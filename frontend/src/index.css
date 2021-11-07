@@ -1,0 +1,31 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+h1 {
+  background-color: rgb(0, 0, 255);
+  color: white;
+}
+
+.event-title {
+  cursor: pointer;
+}
+
+.cancelled-event {
+  text-decoration: line-through;
+  color: rgb(120, 120, 120);
+}
+
+.tab-list > span {
+  padding: 5px 8px;
+  border: 1px solid rgb(0, 0, 255);
+  margin-right: 20px;
+  cursor: pointer;
+}
+
+.tab-list > span.active {
+  background-color: rgb(0, 0, 255);
+  color: white;
+}
