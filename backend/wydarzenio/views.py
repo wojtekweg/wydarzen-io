@@ -1,3 +1,12 @@
 from django.shortcuts import render
+from rest_framework import serializers, viewsets
+from .serializers import EventSerializer, PlaceSerializer
+from .models import Event, Place
 
-# Create your views here.
+class EventView(viewsets.ModelViewSet):
+    serializer_class = EventSerializer
+    queryset = Event.objects.all()  # TODO: add start_date 
+
+class PlaceView(viewsets.ModelViewSet):
+    serializer_class = PlaceSerializer
+    queryset = Place.objects.all()
