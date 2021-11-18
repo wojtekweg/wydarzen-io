@@ -1,5 +1,4 @@
-import React, { Component } from "react";
-import { render } from "react-dom";
+import React, { useState, setState } from "react";
 import {
   Button,
   Modal,
@@ -11,77 +10,118 @@ import {
   Input,
   Label,
 } from "reactstrap";
+// import DatePicker from "react-datepicker";
+// TODO make the datepicker possible to choose
+// by using this lib: https://final-form.org/docs/react-final-form/getting-started
+// from this answer https://stackoverflow.com/a/65133540
+// Here is datepicker code:
 
-class CustomModal extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      activeEvent: this.props.activeEvent,
-    };
-  }
+// const [startDate, setStartDate] = useState(new Date());
 
-  handleChange = (e) => {
-    let { name, value } = e.target;
-    if (e.target.type === "checkbox") {
-      value = e.target.cancelled;
-    }
-    const activeEvent = { ...this.state.activeEvent, [name]: value };
-    this.setState({ activeEvent });
+// let handleColor = (time) => {
+//   return time.getHours() > 12 ? "text-success" : "text-error";
+// };
+
+// const RenderDatePicker = ({ name, input, input: { value, onChange } }) => {
+//   return (
+//     <DatePicker
+//       showTimeSelect
+//       selected={startDate}
+//       //onChange={(date) => setStartDate(date)}
+//       onChange={handleChange}
+//       minDate={new Date()}
+//       timeClassName={handleColor}
+//     />
+//   );
+// };
+
+function CustomModal(props) {
+  const [values, setValues] = useState({ val: [] });
+
+  // TODO handle change of forms
+  const handleChange = (event) => {
+    let vals = [...values.val];
+    vals[this] = event.target.value;
+    setValues({ val: vals });
   };
 
-  render() {
-    const { toggle, onSave } = this.props;
-    return (
-      <Modal isOpen={true} toggle={toggle}>
-        <ModalHeader toggle={toggle}>Event</ModalHeader>
-        <ModalBody>
-          <Form>
-            <FormGroup>
-              <Label for="title">Title</Label>
-              <Input
-                type="text"
-                name="title"
-                value={this.state.activeEvent.title}
-                onChange={this.handleChange}
-                placeholder="Enter Event Title"
-              />
-            </FormGroup>
+  // const handleChange = (e) => {
+  //   let { name, value } = e.target;
+  //   if (e.target.type === "checkbox") {
+  //     value = e.target.cancelled;
+  //   }
+  //   // if (e.target.type === "date") {
+  //   //   value = e.target.date;
+  //   // }
+  //   console.log(e);
+  //   console.log(name, value);
+  //   e.persist();
 
-            <FormGroup>
-              <Label for="description">Description</Label>
-              <Input
-                type="text"
-                name="description"
-                value={this.state.activeEvent.description}
-                onChange={this.handleChange}
-                placeholder="Enter Event Description"
-              />
-            </FormGroup>
+  //   this.setState((prevState) => ({
+  //     activeEvent: {
+  //       ...prevState.activeEvent,
+  //       [e.target.name]: e.target.value,
+  //     },
+  //   }));
+  // };
 
-            <FormGroup check>
-              <Label for="cancelled">
-                <Input
-                  type="checkbox"
-                  name="cancelled"
-                  checked={this.state.activeEvent.is_cancelled}
-                  onChange={this.handleChange}
-                />
-                Cancelled
-              </Label>
-            </FormGroup>
-          </Form>
-        </ModalBody>
-        <ModalFooter>
-          <Button
-            color="success"
-            onClick={() => onSave(this.state.activeEvent)}
-          >
-            Save
-          </Button>
-        </ModalFooter>
-      </Modal>
-    );
-  }
+  return (
+    <Modal isOpen={true} toggle={props.toggle}>
+      <ModalHeader toggle={props.toggle}>Event</ModalHeader>
+      <ModalBody>
+        <Form>
+          <FormGroup>
+            <Label for="title">Title</Label>
+            <Input
+              type="text"
+              name="title"
+              value={props.activeEvent.title}
+              onChange={handleChange}
+              placeholder="Enter event title"
+            />
+          </FormGroup>
+
+          <FormGroup>
+            <Label for="description">Description</Label>
+            <Input
+              type="text"
+              name="description"
+              value={props.activeEvent.description}
+              onChange={handleChange}
+              placeholder="Enter event description"
+            />
+          </FormGroup>
+
+          <FormGroup>
+            <Label for="date">Date</Label>
+            <Input
+              type="date"
+              name="date"
+              onChange={handleChange}
+              value={props.activeEvent.date}
+            />
+          </FormGroup>
+
+          <FormGroup check>
+            <Label for="cancelled">
+              <Input
+                type="checkbox"
+                name="cancelled"
+                checked={props.activeEvent.is_cancelled}
+                // onChange={handleChange}
+              />
+              Cancelled
+            </Label>
+          </FormGroup>
+        </Form>
+      </ModalBody>
+      <ModalFooter>
+        <Button color="success" onClick={() => props.onSave(props.activeEvent)}>
+          Save
+        </Button>
+      </ModalFooter>
+    </Modal>
+  );
 }
 
 export default CustomModal;

@@ -13,6 +13,11 @@ h1 {
   cursor: pointer;
 }
 
+.event-date {
+  color: rgb(100, 100, 100);
+  font-style: italic;
+}
+
 .cancelled-event {
   text-decoration: line-through;
   color: rgb(120, 120, 120);
