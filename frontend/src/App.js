@@ -13,7 +13,8 @@ class App extends Component {
         title: "",
         description: "",
         is_cancelled: false,
-        date: new Date(),
+        date: "2021-11-12",
+        place: 1,
       },
     };
   }
@@ -100,15 +101,19 @@ class App extends Component {
 
   handleSubmit = (event) => {
     this.toggle();
-    if (event.id) {
+    console.log("HANDLE SUBMIT")
+    console.log(event)
+
+    // TODO is below logic is good? shouldnt there be another check?
+    if (typeof event === 'undefined' || typeof event.id === 'undefined') {
       axios
-        .put(`http://localhost:8000/api/events/${event.id}/`, event)
-        .then((res) => this.refreshList());
+      .post("http://localhost:8000/api/events/", event)
+      .then((res) => this.refreshList());
       return;
     }
     axios
-      .post("http://localhost:8000/api/events/", event)
-      .then((res) => this.refreshList());
+        .put(`http://localhost:8000/api/events/${event.id}/`, event)
+        .then((res) => this.refreshList());
   };
 
   handleDelete = (event) => {
@@ -152,8 +157,8 @@ class App extends Component {
         {this.state.modal ? (
           <Modal
             activeEvent={this.state.activeEvent}
-            toggle={this.toggle}
-            onSave={this.handleSubmit}
+            // toggle={this.toggle}
+            onSave={this.handleSubmit()}
           />
         ) : null}
       </main>

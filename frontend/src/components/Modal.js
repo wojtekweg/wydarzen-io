@@ -10,64 +10,30 @@ import {
   Input,
   Label,
 } from "reactstrap";
-// import DatePicker from "react-datepicker";
-// TODO make the datepicker possible to choose
-// by using this lib: https://final-form.org/docs/react-final-form/getting-started
-// from this answer https://stackoverflow.com/a/65133540
-// Here is datepicker code:
 
-// const [startDate, setStartDate] = useState(new Date());
-
-// let handleColor = (time) => {
-//   return time.getHours() > 12 ? "text-success" : "text-error";
-// };
-
-// const RenderDatePicker = ({ name, input, input: { value, onChange } }) => {
-//   return (
-//     <DatePicker
-//       showTimeSelect
-//       selected={startDate}
-//       //onChange={(date) => setStartDate(date)}
-//       onChange={handleChange}
-//       minDate={new Date()}
-//       timeClassName={handleColor}
-//     />
-//   );
-// };
 
 function CustomModal(props) {
-  const [values, setValues] = useState({ val: [] });
+  const [name, setName] = useState(props.activeEvent.name);
+  const [description, setDescription] = useState(props.activeEvent.description);
+  const [date, setDate] = useState(props.activeEvent.date);
+  const [is_cancelled, setCancelled] = useState(props.activeEvent.is_cancelled);
 
-  // TODO handle change of forms
-  const handleChange = (event) => {
-    let vals = [...values.val];
-    vals[this] = event.target.value;
-    setValues({ val: vals });
-  };
+  const postData = () => {
+    const req_json = {
+      "title": name,
+      "description": description,
+      "date": "2021-11-12",
+      "is_cancelled": is_cancelled,
+      "place": 1,
+    }
 
-  // const handleChange = (e) => {
-  //   let { name, value } = e.target;
-  //   if (e.target.type === "checkbox") {
-  //     value = e.target.cancelled;
-  //   }
-  //   // if (e.target.type === "date") {
-  //   //   value = e.target.date;
-  //   // }
-  //   console.log(e);
-  //   console.log(name, value);
-  //   e.persist();
+    // TODO resolve how to pass data from child component (Modal) to parent component (App)
+  }
 
-  //   this.setState((prevState) => ({
-  //     activeEvent: {
-  //       ...prevState.activeEvent,
-  //       [e.target.name]: e.target.value,
-  //     },
-  //   }));
-  // };
 
   return (
     <Modal isOpen={true} toggle={props.toggle}>
-      <ModalHeader toggle={props.toggle}>Event</ModalHeader>
+      {/* <ModalHeader toggle={props.toggle}>Event</ModalHeader> */}
       <ModalBody>
         <Form>
           <FormGroup>
@@ -75,8 +41,8 @@ function CustomModal(props) {
             <Input
               type="text"
               name="title"
-              value={props.activeEvent.title}
-              onChange={handleChange}
+              value={name}
+              onChange={e => setName(e.target.value)}
               placeholder="Enter event title"
             />
           </FormGroup>
@@ -86,8 +52,8 @@ function CustomModal(props) {
             <Input
               type="text"
               name="description"
-              value={props.activeEvent.description}
-              onChange={handleChange}
+              value={description}
+              onChange={e => setDescription(e.target.value)}
               placeholder="Enter event description"
             />
           </FormGroup>
@@ -97,8 +63,8 @@ function CustomModal(props) {
             <Input
               type="date"
               name="date"
-              onChange={handleChange}
-              value={props.activeEvent.date}
+              onChange={e => setDate(e.target.value)}
+              value={date}
             />
           </FormGroup>
 
@@ -107,8 +73,8 @@ function CustomModal(props) {
               <Input
                 type="checkbox"
                 name="cancelled"
-                checked={props.activeEvent.is_cancelled}
-                // onChange={handleChange}
+                checked={is_cancelled}
+                onChange={e => setCancelled(e.target.value)}
               />
               Cancelled
             </Label>
@@ -116,7 +82,7 @@ function CustomModal(props) {
         </Form>
       </ModalBody>
       <ModalFooter>
-        <Button color="success" onClick={() => props.onSave(props.activeEvent)}>
+        <Button color="success" onClick={postData()}>
           Save
         </Button>
       </ModalFooter>
