@@ -2,6 +2,8 @@
 
 `python3 -m venv myvenv`
 
+`python3 source myvenv/bin/activate`
+
 `cd backend`
 
 `python3 -m pip install -r requirements.txt`
@@ -10,9 +12,9 @@ local superuser: admin / admin
 
 # Frontend
 
-`npx create-react-app frontend`
+`npm install packages`
 
-`npm install reactstrap bootstrap`
+`npm start`
 
 # Sources
 
