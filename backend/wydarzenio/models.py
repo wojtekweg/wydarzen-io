@@ -13,10 +13,10 @@ class Place(models.Model):
         return self.name
 
 class Event(models.Model):
-    title = models.CharField(max_length=128)
-    date = models.DateField()
-    decription = models.TextField(max_length=1024)
-    place = models.ForeignKey(Place, on_delete=models.CASCADE)
+    title = models.CharField(max_length=128, default="TBA")
+    date = models.DateField(default="2000-01-01")
+    decription = models.TextField(max_length=1024, default="TBA")
+    place = models.ForeignKey(Place, on_delete=models.CASCADE, default=1)
     is_cancelled = models.BooleanField(default=False)
 
     def __str__(self) -> str:
