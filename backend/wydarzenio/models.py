@@ -18,6 +18,7 @@ class Event(models.Model):
     description = models.TextField(max_length=1024, default="TBA")
     place = models.ForeignKey(Place, on_delete=models.CASCADE, default=1)
     is_cancelled = models.BooleanField(default=False)
+    picture = models.ImageField(upload_to="event/posters", blank=True)
 
     def __str__(self) -> str:
         return f"{self.title} ({self.date})"
