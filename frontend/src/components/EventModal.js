@@ -30,7 +30,7 @@ function CustomModal(props) {
 
     // TODO is below logic is good? shouldnt there be another check?
     if (typeof event === 'undefined' || typeof event.id === 'undefined') {
-      axios.post("http://localhost:8000/api/events/", event)
+      axios.post("http://localhost:8000/api/events/", event).then((res) => console.log(res.data));
       return;
     }
     axios.put(`http://localhost:8000/api/events/${event.id}/`, event)

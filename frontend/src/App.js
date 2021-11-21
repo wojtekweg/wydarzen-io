@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import "./App.css";
-import Modal from "./components/Modal";
+import EventModal from "./components/EventModal";
+import PlaceModal from "./components/PlaceModal";
 import axios from "axios";
 
 const emptyEvent = {
@@ -9,6 +10,12 @@ const emptyEvent = {
   is_cancelled: false,
   date: "2021-01-01",
   place: 1,
+  picture: null
+}
+
+const emptyPlace = {
+  name: "",
+  country: "PL"
 }
 
 class App extends Component {
@@ -17,9 +24,11 @@ class App extends Component {
     super(props);
     this.state = {
       viewCancelled: false,
-      modal: false,
+      eventModal: false,
+      placeModal: false,
       eventsList: [],
       activeEvent: {...emptyEvent},
+      activePlace: {...emptyPlace}
     };
   }
 
@@ -113,12 +122,16 @@ class App extends Component {
     ));
   };
 
-  toggle = () => {
-    this.setState({ modal: !this.state.modal });
+  toggleEvents = () => {
+    this.setState({ eventModal: !this.state.eventModal });
   };
 
-  toggleAndRefresh = () => {
-    this.setState({ modal: false });
+  togglePlaces = () => {
+    this.setState({ placeModal: !this.state.placeModal });
+  };
+
+  toggleAndRefreshEvents = () => {
+    this.setState({ eventModal: false });
     this.refreshList()
   }
 
@@ -136,11 +149,16 @@ class App extends Component {
 
   createEvent = () => {
     const event = {...emptyEvent};
-    this.setState({ activeEvent: event, modal: !this.state.modal });
+    this.setState({ activeEvent: event, eventModal: !this.state.eventModal });
+  };
+
+  createPlace = () => {
+    const place = {...emptyPlace};
+    this.setState({ activePlace: place, placeModal: !this.state.placeModal });
   };
 
   editEvent = (event) => {
-    this.setState({ activeEvent: event, modal: !this.state.modal });
+    this.setState({ activeEvent: event, eventModal: !this.state.eventModal });
   };
 
   render() {
@@ -154,6 +172,9 @@ class App extends Component {
               <button onClick={this.createEvent} className="btn btn-primary mx-1">
                 Add event
               </button>
+              <button onClick={this.createPlace} className="btn btn-primary mx-1">
+                Add place
+              </button>
               <button onClick={this.refreshList} className="btn btn-primary mx-1">
                 Refresh list
               </button>
@@ -164,11 +185,17 @@ class App extends Component {
             </ul>
           </div>
         </div>
-        {this.state.modal ? (
-          <Modal
+        {this.state.eventModal ? (
+          <EventModal
             activeEvent={this.state.activeEvent}
-            toggle={this.toggle}
-            onSave={this.toggleAndRefresh}
+            toggle={this.toggleEvents}
+            onSave={this.toggleAndRefreshEvents}
+          />
+        ) : null}
+        {this.state.placeModal ? (
+          <PlaceModal
+            activePlace={this.state.activePlace}
+            toggle={this.togglePlaces}
           />
         ) : null}
       </main>
