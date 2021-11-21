@@ -1,4 +1,5 @@
-import React, { useState, setState } from "react";
+import React, { useState } from "react";
+import axios from "axios";
 import {
   Button,
   Modal,
@@ -11,29 +12,36 @@ import {
   Label,
 } from "reactstrap";
 
-
 function CustomModal(props) {
-  const [name, setName] = useState(props.activeEvent.name);
+  const [title, setTitle] = useState(props.activeEvent.title);
   const [description, setDescription] = useState(props.activeEvent.description);
   const [date, setDate] = useState(props.activeEvent.date);
   const [is_cancelled, setCancelled] = useState(props.activeEvent.is_cancelled);
+  // const [toggle, setToggle] = useState(props.toggle)
 
   const postData = () => {
-    const req_json = {
-      "title": name,
+    const event = {
+      ...props.activeEvent,
+      "title": title,
       "description": description,
-      "date": "2021-11-12",
+      "date": date,
       "is_cancelled": is_cancelled,
-      "place": 1,
     }
 
-    // TODO resolve how to pass data from child component (Modal) to parent component (App)
-  }
-
+    // TODO is below logic is good? shouldnt there be another check?
+    if (typeof event === 'undefined' || typeof event.id === 'undefined') {
+      axios.post("http://localhost:8000/api/events/", event)
+      return;
+    }
+    axios.put(`http://localhost:8000/api/events/${event.id}/`, event)
+  };
 
   return (
-    <Modal isOpen={true} toggle={props.toggle}>
-      {/* <ModalHeader toggle={props.toggle}>Event</ModalHeader> */}
+    <Modal 
+      isOpen={true} 
+      toggle={props.toggle}
+    >
+      <ModalHeader toggle={props.toggle}>Event</ModalHeader>
       <ModalBody>
         <Form>
           <FormGroup>
@@ -41,8 +49,8 @@ function CustomModal(props) {
             <Input
               type="text"
               name="title"
-              value={name}
-              onChange={e => setName(e.target.value)}
+              value={title}
+              onChange={e => setTitle(e.target.value)}
               placeholder="Enter event title"
             />
           </FormGroup>
@@ -82,7 +90,8 @@ function CustomModal(props) {
         </Form>
       </ModalBody>
       <ModalFooter>
-        <Button color="success" onClick={postData()}>
+        {/* TODO saving is not closing the modal */}
+        <Button color="success" onClick={postData}>
           Save
         </Button>
       </ModalFooter>

@@ -3,19 +3,23 @@ import "./App.css";
 import Modal from "./components/Modal";
 import axios from "axios";
 
+const emptyEvent = {
+  title: "",
+  description: "",
+  is_cancelled: false,
+  date: "2021-01-01",
+  place: 1,
+}
+
 class App extends Component {
+  // TODO rewrite to function component
   constructor(props) {
     super(props);
     this.state = {
       viewCancelled: false,
+      modal: false,
       eventsList: [],
-      activeEvent: {
-        title: "",
-        description: "",
-        is_cancelled: false,
-        date: "2021-11-12",
-        place: 1,
-      },
+      activeEvent: {...emptyEvent},
     };
   }
 
@@ -30,46 +34,42 @@ class App extends Component {
       .catch((err) => console.log(err));
   };
 
-  displayCompleted = (status) => {
-    return this.setState({ viewCompleted: Boolean(status) });
-  }; // TODO delete that?
-
   displayCancelled = (status) => {
     return this.setState({ viewCancelled: !!status });
   };
 
   renderTabList = () => {
     return (
-      <div className="my-5 tab-list">
-        <span
+      <div className="my-1 tab-list">
+        <button
+          className={`btn btn-primary mx-1 ${this.state.viewCancelled ? 'active' : ''}`}
           onClick={() => this.displayCancelled(true)}
-          className={this.state.viewCancelled ? "active" : ""}
         >
           Cancelled
-        </span>
-        <span
+        </button>
+        <button
           onClick={() => this.displayCancelled(false)}
-          className={this.state.viewCancelled ? "" : "active"}
+          className={`btn btn-primary mx-1 ${this.state.viewCancelled ? '' : 'active'}`}
         >
-          Active
-        </span>
+          Active events
+        </button>
       </div>
     );
   };
 
   renderItems = () => {
     const { viewCancelled } = this.state;
-    const newEvents = this.state.eventsList.filter(
+    const activeEvents = this.state.eventsList.filter(
       (event) => event.is_cancelled === viewCancelled
     );
 
-    return newEvents.map((event) => (
+    return activeEvents.map((event) => (
       <li
         key={event.id}
-        className="list-group-event d-flex justify-content-between align-items-center"
+        className="list-group-event d-flex justify-content-between align-items-center my-2"
       >
         <span
-          className={`event-title mr-2 ${
+          className={`event-title mx-12 ${
             this.state.viewCancelled ? "cancelled-event" : ""
           }`}
           title={event.title}
@@ -78,14 +78,32 @@ class App extends Component {
         </span>
         <span className="event-date mr-2">{event.date}</span>
         <span>
+          {this.state.viewCancelled ? (
+            <button
+              className="btn btn-success mx-2"
+              onClick={() => this.changeCancel(event)}
+            >
+              Reactivate
+            </button>
+          ) : (
+            <span>
+              <button
+                className="btn btn-info mx-2"
+                onClick={() => this.editEvent(event)}
+              >
+                Edit
+              </button>
+              <button
+                className="btn btn-danger mx-2"
+                onClick={() => this.changeCancel(event)}
+              >
+                Cancel
+              </button>
+            </span>
+          )
+          }
           <button
-            className="btn btn-info mr-2"
-            onClick={() => this.editEvent(event)}
-          >
-            Edit
-          </button>
-          <button
-            className="btn btn-danger mr-2"
+            className="btn btn-danger mx-2"
             onClick={() => this.handleDelete(event)}
           >
             Delete
@@ -99,22 +117,16 @@ class App extends Component {
     this.setState({ modal: !this.state.modal });
   };
 
-  handleSubmit = (event) => {
-    this.toggle();
-    console.log("HANDLE SUBMIT")
-    console.log(event)
+  toggleAndRefresh = () => {
+    this.setState({ modal: false });
+    this.refreshList()
+  }
 
-    // TODO is below logic is good? shouldnt there be another check?
-    if (typeof event === 'undefined' || typeof event.id === 'undefined') {
-      axios
-      .post("http://localhost:8000/api/events/", event)
-      .then((res) => this.refreshList());
-      return;
-    }
+  changeCancel = (event) => {
     axios
-        .put(`http://localhost:8000/api/events/${event.id}/`, event)
-        .then((res) => this.refreshList());
-  };
+      .put(`http://localhost:8000/api/events/${event.id}/`, {...event, "is_cancelled": !event.is_cancelled})
+      .then((res) => this.refreshList());
+  }
 
   handleDelete = (event) => {
     axios
@@ -123,12 +135,7 @@ class App extends Component {
   };
 
   createEvent = () => {
-    const event = {
-      title: "",
-      description: "",
-      is_cancelled: false,
-      date: new Date(),
-    };
+    const event = {...emptyEvent};
     this.setState({ activeEvent: event, modal: !this.state.modal });
   };
 
@@ -140,16 +147,19 @@ class App extends Component {
     return (
       <main className="context">
         <h1 className="text-center my-4">wydarzen.io</h1>
-        <div className="row">
+        <div className="row mx-10">
           <div className="col-md-6 col-sma-10 mx-auto p-0"></div>
-          <div className="card p-3">
+          <div className="card p-3 mx-5">
             <div>
-              <button onClick={this.createEvent} className="btn btn-primary">
+              <button onClick={this.createEvent} className="btn btn-primary mx-1">
                 Add event
+              </button>
+              <button onClick={this.refreshList} className="btn btn-primary mx-1">
+                Refresh list
               </button>
             </div>
             {this.renderTabList()}
-            <ul className="list-group list-group-flush">
+            <ul className="list-group list-group-flush mx-5">
               {this.renderItems()}
             </ul>
           </div>
@@ -157,8 +167,8 @@ class App extends Component {
         {this.state.modal ? (
           <Modal
             activeEvent={this.state.activeEvent}
-            // toggle={this.toggle}
-            onSave={this.handleSubmit()}
+            toggle={this.toggle}
+            onSave={this.toggleAndRefresh}
           />
         ) : null}
       </main>
