@@ -15,7 +15,7 @@ class Place(models.Model):
 class Event(models.Model):
     title = models.CharField(max_length=128, default="TBA")
     date = models.DateField(default="2000-01-01")
-    decription = models.TextField(max_length=1024, default="TBA")
+    description = models.TextField(max_length=1024, default="TBA")
     place = models.ForeignKey(Place, on_delete=models.CASCADE, default=1)
     is_cancelled = models.BooleanField(default=False)
 

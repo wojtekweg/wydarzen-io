@@ -5,7 +5,7 @@ from .models import Event, Place
 class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
-        fields = ('id', 'title', 'date', 'place', 'is_cancelled')
+        fields = ('id', 'title', 'description', 'date', 'place', 'is_cancelled')
 
 class PlaceSerializer(serializers.ModelSerializer):
     class Meta:

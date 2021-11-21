@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework import serializers, viewsets
+from rest_framework import viewsets
 from .serializers import EventSerializer, PlaceSerializer
 from .models import Event, Place
 
