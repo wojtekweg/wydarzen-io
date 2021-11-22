@@ -19,26 +19,23 @@ function CustomModal(props) {
   const postData = () => {
     const place = {
       ...props.activePlace,
-      "name": name,
-      "country": country,
-    }
+      name: name,
+      country: country,
+    };
 
     // TODO is below logic is good? shouldnt there be another check?
 
     // TODO recheck if backend sends place id
 
-    if (typeof place === 'undefined' || typeof place.id === 'undefined') {
-      axios.post("http://localhost:8000/api/places/", place)
+    if (typeof place === "undefined" || typeof place.id === "undefined") {
+      axios.post("http://localhost:8000/api/places/", place);
       return;
     }
-    axios.put(`http://localhost:8000/api/palces/${place.id}/`, place)
+    axios.put(`http://localhost:8000/api/palces/${place.id}/`, place);
   };
 
   return (
-    <Modal 
-      isOpen={true} 
-      toggle={props.toggle}
-    >
+    <Modal isOpen={true} toggle={props.toggle}>
       <ModalHeader toggle={props.toggle}>Place</ModalHeader>
       <ModalBody>
         <Form>
@@ -48,7 +45,7 @@ function CustomModal(props) {
               type="text"
               name="name"
               value={name}
-              onChange={e => setName(e.target.value)}
+              onChange={(e) => setName(e.target.value)}
               placeholder="Enter place name"
             />
           </FormGroup>
@@ -59,7 +56,7 @@ function CustomModal(props) {
               type="text"
               name="country"
               value={country}
-              onChange={e => setCountry(e.target.value)}
+              onChange={(e) => setCountry(e.target.value)}
               placeholder="Enter place country"
             />
           </FormGroup>
