@@ -12,35 +12,60 @@ import {
   Label,
 } from "reactstrap";
 
+// TODO create helpers and cleanup
+const logError = (error) => {
+  if (error.response) {
+    console.log(error.response.data);
+  } else if (error.request) {
+    console.log(error.request);
+  } else {
+    console.log("Error", error.message);
+  }
+};
+
 function CustomModal(props) {
   const [title, setTitle] = useState(props.activeEvent.title);
   const [description, setDescription] = useState(props.activeEvent.description);
   const [date, setDate] = useState(props.activeEvent.date);
   const [is_cancelled, setCancelled] = useState(props.activeEvent.is_cancelled);
-  // const [toggle, setToggle] = useState(props.toggle)
+  const [picture, setPicture] = useState(props.activeEvent.picture);
 
   const postData = () => {
     const event = {
       ...props.activeEvent,
-      "title": title,
-      "description": description,
-      "date": date,
-      "is_cancelled": is_cancelled,
-    }
+      title: title,
+      description: description,
+      date: date,
+      is_cancelled: is_cancelled,
+      picture: picture,
+    };
+
+    // TODO handle file upload
+    let formData = new FormData();
+
+    console.log(event);
+
+    formData.forEach((value, key) => (event[key] = value));
+    formData.append("picture", picture, `${title}-picture`);
+
+    console.log(formData.get());
 
     // TODO is below logic is good? shouldnt there be another check?
-    if (typeof event === 'undefined' || typeof event.id === 'undefined') {
-      axios.post("http://localhost:8000/api/events/", event).then((res) => console.log(res.data));
-      return;
+    let url = "http://localhost:8000/api/events/";
+    if (typeof event != "undefined" && typeof event.id != "undefined") {
+      axios.put(url + `${event.id}/`, event).catch(logError);
     }
-    axios.put(`http://localhost:8000/api/events/${event.id}/`, event)
+    axios
+      .post(url, formData, {
+        headers: {
+          ...formData.getHeaders(),
+        },
+      })
+      .catch(logError);
   };
 
   return (
-    <Modal 
-      isOpen={true} 
-      toggle={props.toggle}
-    >
+    <Modal isOpen={true} toggle={props.toggle}>
       <ModalHeader toggle={props.toggle}>Event</ModalHeader>
       <ModalBody>
         <Form>
@@ -50,7 +75,7 @@ function CustomModal(props) {
               type="text"
               name="title"
               value={title}
-              onChange={e => setTitle(e.target.value)}
+              onChange={(e) => setTitle(e.target.value)}
               placeholder="Enter event title"
             />
           </FormGroup>
@@ -61,7 +86,7 @@ function CustomModal(props) {
               type="text"
               name="description"
               value={description}
-              onChange={e => setDescription(e.target.value)}
+              onChange={(e) => setDescription(e.target.value)}
               placeholder="Enter event description"
             />
           </FormGroup>
@@ -71,7 +96,7 @@ function CustomModal(props) {
             <Input
               type="date"
               name="date"
-              onChange={e => setDate(e.target.value)}
+              onChange={(e) => setDate(e.target.value)}
               value={date}
             />
           </FormGroup>
@@ -82,15 +107,24 @@ function CustomModal(props) {
                 type="checkbox"
                 name="cancelled"
                 checked={is_cancelled}
-                onChange={e => setCancelled(e.target.value)}
+                onChange={(e) => setCancelled(e.target.value)}
               />
               Cancelled
             </Label>
           </FormGroup>
+
+          <FormGroup>
+            <Label for="picture">Picture</Label>
+            <br />
+            <input
+              type="file"
+              id="picture"
+              onChange={(e) => setPicture(e.target.value)}
+            />
+          </FormGroup>
         </Form>
       </ModalBody>
       <ModalFooter>
-        {/* TODO saving is not closing the modal */}
         <Button color="success" onClick={postData}>
           Save
         </Button>
