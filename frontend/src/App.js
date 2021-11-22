@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "./App.css";
 import EventModal from "./components/EventModal";
 import PlaceModal from "./components/PlaceModal";
+import ImportModal from "./components/ImportModal";
 import axios from "axios";
 
 const emptyEvent = {
@@ -10,13 +11,13 @@ const emptyEvent = {
   is_cancelled: false,
   date: "2021-01-01",
   place: 1,
-  picture: null
-}
+  picture: null,
+};
 
 const emptyPlace = {
   name: "",
-  country: "PL"
-}
+  country: "PL",
+};
 
 class App extends Component {
   // TODO rewrite to function component
@@ -26,9 +27,10 @@ class App extends Component {
       viewCancelled: false,
       eventModal: false,
       placeModal: false,
+      importModal: false,
       eventsList: [],
-      activeEvent: {...emptyEvent},
-      activePlace: {...emptyPlace}
+      activeEvent: { ...emptyEvent },
+      activePlace: { ...emptyPlace },
     };
   }
 
@@ -37,7 +39,7 @@ class App extends Component {
   }
 
   refreshList = () => {
-    axios //Axios to send and receive HTTP requests
+    axios
       .get("http://localhost:8000/api/events/")
       .then((res) => this.setState({ eventsList: res.data }))
       .catch((err) => console.log(err));
@@ -51,14 +53,18 @@ class App extends Component {
     return (
       <div className="my-1 tab-list">
         <button
-          className={`btn btn-primary mx-1 ${this.state.viewCancelled ? 'active' : ''}`}
+          className={`btn btn-primary mx-1 ${
+            this.state.viewCancelled ? "active" : ""
+          }`}
           onClick={() => this.displayCancelled(true)}
         >
           Cancelled
         </button>
         <button
           onClick={() => this.displayCancelled(false)}
-          className={`btn btn-primary mx-1 ${this.state.viewCancelled ? '' : 'active'}`}
+          className={`btn btn-primary mx-1 ${
+            this.state.viewCancelled ? "" : "active"
+          }`}
         >
           Active events
         </button>
@@ -109,8 +115,7 @@ class App extends Component {
                 Cancel
               </button>
             </span>
-          )
-          }
+          )}
           <button
             className="btn btn-danger mx-2"
             onClick={() => this.handleDelete(event)}
@@ -122,8 +127,12 @@ class App extends Component {
     ));
   };
 
-  toggleEvents = () => {
+  toggleAdd = () => {
     this.setState({ eventModal: !this.state.eventModal });
+  };
+
+  toggleImport = () => {
+    this.setState({ importModal: !this.state.importModal });
   };
 
   togglePlaces = () => {
@@ -132,14 +141,17 @@ class App extends Component {
 
   toggleAndRefreshEvents = () => {
     this.setState({ eventModal: false });
-    this.refreshList()
-  }
+    this.refreshList();
+  };
 
   changeCancel = (event) => {
     axios
-      .put(`http://localhost:8000/api/events/${event.id}/`, {...event, "is_cancelled": !event.is_cancelled})
+      .put(`http://localhost:8000/api/events/${event.id}/`, {
+        ...event,
+        is_cancelled: !event.is_cancelled,
+      })
       .then((res) => this.refreshList());
-  }
+  };
 
   handleDelete = (event) => {
     axios
@@ -147,13 +159,20 @@ class App extends Component {
       .then((res) => this.refreshList());
   };
 
-  createEvent = () => {
-    const event = {...emptyEvent};
+  createEvent = (is_import = false) => {
+    const event = { ...emptyEvent };
+    if (is_import) {
+      this.setState({
+        activeEvent: event,
+        importModal: !this.state.importModal,
+      });
+      return;
+    }
     this.setState({ activeEvent: event, eventModal: !this.state.eventModal });
   };
 
   createPlace = () => {
-    const place = {...emptyPlace};
+    const place = { ...emptyPlace };
     this.setState({ activePlace: place, placeModal: !this.state.placeModal });
   };
 
@@ -169,13 +188,28 @@ class App extends Component {
           <div className="col-md-6 col-sma-10 mx-auto p-0"></div>
           <div className="card p-3 mx-5">
             <div>
-              <button onClick={this.createEvent} className="btn btn-primary mx-1">
+              <button
+                onClick={() => this.createEvent(false)}
+                className="btn btn-primary mx-1"
+              >
                 Add event
               </button>
-              <button onClick={this.createPlace} className="btn btn-primary mx-1">
+              <button
+                onClick={() => this.createEvent(true)}
+                className="btn btn-primary mx-1"
+              >
+                Import event
+              </button>
+              <button
+                onClick={this.createPlace}
+                className="btn btn-primary mx-1"
+              >
                 Add place
               </button>
-              <button onClick={this.refreshList} className="btn btn-primary mx-1">
+              <button
+                onClick={this.refreshList}
+                className="btn btn-primary mx-1"
+              >
                 Refresh list
               </button>
             </div>
@@ -188,7 +222,14 @@ class App extends Component {
         {this.state.eventModal ? (
           <EventModal
             activeEvent={this.state.activeEvent}
-            toggle={this.toggleEvents}
+            toggle={this.toggleAdd}
+            onSave={this.toggleAndRefreshEvents}
+          />
+        ) : null}
+        {this.state.importModal ? (
+          <ImportModal
+            activeEvent={this.state.activeEvent}
+            toggle={this.toggleImport}
             onSave={this.toggleAndRefreshEvents}
           />
         ) : null}
