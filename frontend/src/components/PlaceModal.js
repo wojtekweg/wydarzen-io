@@ -11,6 +11,7 @@ import {
   Input,
   Label,
 } from "reactstrap";
+import Map from "./Map";
 
 function CustomModal(props) {
   const [name, setName] = useState(props.activePlace.name);
@@ -48,6 +49,14 @@ function CustomModal(props) {
               onChange={(e) => setName(e.target.value)}
               placeholder="Enter place name"
             />
+          </FormGroup>
+
+          <FormGroup>
+            {/* TODO fix to pick a location */}
+            <label>Insert a Geo Location</label>
+            <div height="32px" width="10px">
+              <Map />
+            </div>
           </FormGroup>
 
           <FormGroup>

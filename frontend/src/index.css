@@ -28,3 +28,8 @@ h1 {
   text-decoration: line-through;
   color: rgb(120, 120, 120);
 }
+
+#map {
+  height: 10px;
+  width: 10px;
+}
