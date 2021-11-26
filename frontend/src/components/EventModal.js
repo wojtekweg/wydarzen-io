@@ -15,11 +15,11 @@ import {
 // TODO create helpers and cleanup
 const logError = (error) => {
   if (error.response) {
-    console.log(error.response.data);
+    console.error(error.response.data);
   } else if (error.request) {
-    console.log(error.request);
+    console.error(error.request);
   } else {
-    console.log("Error", error.message);
+    console.error("Error", error.message);
   }
 };
 
@@ -29,6 +29,21 @@ function CustomModal(props) {
   const [date, setDate] = useState(props.activeEvent.date);
   const [is_cancelled, setCancelled] = useState(props.activeEvent.is_cancelled);
   const [picture, setPicture] = useState(props.activeEvent.picture);
+  const is_picture_upload_disabled = !!picture;
+
+  const handlePictureUpload = async (file, type = file.type) => {
+    setPicture(
+      new Blob([new Uint8Array(await file.arrayBuffer())], { type: type })
+    );
+    if (picture instanceof Blob !== true) {
+      console.error("Incorrect file upload of: " + picture);
+      return;
+    }
+    if (picture.size === 0) {
+      console.error("Empty file uploaded");
+      return;
+    }
+  };
 
   const postData = () => {
     const event = {
@@ -40,28 +55,60 @@ function CustomModal(props) {
       picture: picture,
     };
 
-    // TODO handle file upload
     let formData = new FormData();
+    for (let key in event) {
+      formData.append(key, event[key]);
+    }
 
-    console.log(event);
+    if (picture === null) {
+      console.error("No picture uploaded");
+      return;
+    }
+    if (!is_picture_upload_disabled) {
+      formData.append(
+        "picture",
+        picture,
+        `${title}-picture.${picture.type.split("/").pop()}`
+      );
+    } else {
+      // TODO do zaorania calkiem to gowno XD teraz dziala najgorzej jak sie da
 
-    formData.forEach((value, key) => (event[key] = value));
-    formData.append("picture", picture, `${title}-picture`);
+      // TODO it is a bug to fix, because the image has to be reuploaded
+      //  because server is not accepting a string path to image
+      //  convert what we have to a blob
+      const extension = String(picture).split(".").pop();
+      const f = async () => {
+        await fetch(picture).then((r) => {
+          console.log(r);
 
-    console.log(formData.get());
+          handlePictureUpload(r, extension);
+          console.log(picture);
+          formData.append(
+            "picture",
+            picture,
+            `${title}-picture.${picture.type.split("/")[1]}`
+          );
+
+          let url = "http://localhost:8000/api/events/";
+          if (typeof event != "undefined" && typeof event.id != "undefined") {
+            console.log(event);
+            axios.put(url + `${event.id}/`, event).catch(logError);
+            return;
+          }
+        });
+      };
+      f();
+      return;
+    }
 
     // TODO is below logic is good? shouldnt there be another check?
     let url = "http://localhost:8000/api/events/";
     if (typeof event != "undefined" && typeof event.id != "undefined") {
+      console.log(event);
       axios.put(url + `${event.id}/`, event).catch(logError);
+      return;
     }
-    axios
-      .post(url, formData, {
-        headers: {
-          ...formData.getHeaders(),
-        },
-      })
-      .catch(logError);
+    axios.post(url, formData).catch(logError);
   };
 
   return (
@@ -116,11 +163,18 @@ function CustomModal(props) {
           <FormGroup>
             <Label for="picture">Picture</Label>
             <br />
-            <input
-              type="file"
-              id="picture"
-              onChange={(e) => setPicture(e.target.value)}
-            />
+            {is_picture_upload_disabled ? (
+              <p>File is already uploaded</p>
+            ) : (
+              <input
+                type="file"
+                id="picture"
+                label="picture file"
+                disabled={!!is_picture_upload_disabled}
+                onChange={(e) => handlePictureUpload(e.target.files[0])}
+                accept="image/png, image/jpeg"
+              />
+            )}
           </FormGroup>
         </Form>
       </ModalBody>

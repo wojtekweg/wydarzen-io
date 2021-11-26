@@ -20,10 +20,12 @@ class Event(models.Model):
     is_cancelled = models.BooleanField(default=False)
     picture = models.ImageField(
         upload_to="event/posters", 
-        blank=True, 
+        blank=True,
         null=True,
-        default="http://127.0.0.1:8000/media/event/posters/tumblr_a4f6104f246a9fcd3c46f4212a1f9d9c_be7b3587_1280.png")
+        default=None)
         # TODO change default
+        # TODO add server-side naming of files (so the file will have the ID instead of name)
+        # TODO handle PUT of empty file
 
     def __str__(self) -> str:
         return f"{self.title} ({self.date})"
