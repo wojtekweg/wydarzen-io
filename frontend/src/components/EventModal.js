@@ -29,86 +29,63 @@ function CustomModal(props) {
   const [date, setDate] = useState(props.activeEvent.date);
   const [is_cancelled, setCancelled] = useState(props.activeEvent.is_cancelled);
   const [picture, setPicture] = useState(props.activeEvent.picture);
-  const is_picture_upload_disabled = !!picture;
+  const isPictureUploadDisabled = !!picture;
+  const [pictureUploadError, setPictureUploadError] = useState(null);
+
+  const printInvalidPicture = (errorMessage) => {
+    console.error(errorMessage);
+    setPictureUploadError(errorMessage);
+  };
 
   const handlePictureUpload = async (file, type = file.type) => {
-    setPicture(
-      new Blob([new Uint8Array(await file.arrayBuffer())], { type: type })
+    // TODO when cancelling upload, the empty file is uploaded
+    const pictureCandidate = new Blob(
+      [new Uint8Array(await file.arrayBuffer())],
+      { type: type }
     );
-    if (picture instanceof Blob !== true) {
-      console.error("Incorrect file upload of: " + picture);
+    if (pictureCandidate instanceof Blob !== true) {
+      printInvalidPicture("Incorrect file upload of: " + pictureCandidate);
       return;
     }
-    if (picture.size === 0) {
-      console.error("Empty file uploaded");
+    if (pictureCandidate.size === 0) {
+      printInvalidPicture("Empty file uploaded");
       return;
     }
+    setPictureUploadError(null);
+    setPicture(pictureCandidate);
   };
 
   const postData = () => {
+    // Copy all information we have about event object and update it from states
     const event = {
       ...props.activeEvent,
       title: title,
       description: description,
       date: date,
       is_cancelled: is_cancelled,
-      picture: picture,
     };
 
+    // Convert event to form, for more flexible editing options
     let formData = new FormData();
     for (let key in event) {
+      if (key === "picture") continue;
       formData.append(key, event[key]);
     }
 
-    if (picture === null) {
-      console.error("No picture uploaded");
-      return;
-    }
-    if (!is_picture_upload_disabled) {
+    // Post the updated changes
+    let url = "http://localhost:8000/api/events/";
+    if (typeof event != "undefined" && typeof event.id != "undefined") {
+      // if event is updated, patch the non-picture fields [TODO make it change only edited fields]
+      axios.patch(url + `${event.id}/`, formData).catch(logError);
+    } else {
+      // if event is created, append picture to POST data
       formData.append(
         "picture",
         picture,
         `${title}-picture.${picture.type.split("/").pop()}`
       );
-    } else {
-      // TODO do zaorania calkiem to gowno XD teraz dziala najgorzej jak sie da
-
-      // TODO it is a bug to fix, because the image has to be reuploaded
-      //  because server is not accepting a string path to image
-      //  convert what we have to a blob
-      const extension = String(picture).split(".").pop();
-      const f = async () => {
-        await fetch(picture).then((r) => {
-          console.log(r);
-
-          handlePictureUpload(r, extension);
-          console.log(picture);
-          formData.append(
-            "picture",
-            picture,
-            `${title}-picture.${picture.type.split("/")[1]}`
-          );
-
-          let url = "http://localhost:8000/api/events/";
-          if (typeof event != "undefined" && typeof event.id != "undefined") {
-            console.log(event);
-            axios.put(url + `${event.id}/`, event).catch(logError);
-            return;
-          }
-        });
-      };
-      f();
-      return;
+      axios.post(url, formData).catch(logError);
     }
-
-    // TODO is below logic is good? shouldnt there be another check?
-    let url = "http://localhost:8000/api/events/";
-    if (typeof event != "undefined" && typeof event.id != "undefined") {
-      console.log(event);
-      axios.put(url + `${event.id}/`, event).catch(logError);
-      return;
-    }
-    axios.post(url, formData).catch(logError);
   };
 
   return (
@@ -162,15 +139,25 @@ function CustomModal(props) {
 
           <FormGroup>
             <Label for="picture">Picture</Label>
-            <br />
-            {is_picture_upload_disabled ? (
-              <p>File is already uploaded</p>
+
+            {pictureUploadError !== null ? (
+              <p>
+                <b>❗ {pictureUploadError}</b>
+              </p>
+            ) : (
+              <br />
+            )}
+            {isPictureUploadDisabled ? (
+              <p>
+                ℹ️ File is already uploaded, editing uploaded files is not yet
+                possible
+              </p>
             ) : (
               <input
                 type="file"
                 id="picture"
                 label="picture file"
-                disabled={!!is_picture_upload_disabled}
+                disabled={!!isPictureUploadDisabled}
                 onChange={(e) => handlePictureUpload(e.target.files[0])}
                 accept="image/png, image/jpeg"
               />
