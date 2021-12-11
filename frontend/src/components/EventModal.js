@@ -11,6 +11,7 @@ import {
   Input,
   Label,
 } from "reactstrap";
+import config from "../config.json";
 
 // TODO create helpers and cleanup
 const logError = (error) => {
@@ -73,10 +74,9 @@ function CustomModal(props) {
     }
 
     // Post the updated changes
-    let url = "http://localhost:8000/api/events/";
     if (typeof event != "undefined" && typeof event.id != "undefined") {
       // if event is updated, patch the non-picture fields [TODO make it change only edited fields]
-      axios.patch(url + `${event.id}/`, formData).catch(logError);
+      axios.patch(config.url + `events/${event.id}/`, formData).catch(logError);
     } else {
       // if event is created, append picture to POST data
       formData.append(
@@ -84,7 +84,7 @@ function CustomModal(props) {
         picture,
         `${title}-picture.${picture.type.split("/").pop()}`
       );
-      axios.post(url, formData).catch(logError);
+      axios.post(config.url + "events/", formData).catch(logError);
     }
   };
 

@@ -4,6 +4,7 @@ import EventModal from "./components/EventModal";
 import PlaceModal from "./components/PlaceModal";
 import ImportModal from "./components/ImportModal";
 import axios from "axios";
+import config from "./config.json";
 
 const emptyEvent = {
   title: "",
@@ -40,7 +41,7 @@ class App extends Component {
 
   refreshList = () => {
     axios
-      .get("http://localhost:8000/api/events/")
+      .get(`${config.url}events/`)
       .then((res) => this.setState({ eventsList: res.data }))
       .catch((err) => console.log(err));
   };
@@ -140,14 +141,14 @@ class App extends Component {
   };
 
   toggleAndRefreshEvents = () => {
+    // TODO saving a model is not closing it and refreshing - this function does not work at all
     this.setState({ eventModal: false });
     this.refreshList();
   };
 
   changeCancel = (event) => {
     axios
-      .put(`http://localhost:8000/api/events/${event.id}/`, {
-        ...event,
+      .patch(`${config.url}events/${event.id}/`, {
         is_cancelled: !event.is_cancelled,
       })
       .then((res) => this.refreshList());
@@ -155,7 +156,7 @@ class App extends Component {
 
   handleDelete = (event) => {
     axios
-      .delete(`http://localhost:8000/api/events/${event.id}/`)
+      .delete(`${config.url}events/${event.id}/`)
       .then((res) => this.refreshList());
   };
 
