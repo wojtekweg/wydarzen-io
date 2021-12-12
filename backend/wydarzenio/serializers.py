@@ -1,6 +1,6 @@
 from django.db.models import fields
 from rest_framework import serializers
-from .models import Event, Place
+from .models import Event, Place, EventFileImport
 
 class EventSerializer(serializers.ModelSerializer):
     class Meta:
@@ -11,3 +11,8 @@ class PlaceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Place
         fields = ('name', 'country')
+
+class EventFileImportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EventFileImport
+        fields = ('id', 'file')

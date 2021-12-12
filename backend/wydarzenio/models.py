@@ -30,5 +30,9 @@ class Event(models.Model):
     def __str__(self) -> str:
         return f"{self.title} ({self.date})"
 
+class EventFileImport(models.Model):
+    file = models.FileField(upload_to="event/file_imports", null=False, blank=False)
+    upload_date = models.DateTimeField(auto_now=True)
 
-
+    def __str__(self) -> str:
+        return self.file.name

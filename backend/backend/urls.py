@@ -8,6 +8,7 @@ from django.conf.urls.static import static
 router = routers.DefaultRouter()
 router.register(r'events', views.EventView, 'event')
 router.register(r'places', views.PlaceView, 'palce')
+router.register(r'event_file_upload', views.EventFileImportView, 'event_file_upload')
 
 urlpatterns = [
     path('admin/', admin.site.urls),

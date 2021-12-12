@@ -23,32 +23,33 @@ const logError = (error) => {
   }
 };
 
+const printFormData = (formData) => {
+  // TODO printing is not working properly
+  let retString = "";
+  for (var [key, value] of formData) {
+    retString += `${key}: ${value}`;
+
+    if (value instanceof FormData) {
+      for (var [key2, value2] of value) {
+        retString += `${key2}: ${value2}`;
+      }
+    }
+  }
+  return retString;
+};
+
 function CustomModal(props) {
   // const [toggle, setToggle] = useState(props.toggle);
-  const [jsonFile, setJsonFile] = useState(null);
+  const [uploadedFile, setUploadedFile] = useState();
 
-  const handleFileUpload = async (file, type = file.type, e) => {
-    // Design pattern - Adapter
-    if (type.includes("json")) {
-      console.log(file);
-      setJsonFile(JSON.parse(file));
-    } else if (type.includes("ics")) {
-      // TODO convert to .json
-    }
-  };
-
-  const handleFileSelect = (evt) => {
-    // TODO parse properly the .json file
-    let reader = new FileReader();
-    // reader.onload = function (e) {
-    //   that.displayData(e.target.result);
-    // };
-    reader.readAsText(evt.target.files[0]);
-    setJsonFile(JSON.parse(JSON.stringify(evt.target.files[0])));
+  const handleFileUpload = async () => {
+    const formData = new FormData();
+    formData.append("file", uploadedFile);
+    setUploadedFile(formData);
   };
 
   const postData = () => {
-    axios.post(config.url + "events/", jsonFile).catch(logError);
+    axios.post(config.url + "event_file_upload/", uploadedFile).catch(logError);
     return;
   };
 
@@ -78,14 +79,14 @@ function CustomModal(props) {
               type="file"
               id="file"
               label="calendar file"
-              // onChange={(e) => handleFileUpload(e.target.files[0])}
-              onChange={handleFileSelect}
+              onChange={(e) => handleFileUpload(e.target.files[0])}
+              accept="application/json, text/calendar"
             />
           </FormGroup>
         </Form>
-        {jsonFile === null ? null : (
+        {uploadedFile === null ? null : (
           <span className="code">
-            <p>{JSON.stringify(jsonFile)}</p>
+            <p>{printFormData(uploadedFile)}</p>
           </span>
         )}
       </ModalBody>

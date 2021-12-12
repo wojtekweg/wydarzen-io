@@ -96,6 +96,11 @@ CORS_ORIGIN_WHITELIST = (
     "http://localhost:3000",
 )
 
+# CORS_ORIGIN_ALLOW_ALL = True  # TODO remove it, if it will ever be deployed
+# CORS_ALLOW_HEADERS = [
+#     "Content-type",
+#     "Content-Disposition",
+# ]
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
