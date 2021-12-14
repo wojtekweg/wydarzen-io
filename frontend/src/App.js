@@ -10,6 +10,7 @@ import {
   VerticalTimelineElement,
 } from "react-vertical-timeline-component";
 import "react-vertical-timeline-component/style.min.css";
+import { render } from "react-dom";
 
 const emptyEvent = {
   title: "",
@@ -32,10 +33,11 @@ class App extends Component {
     super(props);
     this.state = {
       viewCancelled: false,
-      displayTimeline: false,
+      listDisplay: true,
       eventModal: false,
       placeModal: false,
       importModal: false,
+      sortReversed: false,
       eventsList: [],
       activeEvent: { ...emptyEvent },
       activePlace: { ...emptyPlace },
@@ -57,8 +59,23 @@ class App extends Component {
     return this.setState({ viewCancelled: !!status });
   };
 
-  displayTimelineView = (status) => {
-    return this.setState({ displayTimeline: !!status });
+  invertSort = (status) => {
+    return this.setState({ sortReversed: !!status });
+  };
+
+  getActiveEvents = () => {
+    const { viewCancelled, sortReversed } = this.state;
+    let arr = this.state.eventsList
+      .filter((event) => event.is_cancelled === viewCancelled)
+      .sort((a, b) => new Date(b.date) - new Date(a.date));
+    if (sortReversed) {
+      return arr.reverse();
+    }
+    return arr;
+  };
+
+  listDisplayView = (status) => {
+    return this.setState({ listDisplay: !!status });
   };
 
   renderEventButtons = (event) => {
@@ -66,7 +83,7 @@ class App extends Component {
       <span>
         {this.state.viewCancelled ? (
           <button
-            className="btn btn-success mx-2"
+            class="btn btn-success mx-2"
             onClick={() => this.changeCancel(event)}
           >
             Reactivate
@@ -74,13 +91,13 @@ class App extends Component {
         ) : (
           <span>
             <button
-              className="btn btn-info mx-2"
+              class="btn btn-info mx-2"
               onClick={() => this.editEvent(event)}
             >
               Edit
             </button>
             <button
-              className="btn btn-danger mx-2"
+              class="btn btn-danger mx-2"
               onClick={() => this.changeCancel(event)}
             >
               Cancel
@@ -88,7 +105,7 @@ class App extends Component {
           </span>
         )}
         <button
-          className="btn btn-danger mx-2"
+          class="btn btn-warning"
           onClick={() => this.handleDelete(event)}
         >
           Delete
@@ -97,72 +114,72 @@ class App extends Component {
     );
   };
 
-  renderTabList = () => {
+  renderMenuButtons = () => {
     return (
-      <div className="my-1 tab-list">
+      <div>
         <button
-          className={`btn btn-primary mx-1 ${
-            this.state.viewCancelled ? "active" : ""
-          }`}
-          onClick={() => this.displayCancelled(true)}
+          class="btn"
+          onClick={() => this.invertSort(!this.state.sortReversed)}
         >
-          Cancelled
+          {this.state.sortReversed ? "⬆" : "⬇"}
+        </button>
+        |
+        <button
+          class={`btn toggle ${this.state.viewCancelled ? "active" : ""}`}
+          onClick={() => this.displayCancelled(!this.state.viewCancelled)}
+        >
+          {this.state.viewCancelled ? "Cancelled" : "Active"} events
         </button>
         <button
-          onClick={() => this.displayCancelled(false)}
-          className={`btn btn-primary mx-1 ${
-            this.state.viewCancelled ? "" : "active"
-          }`}
+          class={`btn toggle ${this.state.listDisplay ? "" : "active"}`}
+          onClick={() => this.listDisplayView(!this.state.listDisplay)}
         >
-          Active events
+          {this.state.listDisplay ? "List" : "Timeline"} view
         </button>
-        <button
-          onClick={() => this.displayTimelineView(!this.state.displayTimeline)}
-          className={`btn btn-primary mx-1 ${
-            this.state.displayTimeline ? "" : "active"
-          }`}
-        >
-          Timeline view
+        |
+        <button class="btn" onClick={this.refreshList}>
+          Refresh list
+        </button>
+        |
+        <button class="btn modal" onClick={() => this.createEvent(false)}>
+          Add event
+        </button>
+        <button class="btn modal" onClick={() => this.createEvent(true)}>
+          Import event
+        </button>
+        <button class="btn modal" onClick={this.createPlace}>
+          Add place
         </button>
       </div>
     );
   };
 
   renderListItems = () => {
-    const { viewCancelled } = this.state;
-    const activeEvents = this.state.eventsList.filter(
-      (event) => event.is_cancelled === viewCancelled
-    );
+    const activeEvents = this.getActiveEvents();
 
     return activeEvents.map((event) => (
-      <li
-        key={event.id}
-        className="list-group-event d-flex justify-content-between align-items-center my-2"
-      >
+      <li key={event.id} class="events-list-row">
         <span
-          className={`event-title mx-12 ${
+          class={`event-title ${
             this.state.viewCancelled ? "cancelled-event" : ""
           }`}
           title={event.title}
         >
           {event.title}
         </span>
-        <span className="event-date mr-2">{event.date}</span>
+        <span class="event-date mr-2">{event.date}</span>
         <span>{this.renderEventButtons(event)}</span>
       </li>
     ));
   };
 
   renderTimelineItems = () => {
-    const { viewCancelled } = this.state;
-    const activeEvents = this.state.eventsList.filter(
-      (event) => event.is_cancelled === viewCancelled
-    );
+    const activeEvents = this.getActiveEvents();
 
     return activeEvents.map((event) => (
       <VerticalTimeline lineColor="#0000FF">
         <VerticalTimelineElement
-          className={`vertical-timeline-element--work ${
+          class={`vertical-timeline-element--work  ${
             this.state.viewCancelled ? "cancelled-event" : ""
           }`}
           key={event.id}
@@ -176,7 +193,7 @@ class App extends Component {
         >
           <h3>{event.title}</h3>
           <h5>{event.place_name}</h5>
-          <p className="event-date">{event.date}</p>
+          <p class="event-date">{event.date}</p>
           <p>
             {event.description}
             <br />
@@ -244,42 +261,37 @@ class App extends Component {
 
   render() {
     return (
-      <main className="context">
-        <h1 className="text-center my-4">wydarzen.io</h1>
-        <div className="row mx-10">
-          <div className="col-md-6 col-sma-10 mx-auto p-0"></div>
-          <div className="card p-3 mx-5">
-            <div>
-              <button
-                onClick={() => this.createEvent(false)}
-                className="btn btn-primary mx-1"
-              >
-                Add event
-              </button>
-              <button
-                onClick={() => this.createEvent(true)}
-                className="btn btn-primary mx-1"
-              >
-                Import event
-              </button>
-              <button
-                onClick={this.createPlace}
-                className="btn btn-primary mx-1"
-              >
-                Add place
-              </button>
-              <button
-                onClick={this.refreshList}
-                className="btn btn-primary mx-1"
-              >
-                Refresh list
-              </button>
-            </div>
-            {this.renderTabList()}
-            {this.state.displayTimeline ? (
-              <ul className="list-group list-group-flush mx-5">
-                {this.renderListItems()}
-              </ul>
+      <main class="context">
+        <div class="mx-auto">
+          <div
+            // colorOverlay="#aaaaff"
+            // class="blur-lg"
+            // opacity="0.5"
+            width="100%"
+            height="5%"
+            // blur={10}
+          >
+            <h1 class="text-3xl font-bold underline">
+              <a href="/">wydarzen.io</a>
+            </h1>
+          </div>
+          <div
+            // colorOverlay="#aaaaff"
+            // opacity="0.5"
+            width="100%"
+            height="5%"
+            top="10"
+            class="menu-buttons"
+            // blur={10}
+          >
+            {this.renderMenuButtons()}
+          </div>
+        </div>
+        <div class="row mx-100 my-5">
+          <div class="col-md-6 col-sma-10 mx-auto p-0"></div>
+          <div class="card p-3 mx-5">
+            {this.state.listDisplay ? (
+              <ul class="list-group">{this.renderListItems()}</ul>
             ) : (
               <div>{this.renderTimelineItems()}</div>
             )}

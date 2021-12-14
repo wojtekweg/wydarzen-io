@@ -26,15 +26,15 @@ const logError = (error) => {
 const printFormData = (formData) => {
   // TODO printing is not working properly
   let retString = "";
-  for (var [key, value] of formData) {
-    retString += `${key}: ${value}`;
+  // for (var [key, value] of formData) {
+  //   retString += `${key}: ${value}`;
 
-    if (value instanceof FormData) {
-      for (var [key2, value2] of value) {
-        retString += `${key2}: ${value2}`;
-      }
-    }
-  }
+  //   if (value instanceof FormData) {
+  //     for (var [key2, value2] of value) {
+  //       retString += `${key2}: ${value2}`;
+  //     }
+  //   }
+  // }
   return retString;
 };
 
