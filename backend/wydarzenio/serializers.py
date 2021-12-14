@@ -3,14 +3,19 @@ from rest_framework import serializers
 from .models import Event, Place, EventFileImport
 
 class EventSerializer(serializers.ModelSerializer):
+    place_name = serializers.SerializerMethodField(source='get_place_name')
+
     class Meta:
         model = Event
-        fields = ('id', 'title', 'description', 'date', 'place', 'is_cancelled', 'picture')
+        fields = '__all__'
+
+    def get_place_name(self, obj):
+        return obj.place.name
 
 class PlaceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Place
-        fields = ('name', 'country')
+        fields = ('id', 'name', 'country')
 
 class EventFileImportSerializer(serializers.ModelSerializer):
     class Meta:

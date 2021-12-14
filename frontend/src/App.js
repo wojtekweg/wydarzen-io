@@ -5,6 +5,11 @@ import PlaceModal from "./components/PlaceModal";
 import ImportModal from "./components/ImportModal";
 import axios from "axios";
 import config from "./config.json";
+import {
+  VerticalTimeline,
+  VerticalTimelineElement,
+} from "react-vertical-timeline-component";
+import "react-vertical-timeline-component/style.min.css";
 
 const emptyEvent = {
   title: "",
@@ -12,6 +17,7 @@ const emptyEvent = {
   is_cancelled: false,
   date: "2021-01-01",
   place: 1,
+  place_name: "",
   picture: null,
 };
 
@@ -26,6 +32,7 @@ class App extends Component {
     super(props);
     this.state = {
       viewCancelled: false,
+      displayTimeline: false,
       eventModal: false,
       placeModal: false,
       importModal: false,
@@ -50,6 +57,46 @@ class App extends Component {
     return this.setState({ viewCancelled: !!status });
   };
 
+  displayTimelineView = (status) => {
+    return this.setState({ displayTimeline: !!status });
+  };
+
+  renderEventButtons = (event) => {
+    return (
+      <span>
+        {this.state.viewCancelled ? (
+          <button
+            className="btn btn-success mx-2"
+            onClick={() => this.changeCancel(event)}
+          >
+            Reactivate
+          </button>
+        ) : (
+          <span>
+            <button
+              className="btn btn-info mx-2"
+              onClick={() => this.editEvent(event)}
+            >
+              Edit
+            </button>
+            <button
+              className="btn btn-danger mx-2"
+              onClick={() => this.changeCancel(event)}
+            >
+              Cancel
+            </button>
+          </span>
+        )}
+        <button
+          className="btn btn-danger mx-2"
+          onClick={() => this.handleDelete(event)}
+        >
+          Delete
+        </button>
+      </span>
+    );
+  };
+
   renderTabList = () => {
     return (
       <div className="my-1 tab-list">
@@ -69,11 +116,19 @@ class App extends Component {
         >
           Active events
         </button>
+        <button
+          onClick={() => this.displayTimelineView(!this.state.displayTimeline)}
+          className={`btn btn-primary mx-1 ${
+            this.state.displayTimeline ? "" : "active"
+          }`}
+        >
+          Timeline view
+        </button>
       </div>
     );
   };
 
-  renderItems = () => {
+  renderListItems = () => {
     const { viewCancelled } = this.state;
     const activeEvents = this.state.eventsList.filter(
       (event) => event.is_cancelled === viewCancelled
@@ -93,38 +148,44 @@ class App extends Component {
           {event.title}
         </span>
         <span className="event-date mr-2">{event.date}</span>
-        <span>
-          {this.state.viewCancelled ? (
-            <button
-              className="btn btn-success mx-2"
-              onClick={() => this.changeCancel(event)}
-            >
-              Reactivate
-            </button>
-          ) : (
-            <span>
-              <button
-                className="btn btn-info mx-2"
-                onClick={() => this.editEvent(event)}
-              >
-                Edit
-              </button>
-              <button
-                className="btn btn-danger mx-2"
-                onClick={() => this.changeCancel(event)}
-              >
-                Cancel
-              </button>
-            </span>
-          )}
-          <button
-            className="btn btn-danger mx-2"
-            onClick={() => this.handleDelete(event)}
-          >
-            Delete
-          </button>
-        </span>
+        <span>{this.renderEventButtons(event)}</span>
       </li>
+    ));
+  };
+
+  renderTimelineItems = () => {
+    const { viewCancelled } = this.state;
+    const activeEvents = this.state.eventsList.filter(
+      (event) => event.is_cancelled === viewCancelled
+    );
+
+    return activeEvents.map((event) => (
+      <VerticalTimeline lineColor="#0000FF">
+        <VerticalTimelineElement
+          className={`vertical-timeline-element--work ${
+            this.state.viewCancelled ? "cancelled-event" : ""
+          }`}
+          key={event.id}
+          date={event.date}
+          contentStyle={{
+            background: `${this.state.viewCancelled ? "#CCCCFF" : "#AAAAFF"}`,
+            color: "#fff",
+          }}
+          iconStyle={{ background: "#0000FF", color: "#0000FF" }}
+          // icon={<WorkIcon />}
+        >
+          <h3>{event.title}</h3>
+          <h5>{event.place_name}</h5>
+          <p className="event-date">{event.date}</p>
+          <p>
+            {event.description}
+            <br />
+            <br />
+          </p>
+          <span>{this.renderEventButtons(event)}</span>
+          <br />
+        </VerticalTimelineElement>
+      </VerticalTimeline>
     ));
   };
 
@@ -215,9 +276,13 @@ class App extends Component {
               </button>
             </div>
             {this.renderTabList()}
-            <ul className="list-group list-group-flush mx-5">
-              {this.renderItems()}
-            </ul>
+            {this.state.displayTimeline ? (
+              <ul className="list-group list-group-flush mx-5">
+                {this.renderListItems()}
+              </ul>
+            ) : (
+              <div>{this.renderTimelineItems()}</div>
+            )}
           </div>
         </div>
         {this.state.eventModal ? (

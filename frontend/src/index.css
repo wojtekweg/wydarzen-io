@@ -9,6 +9,10 @@ h1 {
   color: white;
 }
 
+h2 {
+  color: white;
+}
+
 .event-title {
   cursor: pointer;
   font-weight: 750;
