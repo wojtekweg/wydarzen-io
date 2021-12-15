@@ -10,7 +10,6 @@ import {
   VerticalTimelineElement,
 } from "react-vertical-timeline-component";
 import "react-vertical-timeline-component/style.min.css";
-import { render } from "react-dom";
 
 const emptyEvent = {
   title: "",
@@ -38,6 +37,7 @@ class App extends Component {
       placeModal: false,
       importModal: false,
       sortReversed: false,
+      searchPhrase: "",
       eventsList: [],
       activeEvent: { ...emptyEvent },
       activePlace: { ...emptyPlace },
@@ -59,15 +59,25 @@ class App extends Component {
     return this.setState({ viewCancelled: !!status });
   };
 
+  handleSearchInput = (input) => {
+    return this.setState({ searchPhrase: input });
+  };
+
   invertSort = (status) => {
     return this.setState({ sortReversed: !!status });
   };
 
   getActiveEvents = () => {
-    const { viewCancelled, sortReversed } = this.state;
+    const { viewCancelled, sortReversed, searchPhrase } = this.state;
     let arr = this.state.eventsList
       .filter((event) => event.is_cancelled === viewCancelled)
       .sort((a, b) => new Date(b.date) - new Date(a.date));
+    if (searchPhrase.length > 0) {
+      // TODO search for ":", "/" etc will raise error
+      arr = arr.filter((event) =>
+        event.title.toLowerCase().match(searchPhrase.toLowerCase())
+      );
+    }
     if (sortReversed) {
       return arr.reverse();
     }
@@ -83,7 +93,7 @@ class App extends Component {
       <span>
         {this.state.viewCancelled ? (
           <button
-            class="btn btn-success mx-2"
+            className="btn btn-success mx-2"
             onClick={() => this.changeCancel(event)}
           >
             Reactivate
@@ -91,13 +101,13 @@ class App extends Component {
         ) : (
           <span>
             <button
-              class="btn btn-info mx-2"
+              className="btn btn-info mx-2"
               onClick={() => this.editEvent(event)}
             >
               Edit
             </button>
             <button
-              class="btn btn-danger mx-2"
+              className="btn btn-danger mx-2"
               onClick={() => this.changeCancel(event)}
             >
               Cancel
@@ -105,7 +115,7 @@ class App extends Component {
           </span>
         )}
         <button
-          class="btn btn-warning"
+          className="btn btn-warning"
           onClick={() => this.handleDelete(event)}
         >
           Delete
@@ -117,39 +127,55 @@ class App extends Component {
   renderMenuButtons = () => {
     return (
       <div>
-        <button
-          class="btn"
-          onClick={() => this.invertSort(!this.state.sortReversed)}
-        >
-          {this.state.sortReversed ? "⬆" : "⬇"}
-        </button>
-        |
-        <button
-          class={`btn toggle ${this.state.viewCancelled ? "active" : ""}`}
-          onClick={() => this.displayCancelled(!this.state.viewCancelled)}
-        >
-          {this.state.viewCancelled ? "Cancelled" : "Active"} events
-        </button>
-        <button
-          class={`btn toggle ${this.state.listDisplay ? "" : "active"}`}
-          onClick={() => this.listDisplayView(!this.state.listDisplay)}
-        >
-          {this.state.listDisplay ? "List" : "Timeline"} view
-        </button>
-        |
-        <button class="btn" onClick={this.refreshList}>
-          Refresh list
-        </button>
-        |
-        <button class="btn modal" onClick={() => this.createEvent(false)}>
-          Add event
-        </button>
-        <button class="btn modal" onClick={() => this.createEvent(true)}>
-          Import event
-        </button>
-        <button class="btn modal" onClick={this.createPlace}>
-          Add place
-        </button>
+        <div className={"menu-buttons"}>
+          <input
+            className={`search-input ${
+              this.state.searchPhrase !== "" ? "toggle" : null
+            } justify-items-center`}
+            placeholder="Search event title"
+            onChange={(input) => this.handleSearchInput(input.target.value)}
+          />
+          <button
+            className="btn"
+            onClick={() => this.invertSort(!this.state.sortReversed)}
+          >
+            {this.state.sortReversed ? "⬆" : "⬇"}
+          </button>
+        </div>
+        <div className={"menu-buttons"}>
+          <button
+            className={`btn toggle ${this.state.viewCancelled ? "active" : ""}`}
+            onClick={() => this.displayCancelled(!this.state.viewCancelled)}
+          >
+            {this.state.viewCancelled ? "Cancelled" : "Active"} events
+          </button>
+          <button
+            className={`btn toggle ${this.state.listDisplay ? "" : "active"}`}
+            onClick={() => this.listDisplayView(!this.state.listDisplay)}
+          >
+            {this.state.listDisplay ? "List" : "Timeline"} view
+          </button>
+          |
+          <button className="btn" onClick={this.refreshList}>
+            Refresh list
+          </button>
+          |
+          <button className="btn modal" onClick={() => this.createEvent(false)}>
+            Add event
+          </button>
+          <button className="btn modal" onClick={() => this.createEvent(true)}>
+            Import event
+          </button>
+          <button
+            type="text"
+            placeholder="Search for event name..."
+            className="btn modal"
+            value={this.searchPhrase}
+            onClick={this.createPlace}
+          >
+            Add place
+          </button>
+        </div>
       </div>
     );
   };
@@ -158,16 +184,16 @@ class App extends Component {
     const activeEvents = this.getActiveEvents();
 
     return activeEvents.map((event) => (
-      <li key={event.id} class="events-list-row">
+      <li key={event.id} className="events-list-row">
         <span
-          class={`event-title ${
+          className={`event-title ${
             this.state.viewCancelled ? "cancelled-event" : ""
           }`}
           title={event.title}
         >
           {event.title}
         </span>
-        <span class="event-date mr-2">{event.date}</span>
+        <span className="event-date mr-2">{event.date}</span>
         <span>{this.renderEventButtons(event)}</span>
       </li>
     ));
@@ -179,7 +205,7 @@ class App extends Component {
     return activeEvents.map((event) => (
       <VerticalTimeline lineColor="#0000FF">
         <VerticalTimelineElement
-          class={`vertical-timeline-element--work  ${
+          className={`vertical-timeline-element--work  ${
             this.state.viewCancelled ? "cancelled-event" : ""
           }`}
           key={event.id}
@@ -193,7 +219,7 @@ class App extends Component {
         >
           <h3>{event.title}</h3>
           <h5>{event.place_name}</h5>
-          <p class="event-date">{event.date}</p>
+          <p className="event-date">{event.date}</p>
           <p>
             {event.description}
             <br />
@@ -261,17 +287,17 @@ class App extends Component {
 
   render() {
     return (
-      <main class="context">
-        <div class="mx-auto">
+      <main className="context">
+        <div className="mx-auto">
           <div
             // colorOverlay="#aaaaff"
-            // class="blur-lg"
+            // className="blur-lg"
             // opacity="0.5"
             width="100%"
             height="5%"
             // blur={10}
           >
-            <h1 class="text-3xl font-bold underline">
+            <h1 className="text-3xl font-bold underline">
               <a href="/">wydarzen.io</a>
             </h1>
           </div>
@@ -281,17 +307,17 @@ class App extends Component {
             width="100%"
             height="5%"
             top="10"
-            class="menu-buttons"
+            className="menu-buttons"
             // blur={10}
           >
             {this.renderMenuButtons()}
           </div>
         </div>
-        <div class="row mx-100 my-5">
-          <div class="col-md-6 col-sma-10 mx-auto p-0"></div>
-          <div class="card p-3 mx-5">
+        <div className="row mx-100 my-5">
+          <div className="col-md-6 col-sma-10 mx-auto p-0"></div>
+          <div className="card p-3 mx-5">
             {this.state.listDisplay ? (
-              <ul class="list-group">{this.renderListItems()}</ul>
+              <ul className="list-group">{this.renderListItems()}</ul>
             ) : (
               <div>{this.renderTimelineItems()}</div>
             )}
