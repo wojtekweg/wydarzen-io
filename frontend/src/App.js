@@ -5,11 +5,14 @@ import PlaceModal from "./components/PlaceModal";
 import ImportModal from "./components/ImportModal";
 import axios from "axios";
 import config from "./config.json";
+import { format, startOfMonth, subHours } from "date-fns";
 import {
-  VerticalTimeline,
-  VerticalTimelineElement,
-} from "react-vertical-timeline-component";
-import "react-vertical-timeline-component/style.min.css";
+  MonthlyBody,
+  MonthlyDay,
+  MonthlyCalendar,
+  DefaultMonthlyEventItem,
+} from "@zach.codes/react-calendar";
+import { MonthlyNav } from "./components/3rd-party/MonthlyNav";
 
 const emptyEvent = {
   title: "",
@@ -37,6 +40,7 @@ class App extends Component {
       placeModal: false,
       importModal: false,
       sortReversed: false,
+      currentMonth: startOfMonth(new Date()),
       searchPhrase: "",
       eventsList: [],
       activeEvent: { ...emptyEvent },
@@ -67,6 +71,10 @@ class App extends Component {
     return this.setState({ sortReversed: !!status });
   };
 
+  setCurrentMonth = (month) => {
+    return this.setState({ currentMonth: month });
+  };
+
   getActiveEvents = () => {
     const { viewCancelled, sortReversed, searchPhrase } = this.state;
     let arr = this.state.eventsList
@@ -81,6 +89,17 @@ class App extends Component {
     if (sortReversed) {
       return arr.reverse();
     }
+    return arr;
+  };
+
+  getActiveEventsForCalendarView = () => {
+    let arr = [];
+    this.getActiveEvents().forEach((i) =>
+      arr.push({
+        title: i.title,
+        date: subHours(new Date(i.date), 1),
+      })
+    );
     return arr;
   };
 
@@ -153,7 +172,7 @@ class App extends Component {
             className={`btn toggle ${this.state.listDisplay ? "" : "active"}`}
             onClick={() => this.listDisplayView(!this.state.listDisplay)}
           >
-            {this.state.listDisplay ? "List" : "Timeline"} view
+            {this.state.listDisplay ? "List" : "Calendar"} view
           </button>
           |
           <button className="btn" onClick={this.refreshList}>
@@ -199,37 +218,33 @@ class App extends Component {
     ));
   };
 
-  renderTimelineItems = () => {
-    const activeEvents = this.getActiveEvents();
-
-    return activeEvents.map((event) => (
-      <VerticalTimeline lineColor="#0000FF">
-        <VerticalTimelineElement
-          className={`vertical-timeline-element--work  ${
-            this.state.viewCancelled ? "cancelled-event" : ""
-          }`}
-          key={event.id}
-          date={event.date}
-          contentStyle={{
-            background: `${this.state.viewCancelled ? "#CCCCFF" : "#AAAAFF"}`,
-            color: "#fff",
-          }}
-          iconStyle={{ background: "#0000FF", color: "#0000FF" }}
-          // icon={<WorkIcon />}
+  renderCalendarItems = () => {
+    // TODO days are not displayed, probably bug of the package
+    return (
+      <MonthlyCalendar
+        currentMonth={this.state.currentMonth}
+        onCurrentMonthChange={(date) => this.setCurrentMonth(date)}
+      >
+        <MonthlyNav />
+        <MonthlyBody
+          // omitDays={[2, 3, 4, 5, 6]}
+          events={this.getActiveEventsForCalendarView()}
         >
-          <h3>{event.title}</h3>
-          <h5>{event.place_name}</h5>
-          <p className="event-date">{event.date}</p>
-          <p>
-            {event.description}
-            <br />
-            <br />
-          </p>
-          <span>{this.renderEventButtons(event)}</span>
-          <br />
-        </VerticalTimelineElement>
-      </VerticalTimeline>
-    ));
+          <MonthlyDay
+            renderDay={(data) => {
+              data.map((item, index) => (
+                <DefaultMonthlyEventItem
+                  key={index}
+                  title={item.title}
+                  // Format the date here to be in the format you prefer
+                  date={format(item.date, "k:mm")}
+                />
+              ));
+            }}
+          />
+        </MonthlyBody>
+      </MonthlyCalendar>
+    );
   };
 
   toggleAdd = () => {
@@ -319,7 +334,7 @@ class App extends Component {
             {this.state.listDisplay ? (
               <ul className="list-group">{this.renderListItems()}</ul>
             ) : (
-              <div>{this.renderTimelineItems()}</div>
+              <div>{this.renderCalendarItems()}</div>
             )}
           </div>
         </div>
