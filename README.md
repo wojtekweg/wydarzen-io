@@ -16,6 +16,10 @@ local superuser: admin / admin
 
 `npm start`
 
+# UI tests
+
+`./node_modules/.bin/cypress open`
+
 # Sources
 
 https://youtu.be/F5OUT3ijk8M @ 57:37
