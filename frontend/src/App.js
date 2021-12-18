@@ -1,12 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
 import EventModal from "./components/EventModal";
 import PlaceModal from "./components/PlaceModal";
 import ImportModal from "./components/ImportModal";
 import axios from "axios";
 import config from "./config.json";
-import Kalend, { CalendarView } from "kalend";
-import "kalend/dist/styles/index.css";
+import MyCalendar from "./components/3rd-party/reactBigCalendar";
 
 const emptyEvent = {
   title: "",
@@ -23,7 +22,7 @@ const emptyPlace = {
   country: "PL",
 };
 
-function App(props) {
+function App() {
   const [viewCancelled, setViewCancelled] = useState(false);
   const [listDisplay, setListDisplay] = useState(true);
   const [eventModal, setEventModal] = useState(false);
@@ -35,9 +34,9 @@ function App(props) {
   const [activeEvent, setActiveEvent] = useState({ ...emptyEvent });
   const [activePlace, setActivePlace] = useState({ ...emptyPlace });
 
-  // const componentDidMount() {
-  //   this.refreshList();
-  // }
+  useEffect(() => {
+    refreshList();
+  }, []);
 
   const refreshList = () => {
     axios
@@ -63,36 +62,16 @@ function App(props) {
   };
 
   const getActiveEventsForCalendarView = () => {
-    return {
-      "01-11-2021": [
-        {
-          id: 1,
-          startAt: "2021-11-21T18:00:00.000Z",
-          endAt: "2021-11-21T19:00:00.000Z",
-          timezoneStartAt: "Europe/Berlin", // optional
-          summary: "test",
-          color: "blue",
-        },
-      ],
-      "21-11-2021": [
-        {
-          id: 2,
-          startAt: "2021-11-21T18:00:00.000Z",
-          endAt: "2021-11-21T19:00:00.000Z",
-          timezoneStartAt: "Europe/Berlin", // optional
-          summary: "test",
-          color: "blue",
-        },
-      ],
-    };
-    // let arr = [];
-    // this.getActiveEvents().forEach((i) =>
-    //   arr.push({
-    //     title: i.title,
-    //     date: subHours(new Date(i.date), 1),
-    //   })
-    // );
-    // return arr;
+    let arr = [];
+    getActiveEvents().forEach((i) =>
+      arr.push({
+        title: i.title,
+        start: new Date(i.date),
+        end: new Date(i.date),
+        allDay: true,
+      })
+    );
+    return arr;
   };
 
   const renderEventButtons = (event) => {
@@ -145,6 +124,9 @@ function App(props) {
           >
             {sortReversed ? "⬆" : "⬇"}
           </button>
+          <button className="btn" onClick={refreshList}>
+            ↺
+          </button>
         </div>
         <div className={"menu-buttons"}>
           <button
@@ -158,10 +140,6 @@ function App(props) {
             onClick={() => setListDisplay(!listDisplay)}
           >
             {listDisplay ? "List" : "Calendar"} view
-          </button>
-          |
-          <button className="btn" onClick={refreshList}>
-            Refresh list
           </button>
           |
           <button className="btn modal" onClick={() => createEvent(false)}>
@@ -199,23 +177,6 @@ function App(props) {
         <span>{renderEventButtons(event)}</span>
       </li>
     ));
-  };
-
-  const renderCalendarItems = () => {
-    return (
-      <Kalend
-        // onEventClick={onEventClick}
-        // onNewEventClick={onNewEventClick}
-        events={getActiveEventsForCalendarView()}
-        initialDate={new Date().toISOString()}
-        hourHeight={60}
-        initialView={CalendarView.MONTH}
-        // disabledViews={[CalendarView.DAY, CalendarView.AGENDA]}
-        // onSelectView={onSelectView}
-        // selectedView={selectedView}
-        // onPageChange={onPageChange}
-      />
-    );
   };
 
   const toggleAndRefreshEvents = () => {
@@ -284,10 +245,18 @@ function App(props) {
           {listDisplay ? (
             <ul className="list-group">{renderListItems()}</ul>
           ) : (
-            <div>{renderCalendarItems()}</div>
+            <div>
+              {
+                <MyCalendar
+                  events={getActiveEventsForCalendarView()}
+                  cancelEvent={(event) => changeCancel(event)}
+                />
+              }
+            </div>
           )}
         </div>
       </div>
+      {/* TODO fix modals  */}
       {eventModal ? (
         <EventModal
           activeEvent={activeEvent}

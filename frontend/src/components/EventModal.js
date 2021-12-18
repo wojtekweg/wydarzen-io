@@ -1,16 +1,5 @@
 import React, { useState } from "react";
 import axios from "axios";
-import {
-  Button,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Form,
-  FormGroup,
-  Input,
-  Label,
-} from "reactstrap";
 import config from "../config.json";
 
 // TODO create helpers and cleanup
@@ -89,56 +78,56 @@ function CustomModal(props) {
   };
 
   return (
-    <Modal isOpen={true} toggle={props.toggle}>
-      <ModalHeader toggle={props.toggle}>Event</ModalHeader>
-      <ModalBody>
-        <Form>
-          <FormGroup>
-            <Label for="title">Title</Label>
-            <Input
+    <div isOpen={true} toggle={props.toggle}>
+      <h3 toggle={props.toggle}>Event</h3>
+      <div>
+        <div>
+          <div>
+            <p for="title">Title</p>
+            <input
               type="text"
               name="title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Enter event title"
             />
-          </FormGroup>
+          </div>
 
-          <FormGroup>
-            <Label for="description">Description</Label>
-            <Input
+          <div>
+            <p for="description">Description</p>
+            <input
               type="text"
               name="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Enter event description"
             />
-          </FormGroup>
+          </div>
 
-          <FormGroup>
-            <Label for="date">Date</Label>
-            <Input
+          <div>
+            <p for="date">Date</p>
+            <input
               type="date"
               name="date"
               onChange={(e) => setDate(e.target.value)}
               value={date}
             />
-          </FormGroup>
+          </div>
 
-          <FormGroup check>
-            <Label for="cancelled">
-              <Input
+          <div check>
+            <p for="cancelled">
+              <input
                 type="checkbox"
                 name="cancelled"
                 checked={is_cancelled}
                 onChange={(e) => setCancelled(e.target.value)}
               />
               Cancelled
-            </Label>
-          </FormGroup>
+            </p>
+          </div>
 
-          <FormGroup>
-            <Label for="picture">Picture</Label>
+          <div>
+            <p for="picture">Picture</p>
 
             {pictureUploadError !== null ? (
               <p>
@@ -162,15 +151,15 @@ function CustomModal(props) {
                 accept="image/png, image/jpeg"
               />
             )}
-          </FormGroup>
-        </Form>
-      </ModalBody>
-      <ModalFooter>
-        <Button color="success" onClick={postData}>
+          </div>
+        </div>
+      </div>
+      <div>
+        <button color="success" onClick={postData}>
           Save
-        </Button>
-      </ModalFooter>
-    </Modal>
+        </button>
+      </div>
+    </div>
   );
 }
 

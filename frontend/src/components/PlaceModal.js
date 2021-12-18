@@ -1,16 +1,5 @@
 import React, { useState } from "react";
 import axios from "axios";
-import {
-  Button,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Form,
-  FormGroup,
-  Input,
-  Label,
-} from "reactstrap";
 import Map from "./Map";
 
 function CustomModal(props) {
@@ -36,48 +25,48 @@ function CustomModal(props) {
   };
 
   return (
-    <Modal isOpen={true} toggle={props.toggle}>
-      <ModalHeader toggle={props.toggle}>Place</ModalHeader>
-      <ModalBody>
-        <Form>
-          <FormGroup>
-            <Label for="name">Name</Label>
-            <Input
+    <div isOpen={true} toggle={props.toggle}>
+      <div toggle={props.toggle}>Place</div>
+      <div>
+        <div>
+          <div>
+            <p for="name">Name</p>
+            <input
               type="text"
               name="name"
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Enter place name"
             />
-          </FormGroup>
+          </div>
 
-          <FormGroup>
+          <div>
             {/* TODO fix to pick a location */}
             <label>Insert a Geo Location</label>
             <div height="32px" width="10px">
               <Map />
             </div>
-          </FormGroup>
+          </div>
 
-          <FormGroup>
-            <Label for="country">Country</Label>
-            <Input
+          <div>
+            <p for="country">Country</p>
+            <input
               type="text"
               name="country"
               value={country}
               onChange={(e) => setCountry(e.target.value)}
               placeholder="Enter place country"
             />
-          </FormGroup>
-        </Form>
-      </ModalBody>
-      <ModalFooter>
+          </div>
+        </div>
+      </div>
+      <div>
         {/* TODO saving is not closing the modal */}
-        <Button color="success" onClick={postData}>
+        <button color="success" onClick={postData}>
           Save
-        </Button>
-      </ModalFooter>
-    </Modal>
+        </button>
+      </div>
+    </div>
   );
 }
 

@@ -1,16 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
 import config from "../config.json";
-import {
-  Button,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Form,
-  FormGroup,
-  Label,
-} from "reactstrap";
 
 // TODO create helpers and cleanup
 const logError = (error) => {
@@ -54,9 +44,9 @@ function CustomModal(props) {
   };
 
   return (
-    <Modal isOpen={true} toggle={props.toggle}>
-      <ModalHeader toggle={props.toggle}>Import event</ModalHeader>
-      <ModalBody>
+    <div isOpen={true} toggle={props.toggle}>
+      <div toggle={props.toggle}>Import event</div>
+      <div>
         <p>
           For exporting your events refer to{" "}
           <a href="https://www.facebook.com/help/152652248136178/">
@@ -69,11 +59,11 @@ function CustomModal(props) {
           information is processed, but if you want to have full control of what
           is processed, you can manually edit the .json file before uploading.
         </p>
-        <Form>
-          <FormGroup>
-            <Label for="file">
+        <div>
+          <div>
+            <p for="file">
               <b>Calendar file</b>
-            </Label>
+            </p>
             <br />
             <input
               type="file"
@@ -82,20 +72,20 @@ function CustomModal(props) {
               onChange={(e) => handleFileUpload(e.target.files[0])}
               accept="application/json, text/calendar"
             />
-          </FormGroup>
-        </Form>
+          </div>
+        </div>
         {uploadedFile === null ? null : (
           <span className="code">
             <p>{printFormData(uploadedFile)}</p>
           </span>
         )}
-      </ModalBody>
-      <ModalFooter>
-        <Button color="success" onClick={postData}>
+      </div>
+      <div>
+        <button color="success" onClick={postData}>
           Save
-        </Button>
-      </ModalFooter>
-    </Modal>
+        </button>
+      </div>
+    </div>
   );
 }
 
