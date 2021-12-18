@@ -1,18 +1,12 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import "./App.css";
 import EventModal from "./components/EventModal";
 import PlaceModal from "./components/PlaceModal";
 import ImportModal from "./components/ImportModal";
 import axios from "axios";
 import config from "./config.json";
-import { format, startOfMonth, subHours } from "date-fns";
-import {
-  MonthlyBody,
-  MonthlyDay,
-  MonthlyCalendar,
-  DefaultMonthlyEventItem,
-} from "@zach.codes/react-calendar";
-import { MonthlyNav } from "./components/3rd-party/MonthlyNav";
+import Kalend, { CalendarView } from "kalend";
+import "kalend/dist/styles/index.css";
 
 const emptyEvent = {
   title: "",
@@ -29,55 +23,31 @@ const emptyPlace = {
   country: "PL",
 };
 
-class App extends Component {
-  // TODO rewrite to function component
-  constructor(props) {
-    super(props);
-    this.state = {
-      viewCancelled: false,
-      listDisplay: true,
-      eventModal: false,
-      placeModal: false,
-      importModal: false,
-      sortReversed: false,
-      currentMonth: startOfMonth(new Date()),
-      searchPhrase: "",
-      eventsList: [],
-      activeEvent: { ...emptyEvent },
-      activePlace: { ...emptyPlace },
-    };
-  }
+function App(props) {
+  const [viewCancelled, setViewCancelled] = useState(false);
+  const [listDisplay, setListDisplay] = useState(true);
+  const [eventModal, setEventModal] = useState(false);
+  const [placeModal, setPlaceModal] = useState(false);
+  const [importModal, setImportModal] = useState(false);
+  const [sortReversed, setSortReversed] = useState(false);
+  const [searchPhrase, setSearchPhrase] = useState("");
+  const [eventsList, setEventsList] = useState([]);
+  const [activeEvent, setActiveEvent] = useState({ ...emptyEvent });
+  const [activePlace, setActivePlace] = useState({ ...emptyPlace });
 
-  componentDidMount() {
-    this.refreshList();
-  }
+  // const componentDidMount() {
+  //   this.refreshList();
+  // }
 
-  refreshList = () => {
+  const refreshList = () => {
     axios
       .get(`${config.url}events/`)
-      .then((res) => this.setState({ eventsList: res.data }))
+      .then((res) => setEventsList(res.data))
       .catch((err) => console.log(err));
   };
 
-  displayCancelled = (status) => {
-    return this.setState({ viewCancelled: !!status });
-  };
-
-  handleSearchInput = (input) => {
-    return this.setState({ searchPhrase: input });
-  };
-
-  invertSort = (status) => {
-    return this.setState({ sortReversed: !!status });
-  };
-
-  setCurrentMonth = (month) => {
-    return this.setState({ currentMonth: month });
-  };
-
-  getActiveEvents = () => {
-    const { viewCancelled, sortReversed, searchPhrase } = this.state;
-    let arr = this.state.eventsList
+  const getActiveEvents = () => {
+    let arr = eventsList
       .filter((event) => event.is_cancelled === viewCancelled)
       .sort((a, b) => new Date(b.date) - new Date(a.date));
     if (searchPhrase.length > 0) {
@@ -92,28 +62,46 @@ class App extends Component {
     return arr;
   };
 
-  getActiveEventsForCalendarView = () => {
-    let arr = [];
-    this.getActiveEvents().forEach((i) =>
-      arr.push({
-        title: i.title,
-        date: subHours(new Date(i.date), 1),
-      })
-    );
-    return arr;
+  const getActiveEventsForCalendarView = () => {
+    return {
+      "01-11-2021": [
+        {
+          id: 1,
+          startAt: "2021-11-21T18:00:00.000Z",
+          endAt: "2021-11-21T19:00:00.000Z",
+          timezoneStartAt: "Europe/Berlin", // optional
+          summary: "test",
+          color: "blue",
+        },
+      ],
+      "21-11-2021": [
+        {
+          id: 2,
+          startAt: "2021-11-21T18:00:00.000Z",
+          endAt: "2021-11-21T19:00:00.000Z",
+          timezoneStartAt: "Europe/Berlin", // optional
+          summary: "test",
+          color: "blue",
+        },
+      ],
+    };
+    // let arr = [];
+    // this.getActiveEvents().forEach((i) =>
+    //   arr.push({
+    //     title: i.title,
+    //     date: subHours(new Date(i.date), 1),
+    //   })
+    // );
+    // return arr;
   };
 
-  listDisplayView = (status) => {
-    return this.setState({ listDisplay: !!status });
-  };
-
-  renderEventButtons = (event) => {
+  const renderEventButtons = (event) => {
     return (
       <span>
-        {this.state.viewCancelled ? (
+        {viewCancelled ? (
           <button
             className="btn btn-success mx-2"
-            onClick={() => this.changeCancel(event)}
+            onClick={() => changeCancel(event)}
           >
             Reactivate
           </button>
@@ -121,76 +109,73 @@ class App extends Component {
           <span>
             <button
               className="btn btn-info mx-2"
-              onClick={() => this.editEvent(event)}
+              onClick={() => editEvent(event)}
             >
               Edit
             </button>
             <button
               className="btn btn-danger mx-2"
-              onClick={() => this.changeCancel(event)}
+              onClick={() => changeCancel(event)}
             >
               Cancel
             </button>
           </span>
         )}
-        <button
-          className="btn btn-warning"
-          onClick={() => this.handleDelete(event)}
-        >
+        <button className="btn btn-warning" onClick={() => handleDelete(event)}>
           Delete
         </button>
       </span>
     );
   };
 
-  renderMenuButtons = () => {
+  const renderMenuButtons = () => {
     return (
       <div>
         <div className={"menu-buttons"}>
           <input
             className={`search-input ${
-              this.state.searchPhrase !== "" ? "toggle" : null
+              searchPhrase !== "" ? "toggle" : null
             } justify-items-center`}
             placeholder="Search event title"
-            onChange={(input) => this.handleSearchInput(input.target.value)}
+            onChange={(input) => setSearchPhrase(input.target.value)}
           />
           <button
             className="btn"
-            onClick={() => this.invertSort(!this.state.sortReversed)}
+            onClick={() => setSortReversed(!sortReversed)}
           >
-            {this.state.sortReversed ? "⬆" : "⬇"}
+            {sortReversed ? "⬆" : "⬇"}
           </button>
         </div>
         <div className={"menu-buttons"}>
           <button
-            className={`btn toggle ${this.state.viewCancelled ? "active" : ""}`}
-            onClick={() => this.displayCancelled(!this.state.viewCancelled)}
+            className={`btn toggle ${viewCancelled ? "active" : ""}`}
+            onClick={() => setViewCancelled(!viewCancelled)}
           >
-            {this.state.viewCancelled ? "Cancelled" : "Active"} events
+            {viewCancelled ? "Cancelled" : "Active"} events
           </button>
           <button
-            className={`btn toggle ${this.state.listDisplay ? "" : "active"}`}
-            onClick={() => this.listDisplayView(!this.state.listDisplay)}
+            className={`btn toggle ${listDisplay ? "" : "active"}`}
+            onClick={() => setListDisplay(!listDisplay)}
           >
-            {this.state.listDisplay ? "List" : "Calendar"} view
+            {listDisplay ? "List" : "Calendar"} view
           </button>
           |
-          <button className="btn" onClick={this.refreshList}>
+          <button className="btn" onClick={refreshList}>
             Refresh list
           </button>
           |
-          <button className="btn modal" onClick={() => this.createEvent(false)}>
+          <button className="btn modal" onClick={() => createEvent(false)}>
             Add event
           </button>
-          <button className="btn modal" onClick={() => this.createEvent(true)}>
+          <button className="btn modal" onClick={() => createEvent(true)}>
             Import event
           </button>
           <button
             type="text"
             placeholder="Search for event name..."
             className="btn modal"
-            value={this.searchPhrase}
-            onClick={this.createPlace}
+            value={searchPhrase}
+            onClick={createPlace}
           >
             Add place
           </button>
@@ -199,168 +184,132 @@ class App extends Component {
     );
   };
 
-  renderListItems = () => {
-    const activeEvents = this.getActiveEvents();
+  const renderListItems = () => {
+    const activeEvents = getActiveEvents();
 
     return activeEvents.map((event) => (
       <li key={event.id} className="events-list-row">
         <span
-          className={`event-title ${
-            this.state.viewCancelled ? "cancelled-event" : ""
-          }`}
+          className={`event-title ${viewCancelled ? "cancelled-event" : ""}`}
           title={event.title}
         >
           {event.title}
         </span>
         <span className="event-date mr-2">{event.date}</span>
-        <span>{this.renderEventButtons(event)}</span>
+        <span>{renderEventButtons(event)}</span>
       </li>
     ));
   };
 
-  renderCalendarItems = () => {
-    // TODO days are not displayed, probably bug of the package
+  const renderCalendarItems = () => {
     return (
-      <MonthlyCalendar
-        currentMonth={this.state.currentMonth}
-        onCurrentMonthChange={(date) => this.setCurrentMonth(date)}
-      >
-        <MonthlyNav />
-        <MonthlyBody
-          // omitDays={[2, 3, 4, 5, 6]}
-          events={this.getActiveEventsForCalendarView()}
-        >
-          <MonthlyDay
-            renderDay={(data) => {
-              data.map((item, index) => (
-                <DefaultMonthlyEventItem
-                  key={index}
-                  title={item.title}
-                  // Format the date here to be in the format you prefer
-                  date={format(item.date, "k:mm")}
-                />
-              ));
-            }}
-          />
-        </MonthlyBody>
-      </MonthlyCalendar>
+      <Kalend
+        // onEventClick={onEventClick}
+        // onNewEventClick={onNewEventClick}
+        events={getActiveEventsForCalendarView()}
+        initialDate={new Date().toISOString()}
+        hourHeight={60}
+        initialView={CalendarView.MONTH}
+        // disabledViews={[CalendarView.DAY, CalendarView.AGENDA]}
+        // onSelectView={onSelectView}
+        // selectedView={selectedView}
+        // onPageChange={onPageChange}
+      />
     );
   };
 
-  toggleAdd = () => {
-    this.setState({ eventModal: !this.state.eventModal });
+  const toggleAndRefreshEvents = () => {
+    setEventModal(false);
+    refreshList();
   };
 
-  toggleImport = () => {
-    this.setState({ importModal: !this.state.importModal });
-  };
-
-  togglePlaces = () => {
-    this.setState({ placeModal: !this.state.placeModal });
-  };
-
-  toggleAndRefreshEvents = () => {
-    // TODO saving a model is not closing it and refreshing - this function does not work at all
-    this.setState({ eventModal: false });
-    this.refreshList();
-  };
-
-  changeCancel = (event) => {
+  const changeCancel = (event) => {
     axios
       .patch(`${config.url}events/${event.id}/`, {
         is_cancelled: !event.is_cancelled,
       })
-      .then((res) => this.refreshList());
+      .then((res) => refreshList());
   };
 
-  handleDelete = (event) => {
-    axios
-      .delete(`${config.url}events/${event.id}/`)
-      .then((res) => this.refreshList());
+  const handleDelete = (event) => {
+    axios.delete(`${config.url}events/${event.id}/`).then(() => refreshList());
   };
 
-  createEvent = (is_import = false) => {
-    const event = { ...emptyEvent };
-    if (is_import) {
-      this.setState({
-        activeEvent: event,
-        importModal: !this.state.importModal,
-      });
-      return;
-    }
-    this.setState({ activeEvent: event, eventModal: !this.state.eventModal });
+  const createEvent = (is_import = false) => {
+    setActiveEvent({ ...emptyEvent });
+    if (is_import) setImportModal(!importModal);
+    else setEventModal(!eventModal);
   };
 
-  createPlace = () => {
-    const place = { ...emptyPlace };
-    this.setState({ activePlace: place, placeModal: !this.state.placeModal });
+  const createPlace = () => {
+    setActivePlace({ ...emptyPlace });
+    setPlaceModal(!placeModal);
   };
 
-  editEvent = (event) => {
-    this.setState({ activeEvent: event, eventModal: !this.state.eventModal });
+  const editEvent = (event) => {
+    setActiveEvent(event);
+    setEventModal(!eventModal);
   };
 
-  render() {
-    return (
-      <main className="context">
-        <div className="mx-auto">
-          <div
-            // colorOverlay="#aaaaff"
-            // className="blur-lg"
-            // opacity="0.5"
-            width="100%"
-            height="5%"
-            // blur={10}
-          >
-            <h1 className="text-3xl font-bold underline">
-              <a href="/">wydarzen.io</a>
-            </h1>
-          </div>
-          <div
-            // colorOverlay="#aaaaff"
-            // opacity="0.5"
-            width="100%"
-            height="5%"
-            top="10"
-            className="menu-buttons"
-            // blur={10}
-          >
-            {this.renderMenuButtons()}
-          </div>
+  return (
+    <main className="context">
+      <div className="mx-auto">
+        <div
+          // colorOverlay="#aaaaff"
+          // className="blur-lg"
+          // opacity="0.5"
+          width="100%"
+          height="5%"
+          // blur={10}
+        >
+          <h1 className="text-3xl font-bold underline">
+            <a href="/">wydarzen.io</a>
+          </h1>
         </div>
-        <div className="row mx-100 my-5">
-          <div className="col-md-6 col-sma-10 mx-auto p-0"></div>
-          <div className="card p-3 mx-5">
-            {this.state.listDisplay ? (
-              <ul className="list-group">{this.renderListItems()}</ul>
-            ) : (
-              <div>{this.renderCalendarItems()}</div>
-            )}
-          </div>
+        <div
+          // colorOverlay="#aaaaff"
+          // opacity="0.5"
+          width="100%"
+          height="5%"
+          top="10"
+          className="menu-buttons"
+          // blur={10}
+        >
+          {renderMenuButtons()}
         </div>
-        {this.state.eventModal ? (
-          <EventModal
-            activeEvent={this.state.activeEvent}
-            toggle={this.toggleAdd}
-            onSave={this.toggleAndRefreshEvents}
-          />
-        ) : null}
-        {this.state.importModal ? (
-          <ImportModal
-            activeEvent={this.state.activeEvent}
-            toggle={this.toggleImport}
-            onSave={this.toggleAndRefreshEvents}
-          />
-        ) : null}
-        {this.state.placeModal ? (
-          <PlaceModal
-            activePlace={this.state.activePlace}
-            toggle={this.togglePlaces}
-          />
-        ) : null}
-      </main>
-    );
-  }
+      </div>
+      <div className="row mx-100 my-5">
+        <div className="col-md-6 col-sma-10 mx-auto p-0"></div>
+        <div className="card p-3 mx-5">
+          {listDisplay ? (
+            <ul className="list-group">{renderListItems()}</ul>
+          ) : (
+            <div>{renderCalendarItems()}</div>
+          )}
+        </div>
+      </div>
+      {eventModal ? (
+        <EventModal
+          activeEvent={activeEvent}
+          toggle={() => setEventModal(!eventModal)}
+          onSave={toggleAndRefreshEvents}
+        />
+      ) : null}
+      {importModal ? (
+        <ImportModal
+          activeEvent={activeEvent}
+          toggle={() => setImportModal(!importModal)}
+          onSave={toggleAndRefreshEvents}
+        />
+      ) : null}
+      {placeModal ? (
+        <PlaceModal
+          activePlace={activePlace}
+          toggle={() => setPlaceModal(!placeModal)}
+        />
+      ) : null}
+    </main>
+  );
 }
 
 export default App;
