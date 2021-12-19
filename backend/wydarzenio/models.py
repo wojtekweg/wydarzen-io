@@ -4,14 +4,16 @@ from django.core.validators import FileExtensionValidator
 
 cracow_coords = {"lat": 50.049683, "long": 19.944544}
 
+
 class Place(models.Model):
     name = models.CharField(max_length=128)
     country = CountryField()
-    lat  = models.DecimalField(max_digits=9, decimal_places=6, default=cracow_coords["lat"])
+    lat = models.DecimalField(max_digits=9, decimal_places=6, default=cracow_coords["lat"])
     long = models.DecimalField(max_digits=9, decimal_places=6, default=cracow_coords["long"])
 
     def __str__(self) -> str:
         return self.name
+
 
 class Event(models.Model):
     title = models.CharField(max_length=128, default="TBA")
@@ -20,22 +22,24 @@ class Event(models.Model):
     place = models.ForeignKey(Place, on_delete=models.CASCADE, default=1)
     is_cancelled = models.BooleanField(default=False)
     picture = models.ImageField(
-        upload_to="event/posters", 
+        upload_to="event/posters",
         blank=True,
         null=True,
         default=None)
-        # TODO change default
-        # TODO add server-side naming of files (so the file will have the ID instead of name)
-        # TODO handle PUT of empty file
+
+    # TODO change default
+    # TODO add server-side naming of files (so the file will have the ID instead of name)
+    # TODO handle PUT of empty file
 
     def __str__(self) -> str:
         return f"{self.title} ({self.date})"
 
+
 class EventFileImport(models.Model):
     file = models.FileField(
-        upload_to="event/file_imports", 
-        null=False, 
-        blank=False, 
+        upload_to="event/file_imports",
+        null=False,
+        blank=False,
         validators=[FileExtensionValidator(['ics', 'json'])])
     upload_date = models.DateTimeField(auto_now=True)
 
