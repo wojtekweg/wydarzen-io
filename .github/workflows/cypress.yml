@@ -22,15 +22,18 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
       - name: Run Django server
+        working-directory: ./backend
         run: |
-          cd backend && ./manage.py runserver &
+          ./manage.py runserver &
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
       - name: Install NPM dependencies
+        working-directory: ./frontend
         run: npm install
       - name: React build
+        working-directory: ./frontend
         run: npm run build
       - name: Cypress nightly tests 🌃
         uses: cypress-io/github-action@v2
