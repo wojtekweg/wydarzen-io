@@ -32,7 +32,7 @@ jobs:
         run: |
           cd frontend
           npm ci
-          npm install
+          npm install packages
           npm run start
       - name: Cypress nightly tests 🌃
         uses: cypress-io/github-action@v2
