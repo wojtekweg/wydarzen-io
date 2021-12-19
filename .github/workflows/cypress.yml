@@ -25,7 +25,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run server
-        uses: |
+        run: |
           cd backend && ./manage.py runserver &
 
       - name: Use Node.js ${{ matrix.node-version }}
