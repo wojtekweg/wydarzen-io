@@ -1,4 +1,5 @@
 from rest_framework import viewsets
+from rest_framework.decorators import action
 from .serializers import EventSerializer, PlaceSerializer, EventFileImportSerializer
 from .models import Event, Place, EventFileImport
 
@@ -14,6 +15,8 @@ class EventFileImportView(viewsets.ModelViewSet):
     serializer_class = EventFileImportSerializer
     queryset = EventFileImport.objects.all()
 
-    def pre_save(self, obj):  # https://stackoverflow.com/questions/20473572/django-rest-framework-file-upload
-        obj.file = self.request.FILES.get('file')
-        print("DUIPA?")  # TODO add somewhere parsing of uploaded files - but where? 
+    @action(detail=True)
+    def create_file(self, validated_data):
+        print(validated_data)  # TODO add somewhere parsing of uploaded files - but where?
+        print("IM IN")
+        return 

@@ -28,18 +28,16 @@ const printFormData = (formData) => {
   return retString;
 };
 
-function CustomModal(props) {
+const CustomModal = (props) => {
   // const [toggle, setToggle] = useState(props.toggle);
-  const [uploadedFile, setUploadedFile] = useState();
+  const [uploadedFile, setUploadedFile] = useState(null);
 
-  const handleFileUpload = async () => {
+  const postData = async () => {
     const formData = new FormData();
     formData.append("file", uploadedFile);
-    setUploadedFile(formData);
-  };
-
-  const postData = () => {
-    axios.post(config.url + "event_file_upload/", uploadedFile).catch(logError);
+    await axios
+      .post(config.url + "event_file_upload/", formData)
+      .catch(logError);
     return;
   };
 
@@ -69,7 +67,7 @@ function CustomModal(props) {
               type="file"
               id="file"
               label="calendar file"
-              onChange={(e) => handleFileUpload(e.target.files[0])}
+              onChange={(e) => setUploadedFile(e.target.files[0])}
               accept="application/json, text/calendar"
             />
           </div>
@@ -81,12 +79,12 @@ function CustomModal(props) {
         )}
       </div>
       <div>
-        <button color="success" onClick={postData}>
+        <button color="success" onClick={postData} type="submit">
           Save
         </button>
       </div>
     </div>
   );
-}
+};
 
 export default CustomModal;

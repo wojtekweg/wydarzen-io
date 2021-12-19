@@ -1,5 +1,6 @@
 from django_countries.fields import CountryField
 from django.db import models
+from django.core.validators import FileExtensionValidator
 
 cracow_coords = {"lat": 50.049683, "long": 19.944544}
 
@@ -31,7 +32,11 @@ class Event(models.Model):
         return f"{self.title} ({self.date})"
 
 class EventFileImport(models.Model):
-    file = models.FileField(upload_to="event/file_imports", null=False, blank=False)
+    file = models.FileField(
+        upload_to="event/file_imports", 
+        null=False, 
+        blank=False, 
+        validators=[FileExtensionValidator(['ics', 'json'])])
     upload_date = models.DateTimeField(auto_now=True)
 
     def __str__(self) -> str:
