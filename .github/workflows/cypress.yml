@@ -31,7 +31,6 @@ jobs:
       - name: NPM build and run
         working-directory: ./frontend
         run: |
-          cd frontend
           npm ci
           npm install packages
           npm run build --if-present
