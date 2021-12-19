@@ -1,0 +1,52 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Cronofy//Cronofy 0.1//EN
+CALSCALE:GREGORIAN
+METHOD:REQUEST
+BEGIN:VTIMEZONE
+TZID:Europe/Warsaw
+BEGIN:DAYLIGHT
+DTSTART:20210328T030000
+TZOFFSETFROM:+0100
+TZOFFSETTO:+0200
+RRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=3
+TZNAME:CEST
+END:DAYLIGHT
+BEGIN:STANDARD
+DTSTART:20211031T020000
+TZOFFSETFROM:+0200
+TZOFFSETTO:+0100
+RRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10
+TZNAME:CET
+END:STANDARD
+END:VTIMEZONE
+BEGIN:VEVENT
+DTSTAMP:20210920T154817Z
+UID:6148ad41a2287d0192e188af+dad11d29c6ca5c5aa54f@invite-de.cronofy.com
+DTSTART;TZID=Europe/Warsaw:20210922T120000
+DTEND;TZID=Europe/Warsaw:20210922T140000
+DESCRIPTION: \nDzień dobry Panie Wojciechu\,  \n \nzgodnie z naszymi ost
+ atnimi ustaleniami zapraszam Pana na spotkanie rekrutacyjne\, które odbę
+ dzie się w środę (22.09.2021r.) o godz. 12:00.\n \n\n\nSpotkanie potrw
+ a około 2 godzin i będzie składało się z 2 części: \n\n\n\n\n\nT
+ ech\, którą poprowadzi Marcin Michalski\n\nHR/PM\, którą poprowadzę j
+ a oraz Kamil Niedźwiedź\n\nPierwsza odbędzie się część techniczna.\
+ n \n \n \n- link: meet.google.com/wnq-ewhu-qhm\n\n \n\n\n \nProszę o i
+ nformację czy potwierdza Pan swoją obecność.\n\nW razie dodatkowych py
+ tań zapraszam do kontaktu. \n \n \n \nPozdrawiam serdecznie\,\n\nIzabel
+ a Berendt\n\nJunior IT Recruiter\n\n\n\n+48575770741\n 
+LAST-MODIFIED:20210920T154800Z
+ORGANIZER;CN=Teamtailor:mailto:organizer@invite-de.cronofy.com
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:Zaproszenie na spotkanie rekrutacyjne [wideokonferencję]
+TRANSP:OPAQUE
+ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;X-NUM
+ -GUESTS=0;RSVP=TRUE:mailto:ojtek@outlook.com
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-PT1H
+DESCRIPTION:Event reminder
+END:VALARM
+END:VEVENT
+END:VCALENDAR
