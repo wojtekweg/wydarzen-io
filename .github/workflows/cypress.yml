@@ -34,7 +34,8 @@ jobs:
         run: npm install
       - name: React start server
         working-directory: ./frontend
-        run: npm run start
+        run: |
+          npm run start &
       - name: Cypress nightly tests 🌃
         uses: cypress-io/github-action@v2
       - name: Upload artifacts
