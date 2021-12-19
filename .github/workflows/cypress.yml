@@ -32,9 +32,9 @@ jobs:
       - name: Install NPM dependencies
         working-directory: ./frontend
         run: npm install
-      - name: React build
+      - name: React start server
         working-directory: ./frontend
-        run: npm run build
+        run: npm run start
       - name: Cypress nightly tests 🌃
         uses: cypress-io/github-action@v2
       - name: Upload artifacts
