@@ -20,3 +20,21 @@ app.autodiscover_tasks(settings.INSTALLED_APPS)
 @app.task(bind=True)
 def debug_task(self):
     print('Request: {0!r}'.format(self.request))
+
+app.conf.beat_schedule = {
+    #Scheduler Name
+    'mark-as-cancelled-every-12hours': {
+        # Task Name (Name Specified in Decorator)
+        'task': 'mark_as_cancelled',  
+        # Schedule      
+        'schedule': 12 * 60 * 60 * 60 * 1.0,
+    },
+    'mark-as-cancelled-every-ten-seconds': {
+        # Task Name (Name Specified in Decorator)
+        'task': 'mark_as_cancelled_DEBUG',  
+        # Schedule      
+        'schedule': 10 * 1.0,
+        # Function Arguments 
+        # 'args': ("Hello",) 
+    },
+}  

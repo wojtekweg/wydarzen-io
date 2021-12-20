@@ -6,7 +6,8 @@ Open five terminals and run following commmands in each:
 
 - `redis-server`
 
-- `celery -A wydarzenio worker -l info`
+- `celery -A wydarzenio worker -l info --logfile=celery.log --detach && celery -A wydarzenio beat -l info --logfile=celery.beat.log --detach`
+  (omit `--logfile` and run each task individually to disable logging celery actions)
 
 - `cd frontent && nppm start`
 
@@ -46,6 +47,10 @@ Run Celery in another shell:
 
 `celery -A wydarzenio worker -l info`
 
+Kill all Celery services:
+
+`kill -9 $(ps aux | grep celery | grep -v grep | awk '{print $2}' | tr '\n' ' ') > /dev/null 2>&1`
+
 # Frontend
 
 `npm install packages`
@@ -58,4 +63,6 @@ Run Celery in another shell:
 
 # Sources
 
-https://youtu.be/F5OUT3ijk8M @ 57:37
+https://youtu.be/F5OUT3ijk8M - React basics
+
+https://nickmccullum.com/celery-django-periodic-tasks/ - Celery setup for Django

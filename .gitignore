@@ -3,3 +3,6 @@ myvenv
 node_modules
 .DS_store
 redis
+celery.log
+celery.beat.log
+celerybeat-schedule.db
