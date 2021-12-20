@@ -1,3 +1,17 @@
+# Running app
+
+Open five terminals and run following commmands in each:
+
+- `source myvenv/bin/activate && cd backend && ./manage.py runserver`
+
+- `redis-server`
+
+- `celery -A wydarzenio worker -l info`
+
+- `cd frontent && nppm start`
+
+- `./node_modules/.bin/cypress open`
+
 # Backend
 
 `cd backend`
@@ -27,6 +41,10 @@ Install (following https://phoenixnap.com/kb/install-redis-on-mac ):
 Run it:
 
 `redis-server`
+
+Run Celery in another shell:
+
+`celery -A wydarzenio worker -l info`
 
 # Frontend
 
