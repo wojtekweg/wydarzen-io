@@ -20,7 +20,7 @@ class EventSerializer(serializers.ModelSerializer):
 class PlaceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Place
-        fields = ('id', 'name', 'country')
+        fields = ('id', 'name', 'country', 'lat', 'long')
 
 
 class EventFileImportSerializer(serializers.ModelSerializer):

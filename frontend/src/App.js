@@ -19,7 +19,9 @@ const emptyEvent = {
 
 const emptyPlace = {
   name: "",
-  country: "PL",
+  country: "",
+  lat: "",
+  long: "",
 };
 
 function App() {
@@ -159,17 +161,20 @@ function App() {
             {gridDisplay ? "Grid" : "Calendar"} view
           </button>
           |
-          <button className="btn modal" onClick={() => createEvent(false)}>
+          <button
+            className={`btn modal ${eventModal ? "toggle" : ""}`}
+            onClick={() => createEvent(false)}
+          >
             Add event
           </button>
-          <button className="btn modal" onClick={() => createEvent(true)}>
+          <button
+            className={`btn modal ${importModal ? "toggle" : ""}`}
+            onClick={() => createEvent(true)}
+          >
             Import event
           </button>
           <button
-            type="text"
-            placeholder="Search for event name..."
-            className="btn modal"
-            value={searchPhrase}
+            className={`btn modal ${placeModal ? "toggle" : ""}`}
             onClick={createPlace}
           >
             Add place
@@ -268,6 +273,27 @@ function App() {
         <div width="100%" height="5%" className="menu-buttons">
           {renderMenuButtons()}
         </div>
+        {/* TODO fix modals  */}
+        {eventModal ? (
+          <EventModal
+            activeEvent={activeEvent}
+            toggle={() => setEventModal(!eventModal)}
+            onSave={toggleAndRefreshEvents}
+          />
+        ) : null}
+        {importModal ? (
+          <ImportModal
+            activeEvent={activeEvent}
+            toggle={() => setImportModal(!importModal)}
+            onSave={toggleAndRefreshEvents}
+          />
+        ) : null}
+        {placeModal ? (
+          <PlaceModal
+            activePlace={activePlace}
+            toggle={() => setPlaceModal(!placeModal)}
+          />
+        ) : null}
       </div>
       <div className="row mx-100 my-5">
         <div className="card p-3 mx-5">
@@ -289,27 +315,6 @@ function App() {
           )}
         </div>
       </div>
-      {/* TODO fix modals  */}
-      {eventModal ? (
-        <EventModal
-          activeEvent={activeEvent}
-          toggle={() => setEventModal(!eventModal)}
-          onSave={toggleAndRefreshEvents}
-        />
-      ) : null}
-      {importModal ? (
-        <ImportModal
-          activeEvent={activeEvent}
-          toggle={() => setImportModal(!importModal)}
-          onSave={toggleAndRefreshEvents}
-        />
-      ) : null}
-      {placeModal ? (
-        <PlaceModal
-          activePlace={activePlace}
-          toggle={() => setPlaceModal(!placeModal)}
-        />
-      ) : null}
     </main>
   );
 }
