@@ -1,0 +1,35 @@
+BEGIN:VCALENDAR
+PRODID:-//Facebook//NONSGML Facebook Events V1.0//EN
+X-PUBLISHED-TTL:PT12H
+X-ORIGINAL-URL:https://www.facebook.com/events/4710008919042442/
+VERSION:2.0
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+DTSTAMP:20211207T220043Z
+LAST-MODIFIED:20211207T220043Z
+CREATED:20211207T163954Z
+SEQUENCE:19249
+ORGANIZER;CN=Eclectic Guitars:MAILTO:noreply@facebookmail.com
+DTSTART:20220113T190000Z
+DTEND:20220113T220000Z
+UID:e4710008919042442@facebook.com
+SUMMARY:Eclectic Guitars | PAON KRAKÓW
+LOCATION:PAON
+URL:https://www.facebook.com/events/4710008919042442/
+DESCRIPTION:Eclectic Guitars ponownie zagra w 
+ jednym z krakowskich klubów! \n\nBę
+ dzie klimatycznie i jak zwykle moc
+ no energetycznie 🔥🔥\nZaskoczy
+ my Was nowymi kawałkami\, które i
+ dealnie wpisują się w stylistkę
+  naszego zespołu\, czyli każdy zn
+ ajdzie coś dla siebie.\n\n\n\nStart: 
+ 20:00\nWstęp: 10 zł\n\nhttps://www.
+ facebook.com/events/47100089190424
+ 42/
+CLASS:PUBLIC
+STATUS:CONFIRMED
+PARTSTAT:TENTATIVE
+END:VEVENT
+END:VCALENDAR
