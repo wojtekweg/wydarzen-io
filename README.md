@@ -1,3 +1,5 @@
+[![Cypress end-to-end](https://github.com/wojtekweg/wydarzen-io/actions/workflows/cypress.yml/badge.svg)](https://github.com/wojtekweg/wydarzen-io/actions/workflows/cypress.yml)
+
 # Running app
 
 Open five terminals and run following commmands in each:
