@@ -10,7 +10,7 @@ import MyCalendar from "./components/3rd-party/reactBigCalendar";
 const emptyEvent = {
   title: "",
   description: "",
-  is_cancelled: false,
+  is_active: true,
   date: "2021-01-01",
   place: 1,
   place_name: "",
@@ -23,7 +23,7 @@ const emptyPlace = {
 };
 
 function App() {
-  const [viewCancelled, setViewCancelled] = useState(false);
+  const [viewActive, setViewActive] = useState(true);
   const [listDisplay, setListDisplay] = useState(true);
   const [eventModal, setEventModal] = useState(false);
   const [placeModal, setPlaceModal] = useState(false);
@@ -47,7 +47,7 @@ function App() {
 
   const getActiveEvents = () => {
     let arr = eventsList
-      .filter((event) => event.is_cancelled === viewCancelled)
+      .filter((event) => event.is_active === viewActive)
       .sort((a, b) => new Date(b.date) - new Date(a.date));
     if (searchPhrase.length > 0) {
       // TODO search for ":", "/" etc will raise error
@@ -77,14 +77,7 @@ function App() {
   const renderEventButtons = (event) => {
     return (
       <span>
-        {viewCancelled ? (
-          <button
-            className="btn btn-success mx-2"
-            onClick={() => changeCancel(event)}
-          >
-            Reactivate
-          </button>
-        ) : (
+        {viewActive ? (
           <span>
             <button
               className="btn btn-info mx-2"
@@ -94,11 +87,18 @@ function App() {
             </button>
             <button
               className="btn btn-danger mx-2"
-              onClick={() => changeCancel(event)}
+              onClick={() => changeActive(event)}
             >
               Cancel
             </button>
           </span>
+        ) : (
+          <button
+            className="btn btn-success mx-2"
+            onClick={() => changeActive(event)}
+          >
+            Reactivate
+          </button>
         )}
         <button className="btn btn-warning" onClick={() => handleDelete(event)}>
           Delete
@@ -130,10 +130,10 @@ function App() {
         </div>
         <div className={"menu-buttons"}>
           <button
-            className={`btn toggle ${viewCancelled ? "active" : ""}`}
-            onClick={() => setViewCancelled(!viewCancelled)}
+            className={`btn toggle ${viewActive ? "active" : ""}`}
+            onClick={() => setViewActive(!viewActive)}
           >
-            {viewCancelled ? "Cancelled" : "Active"} events
+            {viewActive ? "Active" : "Active"} events
           </button>
           <button
             className={`btn toggle ${listDisplay ? "" : "active"}`}
@@ -168,7 +168,7 @@ function App() {
     return activeEvents.map((event) => (
       <li key={event.id} className="events-list-row">
         <span
-          className={`event-title ${viewCancelled ? "cancelled-event" : ""}`}
+          className={`event-title ${viewActive ? "active-event" : ""}`}
           title={event.title}
         >
           {event.title}
@@ -184,10 +184,10 @@ function App() {
     refreshList();
   };
 
-  const changeCancel = (event) => {
+  const changeActive = (event) => {
     axios
       .patch(`${config.url}events/${event.id}/`, {
-        is_cancelled: !event.is_cancelled,
+        is_active: !event.is_active,
       })
       .then((res) => refreshList());
   };
@@ -249,7 +249,7 @@ function App() {
               {
                 <MyCalendar
                   events={getActiveEventsForCalendarView()}
-                  cancelEvent={(event) => changeCancel(event)}
+                  cancelEvent={(event) => changeActive(event)}
                 />
               }
             </div>

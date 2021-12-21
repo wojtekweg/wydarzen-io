@@ -6,10 +6,10 @@ Open five terminals and run following commmands in each:
 
 - `redis-server`
 
-- `celery -A wydarzenio worker -l info --logfile=celery.log --detach && celery -A wydarzenio beat -l info --logfile=celery.beat.log --detach`
+- `cd backend && celery -A wydarzenio worker -l info --logfile=celery.log --detach && celery -A wydarzenio beat -l info --logfile=celery.beat.log --detach`
   (omit `--logfile` and run each task individually to disable logging celery actions)
 
-- `cd frontent && nppm start`
+- `cd frontend && npm start`
 
 - `./node_modules/.bin/cypress open`
 

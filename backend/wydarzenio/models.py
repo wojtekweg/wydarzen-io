@@ -20,7 +20,7 @@ class Event(models.Model):
     date = models.DateField(default="2000-01-01")
     description = models.TextField(max_length=1024, default="TBA")
     place = models.ForeignKey(Place, on_delete=models.CASCADE, default=1)
-    is_cancelled = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
     picture = models.ImageField(
         upload_to="event/posters",
         blank=True,

@@ -17,7 +17,7 @@ function CustomModal(props) {
   const [title, setTitle] = useState(props.activeEvent.title);
   const [description, setDescription] = useState(props.activeEvent.description);
   const [date, setDate] = useState(props.activeEvent.date);
-  const [is_cancelled, setCancelled] = useState(props.activeEvent.is_cancelled);
+  const [is_active, setActive] = useState(props.activeEvent.is_active);
   const [picture, setPicture] = useState(props.activeEvent.picture);
   const isPictureUploadDisabled = !!picture;
   const [pictureUploadError, setPictureUploadError] = useState(null);
@@ -52,7 +52,7 @@ function CustomModal(props) {
       title: title,
       description: description,
       date: date,
-      is_cancelled: is_cancelled,
+      is_active: is_active,
     };
 
     // Convert event to form, for more flexible editing options
@@ -115,14 +115,15 @@ function CustomModal(props) {
           </div>
 
           <div check>
-            <p for="cancelled">
+            <p for="active">
               <input
+                // TODO activating events is not working
                 type="checkbox"
-                name="cancelled"
-                checked={is_cancelled}
-                onChange={(e) => setCancelled(e.target.value)}
+                name="active"
+                checked={is_active}
+                onChange={(e) => setActive(e.target.value)}
               />
-              Cancelled
+              Active
             </p>
           </div>
 

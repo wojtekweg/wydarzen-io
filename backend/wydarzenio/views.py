@@ -17,9 +17,3 @@ class PlaceView(viewsets.ModelViewSet):
 class EventFileImportView(viewsets.ModelViewSet):
     serializer_class = EventFileImportSerializer
     queryset = EventFileImport.objects.all()
-
-    @action(detail=True)
-    def create_file(self, validated_data):
-        print(validated_data)  # TODO add somewhere parsing of uploaded files - but where?
-        print("IM IN")
-        return

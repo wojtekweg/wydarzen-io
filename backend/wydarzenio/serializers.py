@@ -4,7 +4,6 @@ from icalendar import Calendar, Event
 from .models import Event, Place, EventFileImport
 from .helpers import get_or_create_place
 import json
-from datetime import datetime
 
 
 class EventSerializer(serializers.ModelSerializer):
@@ -45,7 +44,7 @@ class EventFileImportSerializer(serializers.ModelSerializer):
                     date=data["date"],
                     description=data["description"],
                     place=Place.objects.get(pk=int(data["place"])),
-                    is_cancelled=False
+                    is_active=True
                 )
 
         elif Path(event_file.file.name).suffix == ".ics":
@@ -63,7 +62,7 @@ class EventFileImportSerializer(serializers.ModelSerializer):
                                 date=component.get('dtstart').dt,
                                 description=f"{component.get('description')}",
                                 place=get_or_create_place(component.get('location')),
-                                is_cancelled=False
+                                is_active=True
                             ))
                         except TypeError as e:
                             print(f"HOWDY, WE GOT TYPERRROR: {e}")

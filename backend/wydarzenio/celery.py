@@ -23,15 +23,15 @@ def debug_task(self):
 
 app.conf.beat_schedule = {
     #Scheduler Name
-    'mark-as-cancelled-every-12hours': {
+    'mark-as-inactive-every-12hours': {
         # Task Name (Name Specified in Decorator)
-        'task': 'mark_as_cancelled',  
+        'task': 'mark_as_inactive',  
         # Schedule      
         'schedule': 12 * 60 * 60 * 60 * 1.0,
     },
-    'mark-as-cancelled-every-ten-seconds': {
+    'mark-as-inactive-every-ten-seconds': {
         # Task Name (Name Specified in Decorator)
-        'task': 'mark_as_cancelled_DEBUG',  
+        'task': 'mark_as_inactive_DEBUG',  
         # Schedule      
         'schedule': 10 * 1.0,
         # Function Arguments 
