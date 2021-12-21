@@ -13,6 +13,10 @@ Open five terminals and run following commmands in each:
 
 - `./node_modules/.bin/cypress open`
 
+Kill all Celery services and delete logs:
+
+`kill -9 $(ps aux | grep celery | grep -v grep | awk '{print $2}' | tr '\n' ' ') > /dev/null 2>&1 | rm backend/celery.beat.log && rm backend/celery.log && rm backend/celerybeat-schedule.db`
+
 # Backend
 
 `cd backend`
@@ -46,10 +50,6 @@ Run it:
 Run Celery in another shell:
 
 `celery -A wydarzenio worker -l info`
-
-Kill all Celery services:
-
-`kill -9 $(ps aux | grep celery | grep -v grep | awk '{print $2}' | tr '\n' ' ') > /dev/null 2>&1`
 
 # Frontend
 

@@ -23,42 +23,55 @@ const emptyPlace = {
 };
 
 function App() {
-  const [viewActive, setViewActive] = useState(true);
-  const [listDisplay, setListDisplay] = useState(true);
+  const [viewActive, setViewActive] = useState("All"); // allowed states should be "Active", "All", "Inactive"
+  const [gridDisplay, setGridDisplay] = useState(true);
   const [eventModal, setEventModal] = useState(false);
   const [placeModal, setPlaceModal] = useState(false);
   const [importModal, setImportModal] = useState(false);
   const [sortReversed, setSortReversed] = useState(false);
   const [searchPhrase, setSearchPhrase] = useState("");
-  const [eventsList, setEventsList] = useState([]);
+  const [eventsGrid, setEventsGrid] = useState([]);
   const [activeEvent, setActiveEvent] = useState({ ...emptyEvent });
   const [activePlace, setActivePlace] = useState({ ...emptyPlace });
 
   useEffect(() => {
-    refreshList();
+    refreshGrid();
   }, []);
 
-  const refreshList = () => {
+  const refreshGrid = () => {
     axios
       .get(`${config.url}events/`)
-      .then((res) => setEventsList(res.data))
+      .then((res) => setEventsGrid(res.data))
       .catch((err) => console.log(err));
   };
 
   const getActiveEvents = () => {
-    let arr = eventsList
-      .filter((event) => event.is_active === viewActive)
-      .sort((a, b) => new Date(b.date) - new Date(a.date));
+    let arr = eventsGrid;
+    arr = eventsGrid.sort((a, b) => new Date(b.date) - new Date(a.date));
+
     if (searchPhrase.length > 0) {
       // TODO search for ":", "/" etc will raise error
       arr = arr.filter((event) =>
         event.title.toLowerCase().match(searchPhrase.toLowerCase())
       );
     }
+    if (viewActive !== "All") {
+      arr = arr.filter(
+        (event) => event.is_active === (viewActive === "Active")
+      );
+    }
+
     if (sortReversed) {
       return arr.reverse();
     }
+
     return arr;
+  };
+
+  const switchActive = () => {
+    if (viewActive === "All") setViewActive("Active");
+    else if (viewActive === "Active") setViewActive("Inactive");
+    else if (viewActive === "Inactive") setViewActive("All");
   };
 
   const getActiveEventsForCalendarView = () => {
@@ -77,7 +90,7 @@ function App() {
   const renderEventButtons = (event) => {
     return (
       <span>
-        {viewActive ? (
+        {event.is_active ? (
           <span>
             <button
               className="btn btn-info mx-2"
@@ -114,32 +127,36 @@ function App() {
           <input
             className={`search-input ${
               searchPhrase !== "" ? "toggle" : null
-            } justify-items-center`}
+            } justify-items-center dark:bg-slate-800`}
             placeholder="Search event title"
             onChange={(input) => setSearchPhrase(input.target.value)}
           />
+          {/* <button className="btn" onClick={() => setTheme("light")}>
+            Theme
+          </button> */}
           <button
             className="btn"
             onClick={() => setSortReversed(!sortReversed)}
           >
             {sortReversed ? "⬆" : "⬇"}
           </button>
-          <button className="btn" onClick={refreshList}>
+          <button className="btn" onClick={refreshGrid}>
             ↺
           </button>
         </div>
         <div className={"menu-buttons"}>
+          {/* TODO make triple switch */}
           <button
-            className={`btn toggle ${viewActive ? "active" : ""}`}
-            onClick={() => setViewActive(!viewActive)}
+            className={`btn ${viewActive !== "All" ? "toggle active" : ""}`}
+            onClick={switchActive}
           >
-            {viewActive ? "Active" : "Active"} events
+            {viewActive} events
           </button>
           <button
-            className={`btn toggle ${listDisplay ? "" : "active"}`}
-            onClick={() => setListDisplay(!listDisplay)}
+            className={`btn toggle ${gridDisplay ? "" : "active"}`}
+            onClick={() => setGridDisplay(!gridDisplay)}
           >
-            {listDisplay ? "List" : "Calendar"} view
+            {gridDisplay ? "Grid" : "Calendar"} view
           </button>
           |
           <button className="btn modal" onClick={() => createEvent(false)}>
@@ -162,26 +179,54 @@ function App() {
     );
   };
 
-  const renderListItems = () => {
+  const renderGridItems = () => {
     const activeEvents = getActiveEvents();
 
     return activeEvents.map((event) => (
-      <li key={event.id} className="events-list-row">
-        <span
-          className={`event-title ${viewActive ? "active-event" : ""}`}
-          title={event.title}
+      <div className="p-4 md:w-1/3" key={event.id}>
+        <div
+          className={`h-full border-2 ${
+            event.is_active
+              ? "border-gray-200 dark:border-gray-800"
+              : "border-red-400"
+          } border-opacity-60 rounded-lg overflow-hidden`}
         >
-          {event.title}
-        </span>
-        <span className="event-date mr-2">{event.date}</span>
-        <span>{renderEventButtons(event)}</span>
-      </li>
+          <img
+            className="lg:h-48 md:h-36 w-full object-cover object-center"
+            src={`${
+              event.picture
+                ? event.picture
+                : "https://picsum.photos/720/400?grayscale&blur"
+            }`}
+            alt="blog"
+          />
+          <div className="p-6">
+            <h2 className="tracking-widest text-xs title-font font-medium text-gray-400 mb-1">
+              {event.date} at {event.place_name}
+            </h2>
+            <h1
+              className={`title-font text-lg font-medium hover:cursor-pointer ${
+                event.is_active
+                  ? "hover:underline text-gray-900 dark:text-zinc-100"
+                  : "line-through text-red-900 dark:text-red-300"
+              } mb-3`}
+            >
+              {event.title}
+            </h1>
+
+            <p className="leading-relaxed mb-3 truncate">{event.description}</p>
+            <div className="flex items-center flex-wrap ">
+              <span>{renderEventButtons(event)}</span>
+            </div>
+          </div>
+        </div>
+      </div>
     ));
   };
 
   const toggleAndRefreshEvents = () => {
     setEventModal(false);
-    refreshList();
+    refreshGrid();
   };
 
   const changeActive = (event) => {
@@ -189,11 +234,11 @@ function App() {
       .patch(`${config.url}events/${event.id}/`, {
         is_active: !event.is_active,
       })
-      .then((res) => refreshList());
+      .then((res) => refreshGrid());
   };
 
   const handleDelete = (event) => {
-    axios.delete(`${config.url}events/${event.id}/`).then(() => refreshList());
+    axios.delete(`${config.url}events/${event.id}/`).then(() => refreshGrid());
   };
 
   const createEvent = (is_import = false) => {
@@ -214,36 +259,24 @@ function App() {
 
   return (
     <main className="context">
-      <div className="mx-auto">
-        <div
-          // colorOverlay="#aaaaff"
-          // className="blur-lg"
-          // opacity="0.5"
-          width="100%"
-          height="5%"
-          // blur={10}
-        >
+      <div className="px-auto">
+        <div width="100%" height="5%">
           <h1 className="text-3xl font-bold underline">
             <a href="/">wydarzen.io</a>
           </h1>
         </div>
-        <div
-          // colorOverlay="#aaaaff"
-          // opacity="0.5"
-          width="100%"
-          height="5%"
-          top="10"
-          className="menu-buttons"
-          // blur={10}
-        >
+        <div width="100%" height="5%" className="menu-buttons">
           {renderMenuButtons()}
         </div>
       </div>
       <div className="row mx-100 my-5">
-        <div className="col-md-6 col-sma-10 mx-auto p-0"></div>
         <div className="card p-3 mx-5">
-          {listDisplay ? (
-            <ul className="list-group">{renderListItems()}</ul>
+          {gridDisplay ? (
+            <section className="text-gray-600 dark:text-grey-200 body-font">
+              <div className="container px-5 py-5 mx-auto">
+                <div className="flex flex-wrap -m-4">{renderGridItems()}</div>
+              </div>
+            </section>
           ) : (
             <div>
               {
