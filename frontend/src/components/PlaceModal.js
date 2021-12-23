@@ -30,9 +30,9 @@ function CustomModal(props) {
   };
 
   return (
-    <section className="text-gray-600 body-font relative">
-      <div className="container px-5 py-24 mx-auto flex sm:flex-nowrap flex-wrap">
-        <div className="lg:w-2/3 md:w-1/2  rounded-lg overflow-hidden sm:mr-10 p-10 flex items-end justify-start relative">
+    <section className="modal-section">
+      <div className="modal-container mx-auto flex sm:flex-nowrap flex-wrap">
+        <div className="lg:w-full md:w-full rounded-lg overflow-hidden sm:mr-10 p-10 flex items-end justify-start relative">
           <iframe
             width="100%"
             height="100%"
@@ -46,73 +46,63 @@ function CustomModal(props) {
             onChange={(e) => setCountry(e.target.value)}
           ></iframe>
         </div>
-        <div className="lg:w-1/3 md:w-1/2  flex flex-col md:ml-auto w-full md:py-8 mt-8 md:mt-0">
-          <h2 className=" text-lg mb-1 font-medium title-font">Add place</h2>
-          <p className="leading-relaxed mb-5 ">
+        <div className="modal-header">
+          <h1 className="modal-header-h1">Add place</h1>
+          <p className="modal-label">
             Create new place in database - you have to enter it manually, but
             fetching data from maps API is on TODO list :)
           </p>
-          <div className="relative mb-4">
-            <label
-              htmlFor="name"
-              className="leading-7 text-sm dark:text-gray-200"
-            >
-              Name
-            </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              onChange={(e) => setName(e.target.value)}
-              className="input-map"
-            />
+          <div className="modal-full-row">
+            <div className="modal-label-input">
+              <label htmlFor="name" className="modal-label">
+                Name
+              </label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                onChange={(e) => setName(e.target.value)}
+                className="modal-input"
+              />
+            </div>
+            <div className="modal-label-input">
+              <label htmlFor="name" className="modal-label">
+                Country
+              </label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                onChange={(e) => setCountry(e.target.value)}
+                className="modal-input"
+              />
+            </div>
           </div>
 
-          <div className="relative mb-4">
-            <label
-              htmlFor="name"
-              className="leading-7 text-sm text-gray-600 dark:text-gray-200"
-            >
-              Coordinates
-            </label>
-            <span>
+          <div className="modal-full-row">
+            <div className="modal-label-input">
+              <label htmlFor="name" className="modal-label">
+                Coordinates
+              </label>
               <input
                 type="number"
                 id="lat"
                 name="lat"
+                placeholder="Lat"
                 onChange={(e) => setLat(e.target.value)}
-                className="input-map"
+                className="modal-input"
               />
               <input
                 type="number"
                 id="long"
                 name="long"
+                placeholder="Long"
                 onChange={(e) => setLong(e.target.value)}
-                className="input-map"
+                className="modal-input my-2"
               />
-            </span>
+            </div>
           </div>
-
-          <div className="relative mb-4">
-            <label
-              htmlFor="name"
-              className="leading-7 text-sm text-gray-600 dark:text-gray-200"
-            >
-              Country
-            </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              onChange={(e) => setCountry(e.target.value)}
-              className="input-map"
-            />
-          </div>
-
-          <button
-            className="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg"
-            onClick={postData}
-          >
+          <button className="modal-save my-6" onClick={postData}>
             Save
           </button>
         </div>

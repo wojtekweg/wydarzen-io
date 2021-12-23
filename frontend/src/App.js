@@ -258,6 +258,9 @@ function App() {
   };
 
   const editEvent = (event) => {
+    // TODO hide modal when scrolled
+    document.body.scrollTop = 0; // scroll to top for Safari
+    document.documentElement.scrollTop = 0; // as above, but for Chrome, Firefox, IE and Opera
     setActiveEvent(event);
     setEventModal(!eventModal);
   };

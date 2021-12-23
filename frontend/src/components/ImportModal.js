@@ -42,48 +42,46 @@ const CustomModal = (props) => {
   };
 
   return (
-    <div isOpen={true} toggle={props.toggle}>
-      <div toggle={props.toggle}>Import event</div>
-      <div>
-        <p>
-          For exporting your events refer to{" "}
-          <a href="https://www.facebook.com/help/152652248136178/">
-            Facebook help page
-          </a>
-          .
-        </p>
-        <p>
-          You can import .ics or .json files here directly. No personal
-          information is processed, but if you want to have full control of what
-          is processed, you can manually edit the .json file before uploading.
-        </p>
-        <div>
-          <div>
-            <p for="file">
-              <b>Calendar file</b>
-            </p>
+    <section className="modal-section">
+      <div className="modal-container">
+        <div className="modal-header">
+          <h1 className="modal-header-h1">Import events</h1>
+          <p className="modal-p">
+            For exporting your events refer to{" "}
+            <a href="https://www.facebook.com/help/152652248136178/">
+              Facebook help page
+            </a>
+            . You can import .ics or .json files here directly. No personal
+            information is processed, but if you want to have full control of
+            what is processed, you can manually edit the .json file before
+            uploading.
+          </p>
+        </div>
+        <div className="modal-full-row py-2">
+          <div className="w-full">
+            <label htmlFor="calendar-file" className="modal-label">
+              Calendar file
+            </label>
+
             <br />
             <input
               type="file"
               id="file"
               label="calendar file"
               onChange={(e) => setUploadedFile(e.target.files[0])}
+              className="modal-input"
               accept="application/json, text/calendar"
             />
           </div>
+
+          <div className="modal-full-row">
+            <button className="modal-save" onClick={postData} type="submit">
+              Save
+            </button>
+          </div>
         </div>
-        {uploadedFile === null ? null : (
-          <span className="code">
-            <p>{printFormData(uploadedFile)}</p>
-          </span>
-        )}
       </div>
-      <div>
-        <button color="success" onClick={postData} type="submit">
-          Save
-        </button>
-      </div>
-    </div>
+    </section>
   );
 };
 

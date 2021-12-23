@@ -78,65 +78,66 @@ function CustomModal(props) {
   };
 
   return (
-    <div isOpen={true} toggle={props.toggle}>
-      <h3 toggle={props.toggle}>Event</h3>
-      <div>
-        <div>
-          <div>
-            <p for="title">Title</p>
+    <section className="modal-section" id="my-modal">
+      <div className="modal-container">
+        <div className="modal-header">
+          <h1 className="modal-header-h1">
+            {typeof props.activeEvent != "undefined" &&
+            typeof props.activeEvent.id != "undefined"
+              ? "Edit"
+              : "Add"}{" "}
+            event
+          </h1>
+          <p className="modal-p">
+            {typeof props.activeEvent != "undefined" &&
+            typeof props.activeEvent.id != "undefined"
+              ? "Edit the selected event. Remember that event will be automatically marked as inactive after it is past."
+              : "Add an event to the database."}
+          </p>
+        </div>
+        <div className="event-modal-title modal-full-row">
+          <div className="modal-label-input">
+            <label htmlFor="title" className="modal-label">
+              Title
+            </label>
             <input
               type="text"
+              id="title"
               name="title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Enter event title"
+              className="modal-input"
             />
           </div>
-
-          <div>
-            <p for="description">Description</p>
+        </div>
+        <div className="event-modal-description py-2 modal-full-row">
+          <div className="modal-label-input">
+            <label htmlFor="description" className="modal-label">
+              Description
+            </label>
             <input
               type="text"
               name="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Enter event description"
+              className="modal-input h-32 text-base break-all	resize pre"
             />
           </div>
-
-          <div>
-            <p for="date">Date</p>
-            <input
-              type="date"
-              name="date"
-              onChange={(e) => setDate(e.target.value)}
-              value={date}
-            />
-          </div>
-
-          <div check>
-            <p for="active">
-              <input
-                // TODO activating events is not working
-                type="checkbox"
-                name="active"
-                checked={is_active}
-                onChange={(e) => setActive(e.target.value)}
-              />
-              Active
-            </p>
-          </div>
-
-          <div>
-            <p for="picture">Picture</p>
-
+        </div>
+        <div className="event-modal-picture-and-place py-2 modal-full-row">
+          <div className="event-modal-picture modal-label-input">
+            <label for="picture" class="modal-label">
+              Picture
+            </label>
             {pictureUploadError !== null ? (
               <p>
                 <b>❗ {pictureUploadError}</b>
               </p>
             ) : (
               <br />
-            )}
+            )}{" "}
             {isPictureUploadDisabled ? (
               <p>
                 ℹ️ File is already uploaded, editing uploaded files is not yet
@@ -144,6 +145,7 @@ function CustomModal(props) {
               </p>
             ) : (
               <input
+                class="modal-input"
                 type="file"
                 id="picture"
                 label="picture file"
@@ -153,14 +155,66 @@ function CustomModal(props) {
               />
             )}
           </div>
+          <div class="event-modal-place modal-label-input">
+            <label htmlFor="place" className="modal-label">
+              Place
+            </label>
+            <p htmlFor="place">
+              <input
+                // TODO edit place
+                type="text"
+                name="place"
+                className="input-map"
+                disabled="true"
+                placeholder={
+                  typeof props.activeEvent != "undefined" &&
+                  typeof props.activeEvent.id != "undefined" &&
+                  props.activeEvent.place_name !== ""
+                    ? props.activeEvent.place_name
+                    : "Editing place is not yet possible"
+                }
+              />
+            </p>
+          </div>
+        </div>
+        <div className="event-modal-footer modal-full-row">
+          <div className="event-modal-date w-full">
+            <label class="modal-label" htmlFor="date">
+              Date
+            </label>
+            <input
+              type="date"
+              name="date"
+              onChange={(e) => setDate(e.target.value)}
+              value={date}
+              className="modal-input"
+            />
+          </div>
+          {/* 
+          <div class="event-modal-is_active">
+            <label class="leading-7 text-sm text-gray-600" htmlFor="active">
+              Active
+            </label>
+            <input
+              class="form-check-input appearance-none h-10 w-10 border border-gray-900 rounded-sm 
+                  bg-green-200 checked:bg-red-900 checked:border-red-600 focus:outline-none 
+                  transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left 
+                  mr-2 cursor-pointer"
+              type="checkbox"
+              value={is_active}
+              name="active"
+              onChange={(e) => setActive(e.target.value)}
+            />
+          </div> */}
+
+          <div class="event-modal-save modal-full-row">
+            <button className="modal-save" onClick={postData}>
+              Save
+            </button>
+          </div>
         </div>
       </div>
-      <div>
-        <button color="success" onClick={postData}>
-          Save
-        </button>
-      </div>
-    </div>
+    </section>
   );
 }
 

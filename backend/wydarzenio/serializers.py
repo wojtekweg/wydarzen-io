@@ -6,9 +6,6 @@ from .helpers import get_or_create_place
 import json
 
 
-def get_place_name(obj):
-    return obj.place.name
-
 
 class EventSerializer(serializers.ModelSerializer):
     place_name = serializers.SerializerMethodField(source='get_place_name')
@@ -16,6 +13,9 @@ class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         fields = '__all__'
+    
+    def get_place_name(self, obj):
+        return obj.place.name
 
 
 class PlaceSerializer(serializers.ModelSerializer):
