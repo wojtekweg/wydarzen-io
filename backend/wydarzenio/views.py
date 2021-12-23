@@ -1,5 +1,4 @@
 from rest_framework import viewsets
-from rest_framework.decorators import action
 from .serializers import EventSerializer, PlaceSerializer, EventFileImportSerializer
 from .models import Event, Place, EventFileImport
 

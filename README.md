@@ -31,6 +31,8 @@ Kill all Celery services and delete logs:
 
 local superuser: admin / admin
 
+backend test coverage: `coverage run --source='.' manage.py test wydarzenio && coverage report`
+
 ## Install Redis
 
 Redis is needed to use Celery, which is used for asynchronious features.

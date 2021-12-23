@@ -6,3 +6,5 @@ redis
 celery.log
 celery.beat.log
 celerybeat-schedule.db
+dump.rdb
+backend/media/event/posters/test_file.jpeg

@@ -6,7 +6,7 @@ cracow_coords = {"lat": 50.049683, "long": 19.944544}
 
 
 class Place(models.Model):
-    name = models.CharField(max_length=128)
+    name = models.CharField(max_length=128, unique=True)
     country = CountryField()
     lat = models.DecimalField(max_digits=9, decimal_places=6, default=cracow_coords["lat"])
     long = models.DecimalField(max_digits=9, decimal_places=6, default=cracow_coords["long"])
@@ -40,6 +40,7 @@ class EventFileImport(models.Model):
         upload_to="event/file_imports",
         null=False,
         blank=False,
+        unique=True,
         validators=[FileExtensionValidator(['ics', 'json'])])
     upload_date = models.DateTimeField(auto_now=True)
 
