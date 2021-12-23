@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
-import config from "../config.json";
+import config from "../../config.json";
+import { emptyEvent } from "../../helpers/api_methods";
 
 // TODO create helpers and cleanup
 const logError = (error) => {
@@ -13,14 +14,15 @@ const logError = (error) => {
   }
 };
 
-function CustomModal(props) {
-  const [title, setTitle] = useState(props.activeEvent.title);
-  const [description, setDescription] = useState(props.activeEvent.description);
-  const [date, setDate] = useState(props.activeEvent.date);
-  const [is_active, setActive] = useState(props.activeEvent.is_active);
-  const [picture, setPicture] = useState(props.activeEvent.picture);
+function EventModal(props) {
+  const [title, setTitle] = useState(emptyEvent.title);
+  const [description, setDescription] = useState(emptyEvent.description);
+  const [date, setDate] = useState(emptyEvent.date);
+  const [is_active] = useState(emptyEvent.is_active);
+  const [picture, setPicture] = useState(emptyEvent.picture);
   const isPictureUploadDisabled = !!picture;
   const [pictureUploadError, setPictureUploadError] = useState(null);
+  const [toggle, setToggle] = useState(props.isOpen);
 
   const printInvalidPicture = (errorMessage) => {
     console.error(errorMessage);
@@ -48,7 +50,7 @@ function CustomModal(props) {
   const postData = () => {
     // Copy all information we have about event object and update it from states
     const event = {
-      ...props.activeEvent,
+      ...emptyEvent,
       title: title,
       description: description,
       date: date,
@@ -75,22 +77,27 @@ function CustomModal(props) {
       );
       axios.post(config.url + "events/", formData).catch(logError);
     }
+
+    setToggle(false);
   };
 
   return (
-    <section className="modal-section" id="my-modal">
+    <section
+      className={`modal-section ${toggle ? "" : "invisible"}`}
+      id="popup-modal"
+    >
       <div className="modal-container">
         <div className="modal-header">
           <h1 className="modal-header-h1">
-            {typeof props.activeEvent != "undefined" &&
-            typeof props.activeEvent.id != "undefined"
+            {typeof emptyEvent != "undefined" &&
+            typeof emptyEvent.id != "undefined"
               ? "Edit"
               : "Add"}{" "}
             event
           </h1>
           <p className="modal-p">
-            {typeof props.activeEvent != "undefined" &&
-            typeof props.activeEvent.id != "undefined"
+            {typeof emptyEvent != "undefined" &&
+            typeof emptyEvent.id != "undefined"
               ? "Edit the selected event. Remember that event will be automatically marked as inactive after it is past."
               : "Add an event to the database."}
           </p>
@@ -128,7 +135,7 @@ function CustomModal(props) {
         </div>
         <div className="event-modal-picture-and-place py-2 modal-full-row">
           <div className="event-modal-picture modal-label-input">
-            <label for="picture" class="modal-label">
+            <label htmlFor="picture" className="modal-label">
               Picture
             </label>
             {pictureUploadError !== null ? (
@@ -145,7 +152,7 @@ function CustomModal(props) {
               </p>
             ) : (
               <input
-                class="modal-input"
+                className="modal-input"
                 type="file"
                 id="picture"
                 label="picture file"
@@ -155,7 +162,7 @@ function CustomModal(props) {
               />
             )}
           </div>
-          <div class="event-modal-place modal-label-input">
+          <div className="event-modal-place modal-label-input">
             <label htmlFor="place" className="modal-label">
               Place
             </label>
@@ -165,12 +172,12 @@ function CustomModal(props) {
                 type="text"
                 name="place"
                 className="input-map"
-                disabled="true"
+                disabled={true}
                 placeholder={
-                  typeof props.activeEvent != "undefined" &&
-                  typeof props.activeEvent.id != "undefined" &&
-                  props.activeEvent.place_name !== ""
-                    ? props.activeEvent.place_name
+                  typeof emptyEvent != "undefined" &&
+                  typeof emptyEvent.id != "undefined" &&
+                  emptyEvent.place_name !== ""
+                    ? emptyEvent.place_name
                     : "Editing place is not yet possible"
                 }
               />
@@ -179,7 +186,7 @@ function CustomModal(props) {
         </div>
         <div className="event-modal-footer modal-full-row">
           <div className="event-modal-date w-full">
-            <label class="modal-label" htmlFor="date">
+            <label className="modal-label" htmlFor="date">
               Date
             </label>
             <input
@@ -191,12 +198,12 @@ function CustomModal(props) {
             />
           </div>
           {/* 
-          <div class="event-modal-is_active">
-            <label class="leading-7 text-sm text-gray-600" htmlFor="active">
+          <div className="event-modal-is_active">
+            <label className="leading-7 text-sm text-gray-600" htmlFor="active">
               Active
             </label>
             <input
-              class="form-check-input appearance-none h-10 w-10 border border-gray-900 rounded-sm 
+              className="form-check-input appearance-none h-10 w-10 border border-gray-900 rounded-sm 
                   bg-green-200 checked:bg-red-900 checked:border-red-600 focus:outline-none 
                   transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left 
                   mr-2 cursor-pointer"
@@ -207,7 +214,10 @@ function CustomModal(props) {
             />
           </div> */}
 
-          <div class="event-modal-save modal-full-row">
+          <div className="event-modal-save modal-full-row">
+            <button className="modal-cancel" onClick={(e) => setToggle(false)}>
+              Cancel
+            </button>
             <button className="modal-save" onClick={postData}>
               Save
             </button>
@@ -218,4 +228,4 @@ function CustomModal(props) {
   );
 }
 
-export default CustomModal;
+export { EventModal };

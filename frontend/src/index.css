@@ -116,7 +116,30 @@ input {
 }
 
 .modal-section {
-  @apply text-gray-600 border border-indigo-700 m-10 rounded-xl;
+  position: fixed;
+  z-index: 1; /* Sit on top */
+  overflow: auto; /* Enable scroll if needed */
+  left: 0;
+  top: 0;
+  @apply text-gray-600 border-4 border-indigo-700 m-10 rounded-xl bg-white dark:bg-gray-800;
+  @keyframes animatetop {
+    from {
+      top: -300px;
+      opacity: 0;
+    }
+    to {
+      top: 0;
+      opacity: 1;
+    }
+  }
+}
+
+.modal-close {
+  position: fixed;
+  z-index: 1; /* Sit on top */
+  overflow: auto; /* Enable scroll if needed */
+  right: 0;
+  top: 0;
 }
 
 .modal-container {
@@ -155,4 +178,8 @@ input {
 
 .modal-save {
   @apply py-2 flex-auto h-11 text-white bg-indigo-500 border-0 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg;
+}
+
+.modal-cancel {
+  @apply py-2 flex-auto h-11 text-white bg-gray-500 border-0 px-8 focus:outline-none hover:bg-red-400 rounded text-lg;
 }

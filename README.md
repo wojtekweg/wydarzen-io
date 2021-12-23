@@ -61,6 +61,10 @@ Run Celery in another shell:
 
 `npm start`
 
+To interactive update of NPM packages:
+
+`npm-check -u`
+
 # UI tests
 
 `./node_modules/.bin/cypress open`

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import config from "../config.json";
+import config from "../../config.json";
 
 // TODO create helpers and cleanup
 const logError = (error) => {
@@ -13,24 +13,9 @@ const logError = (error) => {
   }
 };
 
-const printFormData = (formData) => {
-  // TODO printing is not working properly
-  let retString = "";
-  // for (var [key, value] of formData) {
-  //   retString += `${key}: ${value}`;
-
-  //   if (value instanceof FormData) {
-  //     for (var [key2, value2] of value) {
-  //       retString += `${key2}: ${value2}`;
-  //     }
-  //   }
-  // }
-  return retString;
-};
-
 const CustomModal = (props) => {
-  // const [toggle, setToggle] = useState(props.toggle);
   const [uploadedFile, setUploadedFile] = useState(null);
+  const [toggle, setToggle] = useState(props.isOpen);
 
   const postData = async () => {
     const formData = new FormData();
@@ -38,11 +23,16 @@ const CustomModal = (props) => {
     await axios
       .post(config.url + "event_file_upload/", formData)
       .catch(logError);
+
+    setToggle(false);
     return;
   };
 
   return (
-    <section className="modal-section">
+    <section
+      className={`modal-section ${toggle ? "" : "invisible"}`}
+      id="popup-modal"
+    >
       <div className="modal-container">
         <div className="modal-header">
           <h1 className="modal-header-h1">Import events</h1>
@@ -75,6 +65,12 @@ const CustomModal = (props) => {
           </div>
 
           <div className="modal-full-row">
+            <button
+              className="modal-cancel w-1/12"
+              onClick={(e) => setToggle(false)}
+            >
+              Cancel
+            </button>
             <button className="modal-save" onClick={postData} type="submit">
               Save
             </button>

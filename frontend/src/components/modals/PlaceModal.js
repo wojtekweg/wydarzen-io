@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import axios from "axios";
+import config from "../../config.json";
 
 function CustomModal(props) {
   const [name, setName] = useState(props.activePlace.name);
   const [country, setCountry] = useState(props.activePlace.country);
   const [lat, setLat] = useState(props.activePlace.lat);
   const [long, setLong] = useState(props.activePlace.long);
+  const [toggle, setToggle] = useState(props.isOpen);
 
-  const postData = () => {
+  const postData = (props) => {
     const place = {
       ...props.activePlace,
       name: name,
@@ -16,21 +18,19 @@ function CustomModal(props) {
       long: long,
     };
 
-    // TODO is below logic is good? shouldnt there be another check?
-
-    // TODO recheck if backend sends place id
-
-    console.log(place);
-
     if (typeof place === "undefined" || typeof place.id === "undefined") {
-      axios.post("http://localhost:8000/api/places/", place);
+      axios.post(config.url + "places/", place);
       return;
     }
-    axios.put(`http://localhost:8000/api/palces/${place.id}/`, place);
+    axios.put(`${config.url}palces/${place.id}/`, place);
+    setToggle(false);
   };
 
   return (
-    <section className="modal-section">
+    <section
+      className={`modal-section ${toggle ? "" : "invisible"}`}
+      id="popup-modal"
+    >
       <div className="modal-container mx-auto flex sm:flex-nowrap flex-wrap">
         <div className="lg:w-full md:w-full rounded-lg overflow-hidden sm:mr-10 p-10 flex items-end justify-start relative">
           <iframe
@@ -102,9 +102,14 @@ function CustomModal(props) {
               />
             </div>
           </div>
-          <button className="modal-save my-6" onClick={postData}>
-            Save
-          </button>
+          <div className="modal-full-row my-6">
+            <button className="modal-cancel" onClick={(e) => setToggle(false)}>
+              Cancel
+            </button>
+            <button className="modal-save" onClick={postData}>
+              Save
+            </button>
+          </div>
         </div>
       </div>
     </section>

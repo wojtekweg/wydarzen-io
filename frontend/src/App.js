@@ -1,46 +1,23 @@
 import React, { useEffect, useState } from "react";
-import "./App.css";
-import EventModal from "./components/EventModal";
-import PlaceModal from "./components/PlaceModal";
-import ImportModal from "./components/ImportModal";
 import axios from "axios";
 import config from "./config.json";
 import MyCalendar from "./components/3rd-party/reactBigCalendar";
-
-const emptyEvent = {
-  title: "",
-  description: "",
-  is_active: true,
-  date: "2021-01-01",
-  place: 1,
-  place_name: "",
-  picture: null,
-};
-
-const emptyPlace = {
-  name: "",
-  country: "",
-  lat: "",
-  long: "",
-};
+import { Navbar } from "./components/Navbar";
+import { emptyEvent } from "./helpers/api_methods";
 
 function App() {
   const [viewActive, setViewActive] = useState("All"); // allowed states should be "Active", "All", "Inactive"
   const [gridDisplay, setGridDisplay] = useState(true);
-  const [eventModal, setEventModal] = useState(false);
-  const [placeModal, setPlaceModal] = useState(false);
-  const [importModal, setImportModal] = useState(false);
   const [sortReversed, setSortReversed] = useState(false);
   const [searchPhrase, setSearchPhrase] = useState("");
   const [eventsGrid, setEventsGrid] = useState([]);
   const [activeEvent, setActiveEvent] = useState({ ...emptyEvent });
-  const [activePlace, setActivePlace] = useState({ ...emptyPlace });
 
   useEffect(() => {
     refreshGrid();
   }, []);
 
-  const refreshGrid = () => {
+  const refreshGrid = async () => {
     axios
       .get(`${config.url}events/`)
       .then((res) => setEventsGrid(res.data))
@@ -122,68 +99,6 @@ function App() {
     );
   };
 
-  const renderMenuButtons = () => {
-    return (
-      <div>
-        <div className={"menu-buttons"}>
-          <input
-            className={`search-input ${
-              searchPhrase !== "" ? "toggle" : null
-            } justify-items-center dark:bg-slate-800`}
-            placeholder="Search event title"
-            onChange={(input) => setSearchPhrase(input.target.value)}
-          />
-          {/* <button className="btn" onClick={() => setTheme("light")}>
-            Theme
-          </button> */}
-          <button
-            className="btn"
-            onClick={() => setSortReversed(!sortReversed)}
-          >
-            {sortReversed ? "⬆" : "⬇"}
-          </button>
-          <button className="btn" onClick={refreshGrid}>
-            ↺
-          </button>
-        </div>
-        <div className={"menu-buttons"}>
-          {/* TODO make triple switch */}
-          <button
-            className={`btn ${viewActive !== "All" ? "toggle active" : ""}`}
-            onClick={switchActive}
-          >
-            {viewActive} events
-          </button>
-          <button
-            className={`btn toggle ${gridDisplay ? "" : "active"}`}
-            onClick={() => setGridDisplay(!gridDisplay)}
-          >
-            {gridDisplay ? "Grid" : "Calendar"} view
-          </button>
-          |
-          <button
-            className={`btn modal ${eventModal ? "toggle" : ""}`}
-            onClick={() => createEvent(false)}
-          >
-            Add event
-          </button>
-          <button
-            className={`btn modal ${importModal ? "toggle" : ""}`}
-            onClick={() => createEvent(true)}
-          >
-            Import event
-          </button>
-          <button
-            className={`btn modal ${placeModal ? "toggle" : ""}`}
-            onClick={createPlace}
-          >
-            Add place
-          </button>
-        </div>
-      </div>
-    );
-  };
-
   const renderGridItems = () => {
     const activeEvents = getActiveEvents();
 
@@ -229,11 +144,6 @@ function App() {
     ));
   };
 
-  const toggleAndRefreshEvents = () => {
-    setEventModal(false);
-    refreshGrid();
-  };
-
   const changeActive = (event) => {
     axios
       .patch(`${config.url}events/${event.id}/`, {
@@ -246,58 +156,58 @@ function App() {
     axios.delete(`${config.url}events/${event.id}/`).then(() => refreshGrid());
   };
 
-  const createEvent = (is_import = false) => {
-    setActiveEvent({ ...emptyEvent });
-    if (is_import) setImportModal(!importModal);
-    else setEventModal(!eventModal);
-  };
-
-  const createPlace = () => {
-    setActivePlace({ ...emptyPlace });
-    setPlaceModal(!placeModal);
+  const renderEventsFiltering = () => {
+    return (
+      <div width="100%" height="5%" className="menu-buttons">
+        <div className={"menu-buttons"}>
+          <input
+            className={`search-input ${
+              searchPhrase !== "" ? "toggle" : null
+            } justify-items-center dark:bg-slate-800`}
+            placeholder="Search event title"
+            onChange={(input) => setSearchPhrase(input.target.value)}
+          />
+          {/* <button className="btn" onClick={() => setTheme("light")}>
+              Theme
+            </button> */}
+          <button
+            className="btn"
+            onClick={() => setSortReversed(!sortReversed)}
+          >
+            {sortReversed ? "⬆" : "⬇"}
+          </button>
+          <button className="btn" onClick={refreshGrid}>
+            ↺
+          </button>
+        </div>
+        <div className={"menu-buttons"}>
+          {/* TODO make triple switch */}
+          <button
+            className={`btn ${viewActive !== "All" ? "toggle active" : ""}`}
+            onClick={switchActive}
+          >
+            {viewActive} events
+          </button>
+          <button
+            className={`btn toggle ${gridDisplay ? "" : "active"}`}
+            onClick={() => setGridDisplay(!gridDisplay)}
+          >
+            {gridDisplay ? "Grid" : "Calendar"} view
+          </button>
+        </div>
+      </div>
+    );
   };
 
   const editEvent = (event) => {
-    // TODO hide modal when scrolled
-    document.body.scrollTop = 0; // scroll to top for Safari
-    document.documentElement.scrollTop = 0; // as above, but for Chrome, Firefox, IE and Opera
+    // TODO display edit on another site, not on index
     setActiveEvent(event);
-    setEventModal(!eventModal);
   };
 
   return (
     <main className="context">
-      <div className="px-auto">
-        <div width="100%" height="5%">
-          <h1 className="text-3xl font-bold underline">
-            <a href="/">wydarzen.io</a>
-          </h1>
-        </div>
-        <div width="100%" height="5%" className="menu-buttons">
-          {renderMenuButtons()}
-        </div>
-        {/* TODO fix modals  */}
-        {eventModal ? (
-          <EventModal
-            activeEvent={activeEvent}
-            toggle={() => setEventModal(!eventModal)}
-            onSave={toggleAndRefreshEvents}
-          />
-        ) : null}
-        {importModal ? (
-          <ImportModal
-            activeEvent={activeEvent}
-            toggle={() => setImportModal(!importModal)}
-            onSave={toggleAndRefreshEvents}
-          />
-        ) : null}
-        {placeModal ? (
-          <PlaceModal
-            activePlace={activePlace}
-            toggle={() => setPlaceModal(!placeModal)}
-          />
-        ) : null}
-      </div>
+      <Navbar />
+      {renderEventsFiltering()}
       <div className="row mx-100 my-5">
         <div className="card p-3 mx-5">
           {gridDisplay ? (
