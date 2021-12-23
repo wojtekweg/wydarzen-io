@@ -7,3 +7,5 @@ celery.log
 celery.beat.log
 celerybeat-schedule.db
 dump.rdb
+/backend/media
+db.sqlite3
