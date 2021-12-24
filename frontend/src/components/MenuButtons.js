@@ -50,13 +50,11 @@ const MenuButtons = (props) => {
         />
       ) : null}
       {placeModal ? (
-        <div>
-          <PlaceModal
-            activePlace={activePlace}
-            // toggle={() => setPlaceModal(false)}
-            isOpen={placeModal}
-          />
-        </div>
+        <PlaceModal
+          activePlace={activePlace}
+          // toggle={() => setPlaceModal(false)}
+          isOpen={placeModal}
+        />
       ) : null}
     </div>
   );
