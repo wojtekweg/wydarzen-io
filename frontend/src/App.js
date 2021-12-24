@@ -4,6 +4,9 @@ import config from "./config.json";
 import MyCalendar from "./components/3rd-party/reactBigCalendar";
 import { Navbar } from "./components/Navbar";
 import { emptyEvent } from "./helpers/api_methods";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { TechStack } from "./components/static-subpages/TechStack";
+import { About } from "./components/static-subpages/About";
 
 function App() {
   const [viewActive, setViewActive] = useState("All"); // allowed states should be "Active", "All", "Inactive"
@@ -255,27 +258,41 @@ function App() {
   return (
     <main className="context">
       <Navbar />
-      {renderEventsFiltering()}
-      <div className="row mx-100 my-5">
-        <div className="card p-3 mx-5">
-          {gridDisplay ? (
-            <section className="text-gray-600 dark:text-grey-200 body-font">
-              <div className="container px-5 py-5 mx-auto">
-                <div className="flex flex-wrap -m-4">{renderGridItems()}</div>
-              </div>
-            </section>
-          ) : (
+
+      <Routes>
+        <Route
+          path="/"
+          element={
             <div>
-              {
-                <MyCalendar
-                  events={getActiveEventsForCalendarView()}
-                  cancelEvent={(event) => changeActive(event)}
-                />
-              }
+              {renderEventsFiltering()}
+              <div className="row mx-100 my-5">
+                <div className="card p-3 mx-5">
+                  {gridDisplay ? (
+                    <section className="text-gray-600 dark:text-grey-200 body-font">
+                      <div className="container px-5 py-5 mx-auto">
+                        <div className="flex flex-wrap -m-4">
+                          {renderGridItems()}
+                        </div>
+                      </div>
+                    </section>
+                  ) : (
+                    <div>
+                      {
+                        <MyCalendar
+                          events={getActiveEventsForCalendarView()}
+                          cancelEvent={(event) => changeActive(event)}
+                        />
+                      }
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
-          )}
-        </div>
-      </div>
+          }
+        />
+        <Route path="about" element={<About />} />
+        <Route path="about/tech-stack" element={<TechStack />} />
+      </Routes>
     </main>
   );
 }
