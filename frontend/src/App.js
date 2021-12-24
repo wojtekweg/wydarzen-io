@@ -10,6 +10,8 @@ function App() {
   const [gridDisplay, setGridDisplay] = useState(true);
   const [sortReversed, setSortReversed] = useState(false);
   const [searchPhrase, setSearchPhrase] = useState("");
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
   const [eventsGrid, setEventsGrid] = useState([]);
   const [activeEvent, setActiveEvent] = useState({ ...emptyEvent });
 
@@ -34,12 +36,17 @@ function App() {
         event.title.toLowerCase().match(searchPhrase.toLowerCase())
       );
     }
+    if (dateFrom !== "") {
+      arr = arr.filter((event) => event.date >= dateFrom);
+    }
+    if (dateTo !== "") {
+      arr = arr.filter((event) => event.date <= dateTo);
+    }
     if (viewActive !== "All") {
       arr = arr.filter(
         (event) => event.is_active === (viewActive === "Active")
       );
     }
-
     if (sortReversed) {
       return arr.reverse();
     }
@@ -158,42 +165,83 @@ function App() {
 
   const renderEventsFiltering = () => {
     return (
-      <div width="100%" height="5%" className="menu-buttons">
-        <div className={"menu-buttons"}>
-          <input
-            className={`search-input ${
-              searchPhrase !== "" ? "toggle" : null
-            } justify-items-center dark:bg-slate-800`}
-            placeholder="Search event title"
-            onChange={(input) => setSearchPhrase(input.target.value)}
-          />
-          {/* <button className="btn" onClick={() => setTheme("light")}>
+      <div>
+        <div height="5%" className="my-2 ">
+          <div className={"menu-buttons"}>
+            <input
+              className={`${
+                searchPhrase !== "" ? "toggle" : null
+              } justify-items-center dark:bg-slate-800 search-input`}
+              placeholder="Search event title"
+              onChange={(input) => setSearchPhrase(input.target.value)}
+            />
+            {/* <button
+              className="btn"
+              onClick={() => {
+                if (
+                  localStorage.getItem("color-theme") === "dark" ||
+                  (!("color-theme" in localStorage) &&
+                    window.matchMedia("(prefers-color-scheme: dark)").matches)
+                ) {
+                  document.documentElement.classList.add("dark");
+                } else {
+                  document.documentElement.classList.remove("dark");
+                }
+              }}
+            >
               Theme
             </button> */}
-          <button
-            className="btn"
-            onClick={() => setSortReversed(!sortReversed)}
-          >
-            {sortReversed ? "⬆" : "⬇"}
-          </button>
-          <button className="btn" onClick={refreshGrid}>
-            ↺
-          </button>
+            <button className="btn" onClick={refreshGrid}>
+              ↺
+            </button>
+            {/* TODO make triple switch */}
+            <button
+              className={`btn ${
+                viewActive !== "All" ? "toggle active" : ""
+              } w-2/12`}
+              onClick={switchActive}
+            >
+              {viewActive} events
+            </button>
+            <button
+              className={`btn toggle ${gridDisplay ? "" : "active"} w-2/12`}
+              onClick={() => setGridDisplay(!gridDisplay)}
+            >
+              {gridDisplay ? "Grid" : "Calendar"} view
+            </button>
+          </div>
         </div>
-        <div className={"menu-buttons"}>
-          {/* TODO make triple switch */}
-          <button
-            className={`btn ${viewActive !== "All" ? "toggle active" : ""}`}
-            onClick={switchActive}
-          >
-            {viewActive} events
-          </button>
-          <button
-            className={`btn toggle ${gridDisplay ? "" : "active"}`}
-            onClick={() => setGridDisplay(!gridDisplay)}
-          >
-            {gridDisplay ? "Grid" : "Calendar"} view
-          </button>
+
+        <div height="5%" className={`my-2 ${gridDisplay ? "" : "invisible"}`}>
+          <div className={"menu-buttons"}>
+            From
+            <input
+              name="start"
+              type="date"
+              placeholder="Set date from"
+              className={`${
+                dateFrom !== "" ? "toggle" : null
+              } justify-items-center dark:bg-slate-800 border-0 search-input`}
+              onChange={(e) => setDateFrom(e.target.value)}
+            />
+            to
+            <input
+              name="end"
+              type="date"
+              className={`${
+                dateTo !== "" ? "toggle" : null
+              } justify-items-center dark:bg-slate-800 border-0 search-input`}
+              placeholder="Set date to"
+              onChange={(e) => setDateTo(e.target.value)}
+              accept="date"
+            />
+            <button
+              className="btn"
+              onClick={() => setSortReversed(!sortReversed)}
+            >
+              {sortReversed ? "⬆" : "⬇"}
+            </button>
+          </div>
         </div>
       </div>
     );
