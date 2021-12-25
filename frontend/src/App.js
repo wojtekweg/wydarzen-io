@@ -4,7 +4,7 @@ import config from "./config.json";
 import MyCalendar from "./components/3rd-party/reactBigCalendar";
 import { Navbar } from "./components/Navbar";
 import { emptyEvent } from "./helpers/api_methods";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { TechStack } from "./components/static-subpages/TechStack";
 import { About } from "./components/static-subpages/About";
 
@@ -16,7 +16,7 @@ function App() {
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
   const [eventsGrid, setEventsGrid] = useState([]);
-  const [activeEvent, setActiveEvent] = useState({ ...emptyEvent });
+  const [, setActiveEvent] = useState({ ...emptyEvent });
 
   useEffect(() => {
     refreshGrid();
