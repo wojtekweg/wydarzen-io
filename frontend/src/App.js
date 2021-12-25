@@ -3,7 +3,6 @@ import axios from "axios";
 import config from "./config.json";
 import MyCalendar from "./components/3rd-party/reactBigCalendar";
 import { Navbar } from "./components/Navbar";
-import { emptyEvent } from "./helpers/api_methods";
 import { Route, Routes } from "react-router-dom";
 import { TechStack } from "./components/static-subpages/TechStack";
 import { About } from "./components/static-subpages/About";
@@ -16,7 +15,6 @@ function App() {
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
   const [eventsGrid, setEventsGrid] = useState([]);
-  const [, setActiveEvent] = useState({ ...emptyEvent });
 
   useEffect(() => {
     refreshGrid();
@@ -77,36 +75,25 @@ function App() {
   };
 
   const renderEventButtons = (event) => {
-    return (
-      <span>
-        {event.is_active ? (
-          <span>
-            <button
-              className="btn btn-info mx-2"
-              onClick={() => editEvent(event)}
-            >
-              Edit
-            </button>
-            <button
-              className="btn btn-danger mx-2"
-              onClick={() => changeActive(event)}
-            >
-              Cancel
-            </button>
-          </span>
-        ) : (
-          <button
-            className="btn btn-success mx-2"
-            onClick={() => changeActive(event)}
-          >
-            Reactivate
-          </button>
-        )}
-        <button className="btn btn-warning" onClick={() => handleDelete(event)}>
-          Delete
+    if (event.is_active) {
+      return (
+        <button
+          className="btn btn-danger mx-2 w-full"
+          onClick={() => changeActive(event)}
+        >
+          Cancel
         </button>
-      </span>
-    );
+      );
+    } else {
+      return (
+        <button
+          className="btn btn-success mx-2 w-full"
+          onClick={() => changeActive(event)}
+        >
+          Reactivate
+        </button>
+      );
+    }
   };
 
   const renderGridItems = () => {
@@ -145,9 +132,9 @@ function App() {
             </h1>
 
             <p className="leading-relaxed mb-3 truncate">{event.description}</p>
-            <div className="flex items-center flex-wrap ">
-              <span>{renderEventButtons(event)}</span>
-            </div>
+          </div>
+          <div className="tracking-widest flex-auto flex-grow mx-2 pr-4 pb-4">
+            {renderEventButtons(event)}
           </div>
         </div>
       </div>
@@ -162,10 +149,6 @@ function App() {
       .then((res) => refreshGrid());
   };
 
-  const handleDelete = (event) => {
-    axios.delete(`${config.url}events/${event.id}/`).then(() => refreshGrid());
-  };
-
   const renderEventsFiltering = () => {
     return (
       <div>
@@ -178,26 +161,9 @@ function App() {
               placeholder="Search event title"
               onChange={(input) => setSearchPhrase(input.target.value)}
             />
-            {/* <button
-              className="btn"
-              onClick={() => {
-                if (
-                  localStorage.getItem("color-theme") === "dark" ||
-                  (!("color-theme" in localStorage) &&
-                    window.matchMedia("(prefers-color-scheme: dark)").matches)
-                ) {
-                  document.documentElement.classList.add("dark");
-                } else {
-                  document.documentElement.classList.remove("dark");
-                }
-              }}
-            >
-              Theme
-            </button> */}
             <button className="btn" onClick={refreshGrid}>
               ↺
             </button>
-            {/* TODO make triple switch */}
             <button
               className={`btn ${
                 viewActive !== "All" ? "toggle active" : ""
@@ -250,15 +216,9 @@ function App() {
     );
   };
 
-  const editEvent = (event) => {
-    // TODO display edit on another site, not on index
-    setActiveEvent(event);
-  };
-
   return (
     <main className="context">
       <Navbar />
-
       <Routes>
         <Route
           path="/"
