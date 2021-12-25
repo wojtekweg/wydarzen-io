@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Event, EventFileImport, Place
+from .models import DesignPatternInfo, Event, EventFileImport, Place, TechStackInfo
 
 
 class EventsAdmin(admin.ModelAdmin):
@@ -9,3 +9,5 @@ class EventsAdmin(admin.ModelAdmin):
 admin.site.register(Event)
 admin.site.register(Place)
 admin.site.register(EventFileImport)
+admin.site.register(TechStackInfo)
+admin.site.register(DesignPatternInfo)

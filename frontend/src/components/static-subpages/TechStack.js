@@ -1,85 +1,14 @@
-const designPatterns = [
-  {
-    title: "Facade",
-    description:
-      "Backend and frontend are entirely separate, communicating by an API.",
-    iconPath:
-      "M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z",
-    color: "blue",
-  },
-  {
-    title: "ModelViewTemplate",
-    description:
-      "Built-in Django architecture. Templates were not used, because of React frontend.",
-    color: "orange",
-    iconPath:
-      "M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2",
-  },
-  {
-    title: "Adapter",
-    description:
-      "Importing events from file is supported for various formats in one endpoint.",
-    iconPath:
-      "M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12",
-    color: "green",
-  },
-  {
-    title: "Decorator",
-    description:
-      "Used in Django tests to override default settings and to mark Celery task.",
-    iconPath:
-      "M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z",
-    color: "blue",
-  },
-  {
-    title: "Page Object",
-    description:
-      "UI tests in Cypress are divided into classes, where each represents different frontend page.",
-    iconPath:
-      "M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4",
-    color: "rose",
-  },
-  {
-    title: "Chain of responsibilit",
-    description: "Not implemented",
-    iconPath:
-      "M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1",
-    color: "gray", // "indigo",
-  },
-  {
-    title: "Observer",
-    description: "Not implemented",
-    iconPath: "M15 12a3 3 0 11-6 0 3 3 0 016 0z",
-    iconPath2:
-      "M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z",
-    color: "gray", // "teal",
-  },
-  {
-    title: "Factory method",
-    description: "Not implemented",
-    iconPath:
-      "M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4",
-    color: "gray", //"amber",
-  },
-];
+import axios from "axios";
+import config from "../../config.json";
+import React, { useEffect, useState } from "react";
 
-const techStacks = [
-  {
-    title: "Django backend",
-    description:
-      "I was pretty familiar with Django and Python, nevertheless it was great adventure to learn Django REST framework and Celery.",
-    icon: (
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="60">
-        <path d="M 11 3 L 11 8.1582031 C 10.653 8.0172031 9.9041562 8 9.5351562 8 C 6.7591563 8 4.1894531 9.306 4.1894531 13 C 4.1894531 17.42 7.67 18 10 18 C 10.92 18 13 17.909141 14 17.619141 L 14 3 L 11 3 z M 16 3 L 16 6 L 19 6 L 19 3 L 16 3 z M 16 8 L 16 16.701172 C 16 18.217172 15.078 19.795172 13 20.701172 L 15.859375 21.996094 C 18.765375 20.996094 19 17.701172 19 16.701172 L 19 8 L 16 8 z M 9.9707031 10.550781 C 10.290703 10.550781 10.65 10.609453 11 10.689453 L 11 15.392578 C 10.65 15.472578 10.290703 15.533203 9.9707031 15.533203 C 8.6607031 15.533203 7.390625 15.12 7.390625 13 C 7.390625 10.88 8.6607031 10.550781 9.9707031 10.550781 z"></path>
-      </svg>
-    ),
-    color: "emerald-400",
-  },
-  {
-    title: "React frontend",
-    description:
-      "It was quite a challenge for me to learn React from scratch for this project, so please don't mind all these bad practices.",
-    icon: (
+function TechStackAbout() {
+  const [lang, setLang] = useState("eng");
+  const [designPatterns, setDesingPatterns] = useState([]);
+  const [techStack, setTechStack] = useState([]);
+  const colors = ["#dc2626", "#d97706", "#059669", "#0891b2", "#0323a1"];
+  const icons = {
+    react: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
         // xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -102,14 +31,12 @@ const techStacks = [
         </g>
       </svg>
     ),
-    color: "gray-900",
-  },
-
-  {
-    title: "Cypress UI tests",
-    description:
-      "It was quite a challenge for me to learn React from scratch for this project, so please don't mind all these bad practices.",
-    icon: (
+    django: (
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M 11 3 L 11 8.1582031 C 10.653 8.0172031 9.9041562 8 9.5351562 8 C 6.7591563 8 4.1894531 9.306 4.1894531 13 C 4.1894531 17.42 7.67 18 10 18 C 10.92 18 13 17.909141 14 17.619141 L 14 3 L 11 3 z M 16 3 L 16 6 L 19 6 L 19 3 L 16 3 z M 16 8 L 16 16.701172 C 16 18.217172 15.078 19.795172 13 20.701172 L 15.859375 21.996094 C 18.765375 20.996094 19 17.701172 19 16.701172 L 19 8 L 16 8 z M 9.9707031 10.550781 C 10.290703 10.550781 10.65 10.609453 11 10.689453 L 11 15.392578 C 10.65 15.472578 10.290703 15.533203 9.9707031 15.533203 C 8.6607031 15.533203 7.390625 15.12 7.390625 13 C 7.390625 10.88 8.6607031 10.550781 9.9707031 10.550781 z"></path>
+      </svg>
+    ),
+    cypress: (
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 87 70">
         <mask
           id="a"
@@ -158,20 +85,14 @@ const techStacks = [
         </defs>
       </svg>
     ),
-    color: "indigo-100",
-  },
-  {
-    title: "Tailwind CSS",
-    description:
-      "CSS always was a hard thing to learn. Thanks to Tailwind I was able to create this website with not-so-scary UI.",
-    icon: (
+    tailwind: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
         // xmlns:xlink="http://www.w3.org/1999/xlink"
         aria-hidden="true"
         role="img"
         id="footer-sample-full"
-        width="60"
+        width="100"
         // width="1.67em"
         // height="1em"
         // preserveAspectRatio="xMidYMid meet"
@@ -196,44 +117,65 @@ const techStacks = [
         ></path>
       </svg>
     ),
-    color: "gray-100",
-  },
-];
+  };
 
-function TechStack() {
+  useEffect(() => {
+    getDesignPatterns(lang);
+    getTechStack(lang);
+  }, []);
+
+  const getDesignPatterns = async (language) => {
+    axios
+      .get(config.url + language + "/design_pattern_info/")
+      .then((res) => setDesingPatterns(res.data))
+      .catch((err) => console.log(err));
+  };
+
+  const getTechStack = async (language) => {
+    axios
+      .get(config.url + language + "/tech_stack_info/")
+      .then((res) => setTechStack(res.data))
+      .catch((err) => console.log(err));
+  };
+
+  const changeLang = () => {
+    const next_lang = lang === "eng" ? "pl" : "eng";
+    setLang(next_lang);
+    getTechStack(next_lang);
+    getDesignPatterns(next_lang);
+  };
+
   const renderTechStackInfo = () => {
-    return techStacks.map((techStack, index) => (
-      <div>
+    return techStack.map((el, index) => (
+      <div key={el.title}>
         <div
           className={`flex items-center lg:w-3/5 mx-auto ${
-            index === techStacks.length - 1
+            index === techStack.length - 1
               ? ""
-              : "border-b pb-10 mb-10 border-gray-200"
-          } sm:flex-row flex-col`}
+              : "border-b pb-10 mb-10 border-gray-200 dark:border-gray-800"
+          } sm:flex-row flex-col `}
         >
           {index % 2 === 0 ? (
-            <div
-              className={`sm:w-22 sm:h-22 h-20 w-20 sm:mr-10 inline-flex items-center justify-center rounded-full bg-${techStack.color} flex-shrink-0`}
-            >
-              {techStack.icon}
+            <div className="sm:w-22 sm:h-22 h-20 w-20 sm:mr-10 inline-flex items-center justify-center flex-shrink-0 hover:rotate-12">
+              {icons[el.icon]}
             </div>
           ) : (
             ""
           )}
           <div className="flex-grow sm:text-left text-center mt-6 sm:mt-0">
-            <h2 className="text-gray-900 text-lg title-font font-medium mb-2">
-              {techStack.title}
+            <h2 className="text-gray-900 dark:text-gray-100 text-lg title-font font-medium mb-2">
+              {el.title}
             </h2>
-            <p className="leading-relaxed text-base">{techStack.description}</p>
+            <p className="leading-relaxed text-base dark:text-gray-400">
+              {el.description}
+            </p>
           </div>
 
           {index % 2 === 0 ? (
             ""
           ) : (
-            <div
-              className={`sm:w-22 sm:h-22 h-20 w-20 sm:mr-10 inline-flex items-center justify-center rounded-full bg-${techStack.color} flex-shrink-0`}
-            >
-              {techStack.icon}
+            <div className="sm:w-22 sm:h-22 h-20 w-20 sm:mr-10 inline-flex items-center justify-center flex-shrink-0 hover:rotate-12">
+              {icons[el.icon]}
             </div>
           )}
         </div>
@@ -242,28 +184,33 @@ function TechStack() {
   };
 
   const renderDesignPatternsInfo = () => {
-    // TODO finish design patterns
-    return designPatterns.map((designPattern) => (
+    return designPatterns.map((designPattern, index) => (
       <div
         key={designPattern.title}
-        className="flex relative pb-20 sm:items-center md:w-2/3 mx-auto"
+        className="flex relative pb-20 sm:items-center md:w-2/3 mx-auto dark:text-gray-400 "
       >
         <div className="h-full w-6 absolute inset-0 flex items-center justify-center">
-          <div className="h-full w-1 bg-gray-200 pointer-events-none"></div>
+          <div className="h-full w-1 bg-gray-200 dark:bg-gray-800 pointer-events-none"></div>
         </div>
         <div
-          className={`flex-shrink-0 w-6 h-6 rounded-full mt-10 sm:mt-0 inline-flex items-center justify-center bg-${designPattern.color}-500 text-white relative z-10 title-font font-medium text-sm`}
+          style={{
+            backgroundColor: colors[index % colors.length],
+          }}
+          className={`flex-shrink-0 w-6 h-6 rounded-full mt-10 sm:mt-0 inline-flex items-center justify-center  text-white dark:text-gray-400 relative z-10 title-font font-medium text-sm`}
         ></div>
         <div className="flex-grow md:pl-8 pl-6 flex sm:items-center items-start flex-col sm:flex-row">
           <div
-            className={`flex-shrink-0 w-24 h-24 bg-${designPattern.color}-100 text-${designPattern.color}-500 rounded-full inline-flex items-center justify-center`}
+            style={{
+              backgroundColor: colors[index % colors.length] + "11",
+            }}
+            className="flex-shrink-0 w-24 h-24 rounded-full inline-flex items-center justify-center hover:rotate-12"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-12 w-12"
               fill="none"
               viewBox="0 0 24 24"
-              stroke="currentColor"
+              stroke={colors[index % colors.length]}
             >
               <path
                 strokeLinecap="round"
@@ -271,7 +218,7 @@ function TechStack() {
                 strokeWidth="2"
                 d={designPattern.iconPath}
               />
-              {designPattern.hasOwnProperty("iconPath2") ? (
+              {designPattern.iconPath2 !== "" ? (
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -282,7 +229,7 @@ function TechStack() {
             </svg>
           </div>
           <div className="flex-grow sm:pl-6 mt-6 sm:mt-0">
-            <h2 className="font-medium title-font text-gray-900 mb-1 text-xl">
+            <h2 className="font-medium title-font text-gray-900 dark:text-gray-100 mb-1 text-xl">
               {designPattern.title}
             </h2>
             <p className="leading-relaxed">{designPattern.description}</p>
@@ -294,21 +241,16 @@ function TechStack() {
 
   return (
     <section className="text-gray-600 body-font">
-      <h1>Technologies</h1>
-      {/* <div>
-        <p className="modal-p">
-          That's first full stack web application that I have even created. It
-          was pretty tought for me to understand the frontend technologies,
-          despite being familiar with JavaScript (used for various scripts and
-          cypress.io, the test automation framework). Going with Django for the
-          backend was obvious choice, since I learned it a little, but never
-          built a whole application with use of it. Maybe FastAPI could be a
-          better choice, though Django gave me a lot of features out-of-the box.
-        </p>
-        
-      </div> */}
+      <div className="container px-5 py-5 mx-auto flex flex-wrap justify-center">
+        <button onClick={(e) => changeLang()} className="btn toggle ">
+          {lang === "eng"
+            ? "Zmień język na polski"
+            : "Change language to English"}
+        </button>
+      </div>
+      <h1>{lang === "eng" ? "Technologies" : "Technologie"}</h1>
       <div className="container px-5 py-5 mx-auto">{renderTechStackInfo()}</div>
-      <h1>Design patterns</h1>
+      <h1>{lang === "eng" ? "Design patterns" : "Wzorce projektowe"}</h1>
       <section className="text-gray-600 body-font">
         <div className="container px-5 py-5 mx-auto flex flex-wrap">
           {renderDesignPatternsInfo()}
@@ -318,4 +260,4 @@ function TechStack() {
   );
 }
 
-export { TechStack };
+export { TechStackAbout as TechStack };

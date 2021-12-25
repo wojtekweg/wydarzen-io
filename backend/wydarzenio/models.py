@@ -46,3 +46,30 @@ class EventFileImport(models.Model):
 
     def __str__(self) -> str:
         return self.file.name
+
+
+class Info(models.Model):
+    ENG = 'Eng'
+    PL = 'Pl'
+    LANG = [
+       (ENG, ('English')),
+       (PL, ('Polish')),
+    ]
+    title = models.CharField(max_length=128)
+    description = models.TextField(max_length=1024, default="")
+    lang = models.CharField(
+       max_length=5,
+       choices=LANG,
+       default=ENG)
+
+    def __str__(self) -> str:
+        return f"{self.title} [{self.lang}]"
+
+
+class TechStackInfo(Info):
+    icon = models.TextField(max_length=5012, default="")
+
+
+class DesignPatternInfo(Info):
+    iconPath = models.TextField(max_length=1024, default="")
+    iconPath2 = models.TextField(max_length=1024, null=True, blank=True, default="")
