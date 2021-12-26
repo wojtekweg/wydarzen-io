@@ -1,6 +1,7 @@
 from rest_framework import viewsets
-from .serializers import EventSerializer, PlaceSerializer, EventFileImportSerializer, TechStackInfoSerializer, DesignPatternInfoSerializer
-from .models import Event, Place, EventFileImport, TechStackInfo, DesignPatternInfo, Info
+from .serializers import EventSerializer, PlaceSerializer, EventFileImportSerializer, TechStackInfoSerializer, \
+    DesignPatternInfoSerializer
+from .models import Event, Place, EventFileImport, TechStackInfo, DesignPatternInfo
 
 
 class EventView(viewsets.ModelViewSet):

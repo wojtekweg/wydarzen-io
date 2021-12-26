@@ -1,7 +1,7 @@
 from django.test import TestCase
 
 from ..models import Place
-from ..helpers.helpers import get_or_create_place
+from ..helpers.helper_scripts import get_or_create_place
 
 
 class TestGetOrCreatePlace(TestCase):

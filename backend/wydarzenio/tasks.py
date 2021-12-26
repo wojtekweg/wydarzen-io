@@ -4,7 +4,7 @@ from datetime import date, timedelta
 from .models import Event
 
 
-@shared_task(name="mark_as_inactive")  # run every 12hours
+@shared_task(name="mark_as_inactive_DEBUG")
 def mark_as_inactive():
     end_date = date.today()
     start_date = end_date - timedelta(days=2)  # two days for safety

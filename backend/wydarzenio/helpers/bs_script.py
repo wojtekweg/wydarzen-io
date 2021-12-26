@@ -1,30 +1,46 @@
 from bs4 import BeautifulSoup
 import requests
 from urllib.request import urlopen
-import ssl
 import os
+import ssl
+from .decorators import limit_scraping
 
 
-def getHTMLdocument(url):
-        response = requests.get(url)
-        return response.text
+def get_html_document(url):
+    response = requests.get(url)
+    return response.text
 
 
-def save_img_from_fb_url(fb_url, save_to_file=False, download_folder="../media/fb_img_downloads"):
-
+@limit_scraping
+def save_img_from_fb_url(fb_url, save_to_file=True, download_folder="../media/fb_img_downloads"):
+    """
+    Having URL, scrap the site and save images.
+    """
     url_to_scrape = fb_url
-    html_document = getHTMLdocument(url_to_scrape)
+    html_document = get_html_document(url_to_scrape)
     soup = BeautifulSoup(html_document, 'html.parser')
 
-    img_url = soup.find_all('img')[1].get('src')
+    images = soup.find_all('img')
+    images = [i.get('src') for i in images]
 
-    if save_to_file:
-        if not os.path.exists(download_folder):
-            os.makedirs(download_folder)
-        ssl._create_default_https_context = ssl._create_unverified_context
-        context = ssl._create_unverified_context()
-        data = urlopen(img_url, context=context)
-        with open(os.path.join(download_folder, os.path.basename(img_url)), "wb") as f:
-            f.write(data.read())
+    for i in images:
+        if save_to_file:
+            if not os.path.exists(download_folder):
+                os.makedirs(download_folder)
 
-    return img_url
+            # TODO review that SSL call
+            ssl._create_default_https_context = ssl._create_unverified_context
+            context = ssl._create_unverified_context()
+            try:
+                data = urlopen(i, context=context)
+                with open(os.path.join(download_folder, os.path.basename(i)), "wb") as f:
+                    f.write(data.read())
+            except Exception as e:
+                print(e)
+                continue
+
+    return images
+
+
+if __name__ == "__main__":
+    pass

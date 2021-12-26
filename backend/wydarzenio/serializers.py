@@ -2,9 +2,8 @@ from pathlib import Path
 from rest_framework import serializers
 from icalendar import Calendar, Event
 from .models import Event, Place, EventFileImport, TechStackInfo, DesignPatternInfo
-from .helpers.helpers import get_or_create_place
+from .helpers.helper_scripts import get_or_create_place
 import json
-
 
 
 class EventSerializer(serializers.ModelSerializer):
@@ -13,7 +12,7 @@ class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         fields = '__all__'
-    
+
     def get_place_name(self, obj):
         return obj.place.name
 
