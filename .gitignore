@@ -8,4 +8,5 @@ celery.beat.log
 celerybeat-schedule.db
 dump.rdb
 backend/media
+backend/credentials.json
 db.sqlite3

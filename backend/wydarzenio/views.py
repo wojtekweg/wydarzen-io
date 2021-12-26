@@ -13,6 +13,7 @@ class PlaceView(viewsets.ModelViewSet):
     queryset = Place.objects.all()
 
 
+# TODO make these classes using arguments (can I do it somehow from urls?)
 class TechStackViewEng(viewsets.ModelViewSet):
     serializer_class = TechStackInfoSerializer
     queryset = TechStackInfo.objects.filter(lang="Eng")

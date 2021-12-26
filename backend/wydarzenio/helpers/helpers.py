@@ -1,4 +1,4 @@
-from .models import Place
+from ..models import Place
 
 
 def get_or_create_place(place_name) -> Place:
