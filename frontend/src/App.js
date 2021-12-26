@@ -3,9 +3,10 @@ import axios from "axios";
 import config from "./config.json";
 import MyCalendar from "./components/3rd-party/reactBigCalendar";
 import { Navbar } from "./components/Navbar";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, Link } from "react-router-dom";
 import { TechStack } from "./components/static-subpages/TechStack";
 import { About } from "./components/static-subpages/About";
+import { EventPage } from "./components/EventPage";
 
 function App() {
   const [viewActive, setViewActive] = useState("All"); // allowed states should be "Active", "All", "Inactive"
@@ -81,7 +82,7 @@ function App() {
           xmlns="http://www.w3.org/2000/svg"
           className="icon-button h-5 w-5 cursor-pointer opacity-50 hover:opacity-100"
           viewBox="0 0 20 20"
-          fill="#aa0000"
+          fill="#888888"
           data-info="Cancel"
         >
           <path
@@ -98,7 +99,7 @@ function App() {
           xmlns="http://www.w3.org/2000/svg"
           className="icon-button h-5 w-5 cursor-pointer opacity-50 hover:opacity-100"
           viewBox="0 0 20 20"
-          fill="#00aa00"
+          fill="#888888"
           data-info="Reactivate"
         >
           <path
@@ -139,15 +140,17 @@ function App() {
             <h2 className="tracking-widest text-xs title-font font-medium text-gray-400 mb-1">
               {event.date} at {event.place_name}
             </h2>
-            <h1
-              className={`title-font text-lg font-medium hover:cursor-pointer ${
-                event.is_active
-                  ? "hover:underline text-gray-900 dark:text-zinc-100"
-                  : "line-through text-red-900 dark:text-red-300"
-              } mb-3`}
-            >
-              {event.title}
-            </h1>
+            <Link to={`/event/${event.id}`}>
+              <h1
+                className={`title-font text-lg font-medium hover:cursor-pointer ${
+                  event.is_active
+                    ? "hover:underline text-gray-900 dark:text-zinc-100"
+                    : "line-through text-red-900 dark:text-red-300"
+                } mb-3`}
+              >
+                {event.title}
+              </h1>
+            </Link>
 
             <p className="leading-relaxed mb-3 truncate">{event.description}</p>
           </div>
@@ -264,6 +267,7 @@ function App() {
         />
         <Route path="about" element={<About />} />
         <Route path="about/tech-stack" element={<TechStack />} />
+        <Route path="event/:eventId" element={<EventPage />} />
       </Routes>
     </main>
   );
