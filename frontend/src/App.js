@@ -32,7 +32,6 @@ function App() {
     arr = eventsGrid.sort((a, b) => new Date(b.date) - new Date(a.date));
 
     if (searchPhrase.length > 0) {
-      // TODO search for ":", "/" etc will raise error
       arr = arr.filter((event) =>
         event.title.toLowerCase().match(searchPhrase.toLowerCase())
       );
@@ -77,21 +76,37 @@ function App() {
   const renderEventButtons = (event) => {
     if (event.is_active) {
       return (
-        <button
-          className="btn btn-danger mx-2 w-full"
+        <svg
           onClick={() => changeActive(event)}
+          xmlns="http://www.w3.org/2000/svg"
+          className="icon-button h-5 w-5 cursor-pointer opacity-50 hover:opacity-100"
+          viewBox="0 0 20 20"
+          fill="#aa0000"
+          data-info="Cancel"
         >
-          Cancel
-        </button>
+          <path
+            fillRule="evenodd"
+            d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+            clipRule="evenodd"
+          />
+        </svg>
       );
     } else {
       return (
-        <button
-          className="btn btn-success mx-2 w-full"
+        <svg
           onClick={() => changeActive(event)}
+          xmlns="http://www.w3.org/2000/svg"
+          className="icon-button h-5 w-5 cursor-pointer opacity-50 hover:opacity-100"
+          viewBox="0 0 20 20"
+          fill="#00aa00"
+          data-info="Reactivate"
         >
-          Reactivate
-        </button>
+          <path
+            fillRule="evenodd"
+            d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"
+            clipRule="evenodd"
+          />
+        </svg>
       );
     }
   };
@@ -108,6 +123,9 @@ function App() {
               : "border-red-400"
           } border-opacity-60 rounded-lg overflow-hidden`}
         >
+          <div className="mx-1 my-1 object-cover object-center absolute">
+            {renderEventButtons(event)}
+          </div>
           <img
             className="lg:h-48 md:h-36 w-full object-cover object-center"
             src={`${
@@ -132,9 +150,6 @@ function App() {
             </h1>
 
             <p className="leading-relaxed mb-3 truncate">{event.description}</p>
-          </div>
-          <div className="tracking-widest flex-auto flex-grow mx-2 pr-4 pb-4">
-            {renderEventButtons(event)}
           </div>
         </div>
       </div>
@@ -161,9 +176,6 @@ function App() {
               placeholder="Search event title"
               onChange={(input) => setSearchPhrase(input.target.value)}
             />
-            <button className="btn" onClick={refreshGrid}>
-              ↺
-            </button>
             <button
               className={`btn ${
                 viewActive !== "All" ? "toggle active" : ""

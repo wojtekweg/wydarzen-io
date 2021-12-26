@@ -185,3 +185,22 @@ input {
 .modal-cancel {
   @apply py-2 flex-auto h-11 text-white bg-gray-500 border-0 px-8 focus:outline-none hover:bg-red-400 rounded text-lg;
 }
+
+.icon-button:before {
+  content: attr(data-info);
+  position: absolute;
+  color: #4a5568;
+  color: var(--solid-900);
+  font-size: 8px;
+  text-transform: uppercase;
+  transition: opacity 0.3s;
+  text-align: center;
+  white-space: nowrap;
+  padding: 1 px 4 px;
+  background-color: #e2e8f0;
+  background-color: var(--base-200);
+  border-radius: 4 px;
+  opacity: 0;
+  pointer-events: none;
+  z-index: -1;
+}
