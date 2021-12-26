@@ -7,6 +7,8 @@ import { Route, Routes, Link } from "react-router-dom";
 import { TechStack } from "./components/static-subpages/TechStack";
 import { About } from "./components/static-subpages/About";
 import { EventPage } from "./components/EventPage";
+import { PlacePage } from "./components/PlacePage";
+import { Places } from "./components/Places";
 
 function App() {
   const [viewActive, setViewActive] = useState("All"); // allowed states should be "Active", "All", "Inactive"
@@ -138,9 +140,10 @@ function App() {
           />
           <div className="p-6">
             <h2 className="tracking-widest text-xs title-font font-medium text-gray-400 mb-1">
-              {event.date} at {event.place_name}
+              {event.date} at{" "}
+              <a href={`/places/${event.place}`}>{event.place_name}</a>
             </h2>
-            <Link to={`/event/${event.id}`}>
+            <Link to={`/events/${event.id}`}>
               <h1
                 className={`title-font text-lg font-medium hover:cursor-pointer ${
                   event.is_active
@@ -266,8 +269,10 @@ function App() {
           }
         />
         <Route path="about" element={<About />} />
+        <Route path="places" element={<Places />} />
         <Route path="about/tech-stack" element={<TechStack />} />
-        <Route path="event/:eventId" element={<EventPage />} />
+        <Route path="events/:eventId" element={<EventPage />} />
+        <Route path="places/:placeId" element={<PlacePage />} />
       </Routes>
     </main>
   );
