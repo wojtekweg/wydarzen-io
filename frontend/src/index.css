@@ -204,3 +204,7 @@ input {
   pointer-events: none;
   z-index: -1;
 }
+
+.navbar-link {
+  @apply hover:opacity-100 hover:text-white hover:underline hover:decoration-wavy  cursor-pointer;
+}

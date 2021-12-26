@@ -76,3 +76,5 @@ https://youtu.be/F5OUT3ijk8M - React basics
 https://nickmccullum.com/celery-django-periodic-tasks/ - Celery setup for Django
 
 https://tailblocks.cc/ - Ready Tailwind componnents
+
+https://heroicons.com/ - SVG icons
