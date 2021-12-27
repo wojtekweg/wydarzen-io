@@ -33,6 +33,9 @@ local superuser: admin / admin
 
 backend test coverage: `coverage run --source='.' manage.py test wydarzenio && coverage report`
 
+If macOS and having SSL problems, go to:
+Macintosh HD > Applications > Python3.7 folder (or whatever version of python you're using) > double click on "Install Certificates.command" file. [Source](https://github.com/hardikvasa/google-images-download/issues/313#issuecomment-643300594)
+
 ## Install Redis
 
 Redis is needed to use Celery, which is used for asynchronious features.

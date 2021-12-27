@@ -22,6 +22,7 @@ class Event(models.Model):
     description = models.TextField(max_length=1024, default="TBA")
     place = models.ForeignKey(Place, on_delete=models.CASCADE, default=1)
     is_active = models.BooleanField(default=True)
+    picture_can_be_updated = models.BooleanField(default=True)
     picture = models.ImageField(
         upload_to="event/posters",
         blank=True,
