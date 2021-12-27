@@ -24,16 +24,22 @@ function App() {
     refreshGrid();
   }, []);
 
+  const setEventsGrid_ = (arr) => {
+    arr.forEach((e) => (e.date_iso = parse(e.date, "yyyy-MM-dd", new Date())));
+    setEventsGrid(arr);
+  };
+
   const refreshGrid = async () => {
     axios
       .get(`${config.url}events/`)
-      .then((res) => setEventsGrid(res.data))
+      .then((res) => setEventsGrid_(res.data))
       .catch((err) => console.log(err));
   };
 
   const getActiveEvents = () => {
     let arr = eventsGrid;
-    arr.forEach((e) => (e.date_iso = parse(e.date, "yyyy-MM-dd", new Date())));
+
+    // arr.forEach((e) => (e.date_iso = parse(e.date, "yyyy-MM-dd", new Date())));
 
     if (searchPhrase.length > 0) {
       arr = arr.filter((event) =>
@@ -50,7 +56,7 @@ function App() {
     if (isValid(dateTo)) {
       arr = arr.filter((event) => isBefore(event.date_iso, dateTo));
     }
-    arr = eventsGrid.sort(compareAsc);
+    arr = arr.sort(compareAsc);
 
     if (viewActive !== "All") {
       arr = arr.filter(
@@ -177,6 +183,13 @@ function App() {
       .then((res) => refreshGrid());
   };
 
+  const toISOStringDate = (dateObj) => {
+    if (isValid(dateObj)) {
+      return dateObj.toISOString().substring(0, 10);
+    }
+    return undefined;
+  };
+
   const renderEventsFiltering = () => {
     return (
       <div>
@@ -209,8 +222,9 @@ function App() {
         <div height="5%" className={`my-2 ${gridDisplay ? "" : "invisible"}`}>
           <div className={"menu-buttons"}>
             <div
-              id="daterangepicker"
-              className="daterangepicker flex items-center"
+              className={`btn flex items-center ${
+                isValid(dateFrom) || isValid(dateTo) ? "toggle" : ""
+              }`}
             >
               <div className="relative">
                 <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
@@ -230,9 +244,8 @@ function App() {
                 <input
                   name="start"
                   type="date"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder={dateFrom}
-                  // value={dateFrom}
+                  className="text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5   dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  defaultValue={toISOStringDate(dateFrom)}
                   onChange={(e) =>
                     setDateFrom(parse(e.target.value, "yyyy-MM-dd", new Date()))
                   }
@@ -257,9 +270,8 @@ function App() {
                 <input
                   name="end"
                   type="date"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder={dateTo}
-                  // value={dateTo}
+                  className="text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5   dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  defaultValue={toISOStringDate(dateTo)}
                   onChange={(e) =>
                     setDateTo(parse(e.target.value, "yyyy-MM-dd", new Date()))
                   }
