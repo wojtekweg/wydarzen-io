@@ -20,6 +20,7 @@ def fill_first_empty_image():
         .filter(picture_can_be_updated=True)\
         .filter(picture='')\
         .first()
+    was_picture_updated = "(picture was not updated)"
     if event_to_update:
         save_img_by_query(event_to_update.title, output_dir='media/event/posters/')
         file_path = f'event/posters/{event_to_update.title}/Image_1.jpg'
@@ -31,7 +32,9 @@ def fill_first_empty_image():
         except IOError:
             event_to_update.picture_can_be_updated = False
         finally:
+            if event_to_update.picture_can_be_updated:
+                was_picture_updated = "(picture was correctly updated)" 
             event_to_update.save()
     else:
         print("No events to update")
-    print(f"Updated {event_to_update} object (was picture updated: {event_to_update.picture_can_be_updated})")
+    print(f"Updated {event_to_update} object {was_picture_updated})")

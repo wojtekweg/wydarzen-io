@@ -4,7 +4,8 @@ from icalendar import Calendar, Event
 from .models import Event, Place, EventFileImport, TechStackInfo, DesignPatternInfo
 from .helpers.helper_scripts import get_or_create_place
 import json
-import datetime
+from zipfile import ZipFile
+from dateutil import parser
 
 
 class EventSerializer(serializers.ModelSerializer):
@@ -84,6 +85,22 @@ class EventFileImportSerializer(serializers.ModelSerializer):
                             ))
                         except TypeError as e:
                             print(f"HOWDY, WE GOT TYPERRROR: {e}")
+        elif Path(event_file.file.name).suffix == ".zip":
+            # here it is asserted that .zip file comes from Notion app and is having .md calendar
+            # TODO rewrite it to be more flexible
+            with ZipFile(f"./media/{event_file}", 'r') as zipObj:
+                listOfFileNames = zipObj.namelist()
+                for fileName in listOfFileNames:
+                    if fileName.endswith('.md'):
+                        zipObj.extract(fileName, 'media/event/file_imports/temp_md')
+                        with open(f"media/event/file_imports/temp_md/{fileName}", 'r') as md_file:
+                            lines = [line for line in md_file]
+                            Event.objects.create(
+                                title=lines[0][2:],
+                                date=parser.parse(lines[2][6:]),
+                                description="Imported from .csv",
+                                is_active=True
+                            )
         else:
             raise AttributeError("WRONG FILE IMPORT!")
         print(events_list)

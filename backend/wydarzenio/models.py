@@ -43,7 +43,7 @@ class EventFileImport(models.Model):
         null=False,
         blank=False,
         unique=True,
-        validators=[FileExtensionValidator(['ics', 'json'])])
+        validators=[FileExtensionValidator(['ics', 'json', 'zip', 'md', 'csv'])])
     upload_date = models.DateTimeField(auto_now=True)
 
     def __str__(self) -> str:

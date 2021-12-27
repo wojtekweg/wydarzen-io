@@ -38,13 +38,23 @@ const CustomModal = (props) => {
           <h1 className="modal-header-h1">Import events</h1>
           <p className="modal-p">
             For exporting your events refer to{" "}
-            <a href="https://www.facebook.com/help/152652248136178/">
+            <a
+              className="navbar-link"
+              href="https://www.facebook.com/help/152652248136178/"
+            >
               Facebook help page
             </a>
-            . You can import .ics or .json files here directly. No personal
-            information is processed, but if you want to have full control of
-            what is processed, you can manually edit the .json file before
-            uploading.
+            .<p>You can import:</p>
+            <p>
+              (1) .ics (Google Calendar, Outlook, Facebook Event, Apple
+              Calendar),{" "}
+            </p>
+            <p>(2) .zip files exported from Notion calendar</p>
+            <p>
+              No personal information is processed, but if you want to have full
+              control of your data, you can manually create the (3) .json file
+              with data that you want to upload.
+            </p>
           </p>
         </div>
         <div className="modal-full-row py-2">
@@ -60,7 +70,7 @@ const CustomModal = (props) => {
               label="calendar file"
               onChange={(e) => setUploadedFile(e.target.files[0])}
               className="modal-input"
-              accept="application/json, text/calendar"
+              accept="application/json, text/calendar, application/zip"
             />
           </div>
 
