@@ -32,10 +32,10 @@ app.conf.beat_schedule = {
     # ABOVE TASK IS COMMENTED BECAUSE OF DEBUG PURPOSES
     'mark-as-inactive-every-ten-seconds': {
         'task': 'mark_as_inactive_DEBUG',
-        'schedule': 10 * 1.0,  # 10 seconds
+        'schedule': 12 * 60 * 60 * 60 * 1.0,  # 12 hours
     },
     'download-img-for-events': {
         'task': 'schedule_download_img',
-        'schedule': 10 * 1.0
+        'schedule': 2 * 60 * 60 * 1.0  # 2 hours
     }
 }

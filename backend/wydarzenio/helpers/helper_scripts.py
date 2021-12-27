@@ -16,3 +16,8 @@ def get_or_create_place(place_name) -> Place:
                 name=place_name,
                 country="PL")
     return Place.objects.get(pk=1)
+
+
+def save_img_from_file_to_model(event_model, file_path):
+    # TODO
+    pass

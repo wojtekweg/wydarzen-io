@@ -13,7 +13,7 @@ def get_html_document(url):
 
 
 @limit_scraping
-def save_img_from_fb_url(fb_url, save_to_file=True, download_folder="../../media/fb_img_downloads"):
+def save_img_from_fb_url(fb_url, save_to_file=True, download_folder="media/fb_img_downloads"):
     """
     Having URL, scrap the site and save images.
     """
@@ -25,6 +25,7 @@ def save_img_from_fb_url(fb_url, save_to_file=True, download_folder="../../media
     i = images[1].get('src')
 
     if save_to_file:
+        # move it to helper_scripts.save_img_from_file_to_model
         if not os.path.exists(download_folder):
             os.makedirs(download_folder)
 
