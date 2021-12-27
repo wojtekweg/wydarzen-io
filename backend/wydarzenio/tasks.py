@@ -1,8 +1,10 @@
 from __future__ import absolute_import, unicode_literals
+import datetime
 from celery import shared_task
 from datetime import date, timedelta
 from .models import Event
 from .helpers.bs_script import save_img_by_query
+import requests
 
 
 @shared_task(name="mark_as_inactive_DEBUG")
@@ -40,3 +42,35 @@ def fill_first_empty_image():
     else:
         print("No events to update")
     print(f"Updated {event_to_update} object {was_picture_updated})")
+
+
+@shared_task(name="discord_notify")
+def send_discord_message_about_event():
+    # TODO make the message more rich like there https://gist.github.com/Birdie0/78ee79402a4301b1faf412ab5f1cdcf9
+    test_discord_endpoint = ''
+    e = Event.objects.last()
+
+    data = {
+        "content" : f"Test message about an event that you have been subscribed for coming on {e.date}",
+        "username" : "wydarzen.io",
+    }
+
+    #leave this out if you dont want an embed
+    #for all params, see https://discordapp.com/developers/docs/resources/channel#embed-object
+    data["embeds"] = [
+        {
+            "description" : e.description,
+            "title" : e.title,
+            "url": f"http://localhost:3000/events/{e.id}",
+            "color": 4405450
+        }
+    ]
+
+    result = requests.post(test_discord_endpoint, json = data)
+
+    try:
+        result.raise_for_status()
+    except requests.exceptions.HTTPError as err:
+        print(err)
+    else:
+        print("Payload delivered successfully, code {}.".format(result.status_code))

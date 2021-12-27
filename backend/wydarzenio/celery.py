@@ -24,12 +24,6 @@ def debug_task(self):
 
 
 app.conf.beat_schedule = {
-    # Scheduler Name
-    # 'mark-as-inactive-every-12hours': {
-    #     'task': 'mark-as-inactive',
-    #     'schedule': 12 * 60 * 60 * 60 * 1.0,
-    # },
-    # ABOVE TASK IS COMMENTED BECAUSE OF DEBUG PURPOSES
     'mark-as-inactive-every-ten-seconds': {
         'task': 'mark_as_inactive_DEBUG',
         'schedule': 12 * 60 * 60 * 60 * 1.0,  # 12 hours
@@ -37,5 +31,9 @@ app.conf.beat_schedule = {
     'download-img-for-events': {
         'task': 'schedule_download_img',
         'schedule': 2 * 60 * 60 * 1.0  # 2 hours
+    },
+    'discord-notify': {
+        'task': 'discord_notify',
+        'schedule': 10 * 1.0  # TODO 10 seconds for testing
     }
 }
