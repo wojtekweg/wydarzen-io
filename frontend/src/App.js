@@ -1,6 +1,6 @@
 import React from "react";
 import { Navbar } from "./components/Navbar";
-import { Route, Routes, Link } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { TechStack } from "./components/static-subpages/TechStack";
 import { About } from "./components/static-subpages/About";
 import { EventPage } from "./components/EventPage";
