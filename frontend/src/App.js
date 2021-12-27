@@ -56,7 +56,7 @@ function App() {
     if (isValid(dateTo)) {
       arr = arr.filter((event) => isBefore(event.date_iso, dateTo));
     }
-    arr = arr.sort(compareAsc);
+    arr.sort((a, b) => compareAsc(a.date_iso, b.date_iso));
 
     if (viewActive !== "All") {
       arr = arr.filter(

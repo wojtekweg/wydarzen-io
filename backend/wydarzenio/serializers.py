@@ -6,6 +6,7 @@ from .helpers.helper_scripts import get_or_create_place
 import json
 from zipfile import ZipFile
 from dateutil import parser
+import csv
 
 
 class EventSerializer(serializers.ModelSerializer):
@@ -98,9 +99,26 @@ class EventFileImportSerializer(serializers.ModelSerializer):
                             Event.objects.create(
                                 title=lines[0][2:],
                                 date=parser.parse(lines[2][6:]),
-                                description="Imported from .csv",
+                                description="Imported from .md",
                                 is_active=True
                             )
+                    if fileName.endswith('.csv'):
+                        zipObj.extract(fileName, 'media/event/file_imports/temp_csv')
+                        with open(f"media/event/file_imports/temp_csv/{fileName}", 'r') as csv_file:
+                            csv_reader = csv.DictReader(csv_file)
+                            line_count = 0
+                            for row in csv_reader:
+                                try:
+                                    e = Event.objects.create(
+                                        title=row['\ufeffName'],  # why is that? idk
+                                        date=parser.parse(row['Date']),
+                                        description="Imported from .csv",
+                                        is_active=True
+                                    )
+                                    print(e)
+                                except parser._parser.ParserError:
+                                    continue
+                                line_count += 1
         else:
             raise AttributeError("WRONG FILE IMPORT!")
         print(events_list)
