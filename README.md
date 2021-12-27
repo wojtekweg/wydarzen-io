@@ -19,7 +19,9 @@ Kill all Celery services and delete logs:
 
 `kill -9 $(ps aux | grep celery | grep -v grep | awk '{print $2}' | tr '\n' ' ') > /dev/null 2>&1 | rm backend/celery.beat.log && rm backend/celery.log && rm backend/celerybeat-schedule.db`
 
-# Backend
+# Installing app
+
+## Backend
 
 `cd backend`
 
@@ -36,7 +38,7 @@ backend test coverage: `coverage run --source='.' manage.py test wydarzenio && c
 If macOS and having SSL problems, go to:
 Macintosh HD > Applications > Python3.7 folder (or whatever version of python you're using) > double click on "Install Certificates.command" file. [Source](https://github.com/hardikvasa/google-images-download/issues/313#issuecomment-643300594)
 
-## Install Redis
+### Install Redis
 
 Redis is needed to use Celery, which is used for asynchronious features.
 
@@ -58,9 +60,9 @@ Run Celery in another shell:
 
 `celery -A wydarzenio worker -l info`
 
-# Frontend
+## Frontend
 
-`npm install packages`
+`cd frontend && npm install packages`
 
 `npm start`
 
@@ -68,7 +70,9 @@ To interactive update of NPM packages:
 
 `npm-check -u`
 
-# UI tests
+## UI tests
+
+`npm install packages`
 
 `./node_modules/.bin/cypress open`
 
