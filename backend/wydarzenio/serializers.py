@@ -112,13 +112,30 @@ class EventFileImportSerializer(serializers.ModelSerializer):
                                     e = Event.objects.create(
                                         title=row['\ufeffName'],  # why is that? idk
                                         date=parser.parse(row['Date']),
-                                        description="Imported from .csv",
                                         is_active=True
                                     )
                                     print(e)
                                 except parser._parser.ParserError:
                                     continue
                                 line_count += 1
+        elif Path(event_file.file.name).suffix == ".csv":
+            with open(f"./media/{event_file}") as file:
+                csv_reader = csv.DictReader(file)
+                line_count = 0
+                for row in csv_reader:
+                    name, date, description, place = row['Name'], row['Date'], row['Description'], row['Place']
+                    try:
+                        e = Event.objects.create(
+                                title=name,
+                                date=parser.parse(date),
+                                description=description,
+                                place=get_or_create_place(place),
+                                is_active=True
+                                )
+                        print(e)
+                    except parser._parser.ParserError:
+                        continue
+                    line_count += 1
         else:
             raise AttributeError("WRONG FILE IMPORT!")
         print(events_list)

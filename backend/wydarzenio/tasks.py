@@ -29,8 +29,10 @@ def fill_first_empty_image():
             with open('media/' + file_path, "r"):
                 pass
             event_to_update.picture = file_path
+            print(f"Updated event {event_to_update.id} picture")
         except IOError:
             event_to_update.picture_can_be_updated = False
+            print(f"Set event picture upload to False for {event_to_update.id}")
         finally:
             if event_to_update.picture_can_be_updated:
                 was_picture_updated = "(picture was correctly updated)" 
