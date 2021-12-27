@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import config from "../config.json";
 import { emptyEvent, emptyPlace } from "../helpers/api_methods";
 
-const EventPage = (ś) => {
+const EventPage = () => {
   const [event, setEvent] = useState({ ...emptyEvent });
   const [place, setPlace] = useState({ ...emptyPlace });
   const [imgClip, setImgClip] = useState(true);

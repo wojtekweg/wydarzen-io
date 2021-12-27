@@ -9,14 +9,15 @@ import { About } from "./components/static-subpages/About";
 import { EventPage } from "./components/EventPage";
 import { PlacePage } from "./components/PlacePage";
 import { Places } from "./components/Places";
+import { isAfter, isBefore, parse, add, compareAsc, isValid } from "date-fns";
 
 function App() {
   const [viewActive, setViewActive] = useState("All"); // allowed states should be "Active", "All", "Inactive"
   const [gridDisplay, setGridDisplay] = useState(true);
   const [sortReversed, setSortReversed] = useState(false);
   const [searchPhrase, setSearchPhrase] = useState("");
-  const [dateFrom, setDateFrom] = useState("");
-  const [dateTo, setDateTo] = useState("");
+  const [dateFrom, setDateFrom] = useState(new Date());
+  const [dateTo, setDateTo] = useState(add(new Date(), { months: 2 }));
   const [eventsGrid, setEventsGrid] = useState([]);
 
   useEffect(() => {
@@ -32,19 +33,25 @@ function App() {
 
   const getActiveEvents = () => {
     let arr = eventsGrid;
-    arr = eventsGrid.sort((a, b) => new Date(b.date) - new Date(a.date));
+    arr.forEach((e) => (e.date_iso = parse(e.date, "yyyy-MM-dd", new Date())));
 
     if (searchPhrase.length > 0) {
       arr = arr.filter((event) =>
         event.title.toLowerCase().match(searchPhrase.toLowerCase())
       );
     }
-    if (dateFrom !== "") {
-      arr = arr.filter((event) => event.date >= dateFrom);
+
+    // TODO logic of date filters has to be refactored
+    //  setting invalid date should clear the filter
+    //  the best would be to always have valid or empty date
+    if (isValid(dateFrom)) {
+      arr = arr.filter((event) => isAfter(event.date_iso, dateFrom));
     }
-    if (dateTo !== "") {
-      arr = arr.filter((event) => event.date <= dateTo);
+    if (isValid(dateTo)) {
+      arr = arr.filter((event) => isBefore(event.date_iso, dateTo));
     }
+    arr = eventsGrid.sort(compareAsc);
+
     if (viewActive !== "All") {
       arr = arr.filter(
         (event) => event.is_active === (viewActive === "Active")
@@ -118,7 +125,7 @@ function App() {
     const activeEvents = getActiveEvents();
 
     return activeEvents.map((event) => (
-      <div className="p-4 md:w-1/3" key={event.id}>
+      <div className="p-4 md:w-1/3 max-w-xl max-h-md" key={event.id}>
         <div
           className={`h-full border-2 ${
             event.is_active
@@ -201,27 +208,64 @@ function App() {
 
         <div height="5%" className={`my-2 ${gridDisplay ? "" : "invisible"}`}>
           <div className={"menu-buttons"}>
-            From
-            <input
-              name="start"
-              type="date"
-              placeholder="Set date from"
-              className={`${
-                dateFrom !== "" ? "toggle" : null
-              } justify-items-center dark:bg-slate-800 border-0 search-input`}
-              onChange={(e) => setDateFrom(e.target.value)}
-            />
-            to
-            <input
-              name="end"
-              type="date"
-              className={`${
-                dateTo !== "" ? "toggle" : null
-              } justify-items-center dark:bg-slate-800 border-0 search-input`}
-              placeholder="Set date to"
-              onChange={(e) => setDateTo(e.target.value)}
-              accept="date"
-            />
+            <div
+              id="daterangepicker"
+              className="daterangepicker flex items-center"
+            >
+              <div className="relative">
+                <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+                  <svg
+                    className="w-5 h-5 text-gray-500 dark:text-gray-400"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                      clipRule="evenodd"
+                    ></path>
+                  </svg>
+                </div>
+                <input
+                  name="start"
+                  type="date"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder={dateFrom}
+                  // value={dateFrom}
+                  onChange={(e) =>
+                    setDateFrom(parse(e.target.value, "yyyy-MM-dd", new Date()))
+                  }
+                />
+              </div>
+              <span className="mx-4 text-gray-500">to</span>
+              <div className="relative">
+                <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+                  <svg
+                    className="w-5 h-5 text-gray-500 dark:text-gray-400"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                      clipRule="evenodd"
+                    ></path>
+                  </svg>
+                </div>
+                <input
+                  name="end"
+                  type="date"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder={dateTo}
+                  // value={dateTo}
+                  onChange={(e) =>
+                    setDateTo(parse(e.target.value, "yyyy-MM-dd", new Date()))
+                  }
+                />
+              </div>
+            </div>
             <button
               className="btn"
               onClick={() => setSortReversed(!sortReversed)}

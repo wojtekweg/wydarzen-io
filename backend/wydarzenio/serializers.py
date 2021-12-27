@@ -4,10 +4,12 @@ from icalendar import Calendar, Event
 from .models import Event, Place, EventFileImport, TechStackInfo, DesignPatternInfo
 from .helpers.helper_scripts import get_or_create_place
 import json
+import datetime
 
 
 class EventSerializer(serializers.ModelSerializer):
     place_name = serializers.SerializerMethodField(source='get_place_name')
+    date_iso = serializers.SerializerMethodField(source='get_place_name')
 
     class Meta:
         model = Event
@@ -15,6 +17,9 @@ class EventSerializer(serializers.ModelSerializer):
 
     def get_place_name(self, obj):
         return obj.place.name
+
+    def get_date_iso(self, obj):
+        return obj.date.strftime('%Y-%d-%mT%H:%M')
 
 
 class PlaceSerializer(serializers.ModelSerializer):
