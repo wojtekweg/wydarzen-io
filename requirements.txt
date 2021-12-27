@@ -12,7 +12,7 @@ Deprecated==1.2.13
 Django>=3.2.10
 django-cors-headers==3.10.0
 django-countries==7.2.1
-djangorestframework==3.12.4
+djangorestframework==3.13.1
 icalendar==4.0.9
 importlib-metadata==4.10.0
 kombu==5.2.2
