@@ -34,4 +34,8 @@ app.conf.beat_schedule = {
         'task': 'mark_as_inactive_DEBUG',
         'schedule': 10 * 1.0,  # 10 seconds
     },
+    'download-img-for-events': {
+        'task': 'schedule_download_img',
+        'schedule': 10 * 1.0
+    }
 }
