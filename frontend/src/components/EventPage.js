@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Router, useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import config from "../config.json";
 import { emptyEvent, emptyPlace } from "../helpers/api_methods";
 import { EventModal } from "./modals/EventModal.js";
@@ -128,6 +128,7 @@ const EventPage = () => {
               justifyContent: "center",
               fontSize: 20,
             }}
+            id="calendarBox"
           >
             <div>
               <div className="m-5 px-2 border-2 dark:border-gray-800 inline-flex items-center aspect-square">
@@ -174,7 +175,10 @@ const EventPage = () => {
                 </svg>
               </div>
 
-              <div className="flex flex-col items-center text-center justify-center">
+              <div
+                className="flex flex-col items-center text-center justify-center"
+                id="place"
+              >
                 <h2 className="font-medium title-font mt-4 text-gray-900 dark:text-gray-200 text-lg">
                   <a href={`/places/${place.id}`}>{event.place_name}</a>
                 </h2>
@@ -189,7 +193,11 @@ const EventPage = () => {
             <button className="btn" onClick={() => setEventModal(!eventModal)}>
               Edit
             </button>
-            <button className="btn" onClick={() => changeCancel()}>
+            <button
+              className="btn"
+              onClick={() => changeCancel()}
+              id="activeButton"
+            >
               {event.is_active ? "Cancel" : "Reactivate"}
             </button>
             <button className="btn" onClick={() => setDeleteConfirmModal(true)}>

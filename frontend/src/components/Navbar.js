@@ -5,7 +5,7 @@ const Navbar = (props) => {
   const [collapse, setCollapse] = useState(false);
   return (
     <div className="px-auto">
-      <div width="100%" height="5%">
+      <div width="100%" height="5%" id="logo">
         <h1 className="text-3xl font-bold underline">
           <a href="/">wydarzen.io</a>
         </h1>

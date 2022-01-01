@@ -190,6 +190,7 @@ function EventModal(props) {
             </label>
             <input
               type="date"
+              id="date"
               name="date"
               onChange={(e) => setDate(e.target.value)}
               value={date}

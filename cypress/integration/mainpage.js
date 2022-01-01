@@ -1,4 +1,4 @@
-import Index from "../support/pageObjects/index";
+import Index from "../support/pageObjects/events";
 
 describe("The Home Page", () => {
   const index = new Index();

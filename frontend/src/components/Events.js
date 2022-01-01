@@ -191,22 +191,25 @@ const Events = () => {
           <div className={"menu-buttons"}>
             <input
               className={`${
-                searchPhrase !== "" ? "toggle" : null
+                searchPhrase !== "" ? "toggle" : ""
               } justify-items-center dark:bg-slate-800 search-input`}
               placeholder="Search event title"
               onChange={(input) => setSearchPhrase(input.target.value)}
+              id="searchInput"
             />
             <button
               className={`btn ${
                 viewActive !== "All" ? "toggle active" : ""
               } w-2/12`}
               onClick={switchActive}
+              id="toggleActive"
             >
               {viewActive} events
             </button>
             <button
               className={`btn toggle ${gridDisplay ? "" : "active"} w-2/12`}
               onClick={() => setGridDisplay(!gridDisplay)}
+              id="toggleView"
             >
               {gridDisplay ? "Grid" : "Calendar"} view
             </button>
@@ -236,6 +239,7 @@ const Events = () => {
                   </svg>
                 </div>
                 <input
+                  id="startDate"
                   name="start"
                   type="date"
                   className="text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5   dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -262,6 +266,7 @@ const Events = () => {
                   </svg>
                 </div>
                 <input
+                  id="endDate"
                   name="end"
                   type="date"
                   className="text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5   dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -275,13 +280,18 @@ const Events = () => {
             <button
               className="btn"
               onClick={() => setSortReversed(!sortReversed)}
+              id="sortButton"
             >
               {sortReversed ? "⬆" : "⬇"}
             </button>
-            <button className="btn" onClick={() => refreshGrid()}>
+            <button
+              className="btn"
+              onClick={() => refreshGrid()}
+              id="refreshButton"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6"
+                className="h-6 w-6"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
