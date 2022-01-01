@@ -25,5 +25,21 @@ class Events {
   getRefreshButton() {
     return cy.get("#refreshButton");
   }
+
+  getEvents() {
+    return cy.get("div[id='eventCard']");
+  }
+  getFirstEvent() {
+    return cy.get("#eventCard");
+  }
 }
-export default Events;
+
+class EventCard {
+  constructor() {}
+
+  getEventTitle() {
+    return cy.get("#eventTitle");
+  }
+}
+
+module.exports = { EventCard: EventCard, Events: Events };

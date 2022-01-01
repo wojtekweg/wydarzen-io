@@ -124,8 +124,19 @@ const Events = () => {
   const renderGridItems = () => {
     const activeEvents = getActiveEvents();
 
+    if (activeEvents.length === 0) {
+      return (
+        <div>
+          <p>No events found :(</p>
+        </div>
+      );
+    }
     return activeEvents.map((event) => (
-      <div className="p-4 md:w-1/3 max-w-xl max-h-md" key={event.id}>
+      <div
+        className="p-4 md:w-1/3 max-w-xl max-h-md"
+        id="eventCard"
+        key={event.id}
+      >
         <div
           className={`h-full border-2 ${
             event.is_active
@@ -157,6 +168,7 @@ const Events = () => {
                     ? "hover:underline text-gray-900 dark:text-zinc-100"
                     : "line-through text-red-900 dark:text-red-300"
                 } mb-3`}
+                id="eventTitle"
               >
                 {event.title}
               </h1>
