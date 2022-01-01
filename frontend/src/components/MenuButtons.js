@@ -3,6 +3,7 @@ import PlaceModal from "./modals/PlaceModal";
 import ImportModal from "./modals/ImportModal";
 import React, { useState } from "react";
 import { emptyPlace } from "./../helpers/api_methods";
+import { emptyEvent } from "../helpers/api_methods";
 
 const MenuButtons = (props) => {
   // TODO fix logic of opening modals, because here it is changed by state
@@ -37,14 +38,14 @@ const MenuButtons = (props) => {
       </div>
       {eventModal ? (
         <EventModal
-          activeEvent={props.activeEvent}
+          activeEvent={emptyEvent}
           // toggle={() => setEventModal(false)}
           isOpen={eventModal}
         />
       ) : null}
       {importModal ? (
         <ImportModal
-          activeEvent={props.activeEvent}
+          activeEvent={emptyEvent}
           // toggle={() => setImportModal(false)}
           isOpen={importModal}
         />

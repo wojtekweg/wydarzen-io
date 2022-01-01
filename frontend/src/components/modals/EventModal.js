@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
 import config from "../../config.json";
-import { emptyEvent } from "../../helpers/api_methods";
 
 // TODO create helpers and cleanup
 const logError = (error) => {
@@ -15,11 +14,11 @@ const logError = (error) => {
 };
 
 function EventModal(props) {
-  const [title, setTitle] = useState(emptyEvent.title);
-  const [description, setDescription] = useState(emptyEvent.description);
-  const [date, setDate] = useState(emptyEvent.date);
-  const [is_active] = useState(emptyEvent.is_active);
-  const [picture, setPicture] = useState(emptyEvent.picture);
+  const [title, setTitle] = useState(props.activeEvent.title);
+  const [description, setDescription] = useState(props.activeEvent.description);
+  const [date, setDate] = useState(props.activeEvent.date);
+  const [is_active] = useState(props.activeEvent.is_active);
+  const [picture, setPicture] = useState(props.activeEvent.picture);
   const isPictureUploadDisabled = !!picture;
   const [pictureUploadError, setPictureUploadError] = useState(null);
   const [toggle, setToggle] = useState(props.isOpen);
@@ -50,7 +49,7 @@ function EventModal(props) {
   const postData = () => {
     // Copy all information we have about event object and update it from states
     const event = {
-      ...emptyEvent,
+      ...props.activeEvent,
       title: title,
       description: description,
       date: date,
@@ -89,15 +88,15 @@ function EventModal(props) {
       <div className="modal-container">
         <div className="modal-header">
           <h1 className="modal-header-h1">
-            {typeof emptyEvent != "undefined" &&
-            typeof emptyEvent.id != "undefined"
+            {typeof props.activeEvent != "undefined" &&
+            typeof props.activeEvent.id != "undefined"
               ? "Edit"
               : "Add"}{" "}
             event
           </h1>
           <p className="modal-p">
-            {typeof emptyEvent != "undefined" &&
-            typeof emptyEvent.id != "undefined"
+            {typeof props.activeEvent != "undefined" &&
+            typeof props.activeEvent.title.id != "undefined"
               ? "Edit the selected event. Remember that event will be automatically marked as inactive after it is past."
               : "Add an event to the database."}
           </p>
@@ -174,10 +173,10 @@ function EventModal(props) {
                 className="input-map"
                 disabled={true}
                 placeholder={
-                  typeof emptyEvent != "undefined" &&
-                  typeof emptyEvent.id != "undefined" &&
-                  emptyEvent.place_name !== ""
-                    ? emptyEvent.place_name
+                  typeof props.activeEvent.title != "undefined" &&
+                  typeof props.activeEvent.id != "undefined" &&
+                  props.activeEvent.place_name !== ""
+                    ? props.activeEvent.place_name
                     : "Editing place is not yet possible"
                 }
               />

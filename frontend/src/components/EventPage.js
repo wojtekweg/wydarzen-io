@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { Router, useParams, useNavigate } from "react-router-dom";
 import config from "../config.json";
 import { emptyEvent, emptyPlace } from "../helpers/api_methods";
+import { EventModal } from "./modals/EventModal.js";
 
 const EventPage = () => {
   const [event, setEvent] = useState({ ...emptyEvent });
   const [place, setPlace] = useState({ ...emptyPlace });
   const [imgClip, setImgClip] = useState(true);
+  const [eventModal, setEventModal] = useState(false);
   const { eventId } = useParams();
+  let navigate = useNavigate();
+  const [deleteConfirmModal, setDeleteConfirmModal] = useState(false);
 
   useEffect(() => {
     fetchEvent();
@@ -35,6 +39,24 @@ const EventPage = () => {
     setImgClip(!imgClip);
   };
 
+  const changeCancel = () => {
+    axios
+      .patch(`${config.url}events/${event.id}/`, {
+        is_active: !event.is_active,
+      })
+      .then((res) => fetchEvent());
+  };
+
+  const handleDeleteEvent = () => {
+    if (deleteConfirmModal) {
+      axios
+        .delete(`${config.url}events/${event.id}/`)
+        .then(() => navigate("/"));
+    } else {
+      setDeleteConfirmModal(true);
+    }
+  };
+
   return (
     <section className="text-gray-600 body-font">
       <div className="container px-5 pt-12 pb-24 mx-auto flex flex-col">
@@ -45,7 +67,7 @@ const EventPage = () => {
             style={{
               textAlign: "center",
             }}
-            class="inline-block my-5 py-5 lg:w-5/6 mx-auto rounded bg-red-50 text-red-500 text-l tracking-widest"
+            className="inline-block my-5 py-5 lg:w-5/6 mx-auto rounded bg-red-50 text-red-500 text-l tracking-widest"
           >
             EVENT IS INACTIVE
           </span>
@@ -163,8 +185,41 @@ const EventPage = () => {
               </div>
             </div>
           </div>
+          <div className="flex flex-col sm:flex-row mt-1 text-right">
+            <button className="btn" onClick={() => setEventModal(!eventModal)}>
+              Edit
+            </button>
+            <button className="btn" onClick={() => changeCancel()}>
+              {event.is_active ? "Cancel" : "Reactivate"}
+            </button>
+            <button className="btn" onClick={() => setDeleteConfirmModal(true)}>
+              Delete
+            </button>
+          </div>
         </div>
       </div>
+      {eventModal ? (
+        <EventModal activeEvent={event} isOpen={eventModal} />
+      ) : null}
+      {deleteConfirmModal ? (
+        <div className="modal-section flex-col left-0 right-0 bottom-0 top-0 bg-opacit-50">
+          <h1>Delete event</h1>
+          <p>Are you sure to delete this event from database?</p>
+          <div>
+            <button
+              className="btn"
+              onClick={() => setDeleteConfirmModal(false)}
+            >
+              No, cancel
+            </button>
+            <button className="btn" onClick={() => handleDeleteEvent()}>
+              Yes, delete
+            </button>
+          </div>
+        </div>
+      ) : (
+        ""
+      )}
     </section>
   );
 };
