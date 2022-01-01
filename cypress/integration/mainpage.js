@@ -1,4 +1,4 @@
-import Events from "../support/pageObjects/events";
+import { Events } from "../support/pageObjects/events";
 
 describe("The Home Page", () => {
   const index = new Events();
