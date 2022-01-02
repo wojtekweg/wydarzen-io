@@ -22,4 +22,4 @@ class Event {
     return cy.contains("Delete");
   }
 }
-export default Event;
+module.exports = { Event: Event };

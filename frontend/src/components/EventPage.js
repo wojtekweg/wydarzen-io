@@ -180,7 +180,7 @@ const EventPage = () => {
                 id="place"
               >
                 <h2 className="font-medium title-font mt-4 text-gray-900 dark:text-gray-200 text-lg">
-                  <a href={`/places/${place.id}`}>{event.place_name}</a>
+                  <a href={`/places/${event.place}`}>{event.place_name}</a>
                 </h2>
                 <div className="w-12 h-1 bg-indigo-500 rounded mt-2 mb-4"></div>
                 <p className="text-base">

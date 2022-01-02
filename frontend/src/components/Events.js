@@ -3,7 +3,15 @@ import axios from "axios";
 import config from "../config.json";
 import MyCalendar from "./3rd-party/reactBigCalendar";
 import { Link } from "react-router-dom";
-import { isAfter, isBefore, parse, add, compareAsc, isValid } from "date-fns";
+import {
+  isAfter,
+  isBefore,
+  parse,
+  add,
+  sub,
+  compareAsc,
+  isValid,
+} from "date-fns";
 
 const Events = () => {
   const [viewActive, setViewActive] = useState("All"); // allowed states should be "Active", "All", "Inactive"
@@ -44,11 +52,16 @@ const Events = () => {
     // TODO logic of date filters has to be refactored
     //  setting invalid date should clear the filter
     //  the best would be to always have valid or empty date
+    // add and sub are to show inclusive date for filtering
     if (isValid(dateFrom)) {
-      arr = arr.filter((event) => isAfter(event.date_iso, dateFrom));
+      arr = arr.filter((event) =>
+        isAfter(event.date_iso, sub(dateFrom, { days: 1 }))
+      );
     }
     if (isValid(dateTo)) {
-      arr = arr.filter((event) => isBefore(event.date_iso, dateTo));
+      arr = arr.filter((event) =>
+        isBefore(event.date_iso, add(dateTo, { days: 1 }))
+      );
     }
     arr.sort((a, b) => compareAsc(a.date_iso, b.date_iso));
 
@@ -157,7 +170,10 @@ const Events = () => {
             alt="blog"
           />
           <div className="p-6">
-            <h2 className="tracking-widest text-xs title-font font-medium text-gray-400 mb-1">
+            <h2
+              className="tracking-widest text-xs title-font font-medium text-gray-400 mb-1"
+              id="dateAndPlace"
+            >
               {event.date} at{" "}
               <a href={`/places/${event.place}`}>{event.place_name}</a>
             </h2>
