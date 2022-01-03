@@ -1,7 +1,6 @@
-name: Cypress end-to-end
+name: Build, Django unit tests & Cypress UI tests
 on:
   schedule:
-    # runs tests every day at 4am
     - cron: "5 8 * * 5"
   push:
 jobs:
@@ -29,6 +28,7 @@ jobs:
         run: |
           ./manage.py runserver &
       - name: Use Node.js ${{ matrix.node-version }}
+        working-directory: ./cypress
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
@@ -40,8 +40,10 @@ jobs:
         run: |
           npm run start &
       - name: Cypress nightly tests 🌃
+        working-directory: ./cypress
         uses: cypress-io/github-action@v2
       - name: Upload artifacts
+        working-directory: ./cypress
         uses: actions/upload-artifact@v2
         if: failure()
         with:
