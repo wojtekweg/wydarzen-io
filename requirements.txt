@@ -3,7 +3,7 @@ anyjson==0.3.3
 asgiref==3.4.1
 billiard==3.6.4.0
 cached-property==1.5.2
-celery==5.2.3
+celery==5.2.2
 click==8.0.3
 click-didyoumean==0.3.0
 click-plugins==1.1.1
@@ -15,7 +15,7 @@ django-countries==7.2.1
 djangorestframework==3.13.1
 icalendar==4.0.9
 importlib-metadata==4.10.0
-kombu==5.2.3
+kombu==5.2.2
 Pillow==9.0.0
 prompt-toolkit==3.0.24
 python-dateutil==2.8.2
