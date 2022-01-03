@@ -39,10 +39,8 @@ jobs:
         run: |
           npm run start &
       - name: Cypress nightly tests 🌃
-        working-directory: ./cypress
         uses: cypress-io/github-action@v2
       - name: Upload artifacts
-        working-directory: ./cypress
         uses: actions/upload-artifact@v2
         if: failure()
         with:
