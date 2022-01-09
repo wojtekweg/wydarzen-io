@@ -1,4 +1,4 @@
-import { useState } from "react/cjs/react.development";
+import { useState } from "react";
 import { MenuButtons } from "./MenuButtons";
 
 const Navbar = (props) => {
@@ -73,11 +73,6 @@ const Navbar = (props) => {
             <div className="navbar-link">
               <a className="navbar-link" href="/about">
                 About
-              </a>
-            </div>
-            <div className="navbar-link">
-              <a className="navbar-link" href="/about/tech-stack">
-                Tech stack
               </a>
             </div>
           </div>
