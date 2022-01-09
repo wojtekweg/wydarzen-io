@@ -81,7 +81,12 @@ const CustomModal = (props) => {
             >
               Cancel
             </button>
-            <button className="modal-save" onClick={postData} type="submit">
+            <button
+              className="modal-save"
+              id="save"
+              onClick={postData}
+              type="submit"
+            >
               Save
             </button>
           </div>

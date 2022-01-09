@@ -124,6 +124,7 @@ function EventModal(props) {
             </label>
             <input
               type="text"
+              id="description"
               name="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -218,7 +219,7 @@ function EventModal(props) {
             <button className="modal-cancel" onClick={(e) => setToggle(false)}>
               Cancel
             </button>
-            <button className="modal-save" onClick={postData}>
+            <button className="modal-save" id="save" onClick={postData}>
               Save
             </button>
           </div>

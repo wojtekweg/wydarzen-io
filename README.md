@@ -13,7 +13,7 @@ Open five terminals and run following commmands in each:
 
 - `cd frontend && npm start`
 
-- `./node_modules/.bin/cypress open`
+- `cd cypress && ./node_modules/.bin/cypress open`
 
 Kill all Celery services and delete logs:
 
