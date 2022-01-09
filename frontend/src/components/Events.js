@@ -52,7 +52,7 @@ const Events = () => {
     // TODO logic of date filters has to be refactored
     //  setting invalid date should clear the filter
     //  the best would be to always have valid or empty date
-    // add and sub are to show inclusive date for filtering
+    //  add and sub are to show inclusive date for filtering
     if (isValid(dateFrom)) {
       arr = arr.filter((event) =>
         isAfter(event.date_iso, sub(dateFrom, { days: 1 }))
