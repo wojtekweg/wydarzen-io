@@ -1,7 +1,7 @@
 from pathlib import Path
 from rest_framework import serializers
 from icalendar import Calendar, Event
-from .models import Event, Place, EventFileImport, TechStackInfo, DesignPatternInfo
+from .models import Event, Place, EventFileImport
 from .helpers.helper_scripts import get_or_create_place
 import json
 from zipfile import ZipFile
@@ -28,18 +28,6 @@ class PlaceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Place
         fields = ('id', 'name', 'country', 'lat', 'long')
-
-
-class TechStackInfoSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = TechStackInfo
-        fields = '__all__'
-
-
-class DesignPatternInfoSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = DesignPatternInfo
-        fields = '__all__'
 
 
 class EventFileImportSerializer(serializers.ModelSerializer):
