@@ -4,9 +4,8 @@ from datetime import datetime, timedelta, timezone
 
 def limit_scraping(scrapping_func):
     """
-    Limit calling scrapper function, so it won't violate (or at least limit violation)
-    terms of use of scrapped websites. Limit of calling a website is saved to ScrapperSingleton
-    object and is dynamically updated.
+    Limit calling scrapper function, so it will limit calls to 3rd party sites. 
+    Limit of calling a website is saved to ScrapperSingleton object and is dynamically updated.
     """
     log_object = ScrapperSingleton.objects.all()[0]
     time_diff = datetime.now(timezone.utc) - log_object.last_call
