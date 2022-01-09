@@ -11,6 +11,12 @@ class Place(models.Model):
     country = CountryField()
     lat = models.DecimalField(max_digits=9, decimal_places=6, default=cracow_coords["lat"])
     long = models.DecimalField(max_digits=9, decimal_places=6, default=cracow_coords["long"])
+    picture = models.ImageField(
+        upload_to="event/posters",
+        blank=True,
+        null=True,
+        default=None)
+
 
     def __str__(self) -> str:
         return self.name

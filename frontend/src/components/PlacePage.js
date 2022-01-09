@@ -70,11 +70,7 @@ const PlacePage = (ś) => {
             <img
               alt="content"
               className="object-cover object-center h-full w-full"
-              src={
-                place.picture
-                  ? place.picture
-                  : "https://picsum.photos/720/400?grayscale&blur" // TODO place picture
-              }
+              src={place.picture}
             />
           </div>
 
