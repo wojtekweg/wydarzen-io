@@ -3,7 +3,7 @@ anyjson==0.3.3
 asgiref==3.4.1
 billiard==3.6.4.0
 cached-property==1.5.2
-celery==5.2.2
+celery==5.2.3
 click==8.0.3
 click-didyoumean==0.3.0
 click-plugins==1.1.1
