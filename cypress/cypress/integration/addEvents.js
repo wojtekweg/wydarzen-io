@@ -6,7 +6,7 @@ describe("Add event", () => {
   const events = new Events();
   const navbar = new Navbar();
   let now = new Date();
-  let futureDate = new Date();
+  let futureDate = new Date().toISOString().substring(0, 10);
   const day = 864e5;
   const filepath = "cypress-pic.jpeg";
 
@@ -22,7 +22,7 @@ describe("Add event", () => {
 
     cy.get("#title").type("From cypress");
     cy.get("#description").type("From cypress is description written :)");
-    cy.get("#date").type(futureDate);
+    cy.get("#date").type(futureDate || "2030-01-14"); // fallback date for unsuccesful asynchronious execution
     cy.get("#picture").attachFile(filepath);
     cy.get("#save").click();
   });
