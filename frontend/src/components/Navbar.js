@@ -3,6 +3,18 @@ import { MenuButtons } from "./MenuButtons";
 
 const Navbar = (props) => {
   const [collapse, setCollapse] = useState(false);
+  const [currTheme, setCurrTheme] = useState("light");
+
+  const setTheme = () => {
+    if (currTheme === "light") {
+      document.documentElement.classList.add("dark");
+      setCurrTheme("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      setCurrTheme("light");
+    }
+  };
+
   return (
     <div className="px-auto">
       <div width="100%" height="5%" id="logo">
@@ -20,9 +32,9 @@ const Navbar = (props) => {
               bottom: 10,
               left: 10,
             }}
-            className="p-10 px-4 py-2 flex bg-gray-400 dark:bg-indigo-700 rounded-full opacity-50 hover:opacity-100 cursor-pointer"
+            className="p-10 px-4 py-2 flex opacity-70 hover:opacity-100 backdrop-blur bg-indigo-500 text-indigo-50 rounded-full cursor-pointer"
           >
-            <p className="mr-2">Show menu</p>
+            <p className="mr-2">Menu</p>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               class="h-5 w-5 rotate-90"
@@ -43,12 +55,12 @@ const Navbar = (props) => {
               bottom: 0,
               width: "100%",
             }}
-            className="bg-gray-200 dark:bg-indigo-900 px-4 py-2 grid gap-4 grid-rows-1 grid-cols-5 opacity-40 hover:opacity-80"
+            className="backdrop-blur-lg x-4 py-2 grid gap-4 grid-rows-1 grid-cols-5"
           >
-            <div className="">
+            <div>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="rotate-90 h-5 w-5 bg-gray-400 dark:bg-indigo-700 rounded-full navbar-link"
+                className="rotate-90 mx-5 h-5 w-5 bg-gray-400 dark:bg-indigo-700 rounded-full navbar-link"
                 viewBox="0 0 20 20"
                 fill="currentColor"
                 onClick={() => setCollapse(!collapse)}
@@ -74,6 +86,9 @@ const Navbar = (props) => {
               <a className="navbar-link" href="/about">
                 About
               </a>
+            </div>
+            <div className="navbar-link" onClick={() => setTheme()}>
+              Change theme
             </div>
           </div>
         )}
