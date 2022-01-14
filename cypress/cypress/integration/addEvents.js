@@ -5,9 +5,15 @@ import "cypress-file-upload";
 describe("Add event", () => {
   const events = new Events();
   const navbar = new Navbar();
-  const now = new Date();
+  let now = new Date();
+  let futureDate = new Date();
   const day = 864e5;
   const filepath = "cypress-pic.jpeg";
+
+  before(() => {
+    now = new Date();
+    futureDate = new Date(+now + day * 7).toISOString().substring(0, 10);
+  });
 
   it("adds event from modal", () => {
     cy.visit(events.url);
@@ -16,9 +22,7 @@ describe("Add event", () => {
 
     cy.get("#title").type("From cypress");
     cy.get("#description").type("From cypress is description written :)");
-    cy.get("#date").type(
-      new Date(+now + day * 7).toISOString().substring(0, 10)
-    );
+    cy.get("#date").type(futureDate);
     cy.get("#picture").attachFile(filepath);
     cy.get("#save").click();
   });
@@ -26,7 +30,7 @@ describe("Add event", () => {
   it("adds event from json", () => {
     cy.writeFile("cypress/fixtures/exampleEvent.json", {
       title: "Imported by Cypress",
-      date: new Date(+now + day * 8).toISOString().substring(0, 10),
+      date: futureDate,
       description: "Cypresso importedo evento!",
       is_active: true,
       picture:
