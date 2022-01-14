@@ -1,8 +1,8 @@
 from pathlib import Path
 from rest_framework import serializers
 from icalendar import Calendar, Event
-from .models import Event, Place, EventFileImport
-from .helpers.helper_scripts import get_or_create_place
+from .models import Event, Place, EventFileImport, DiscordChannel
+from .helpers.helper_scripts import get_or_create_place, get_or_create_discord_channel
 import json
 from zipfile import ZipFile
 from dateutil import parser
@@ -23,11 +23,26 @@ class EventSerializer(serializers.ModelSerializer):
     def get_date_iso(self, obj):
         return obj.date.strftime('%Y-%d-%mT%H:%M')
 
+    def update(self, instance, validated_data):
+        print(validated_data)
+        print("DUPPPPPAA")
+        if hasattr(validated_data, 'add_discord_subscription'):
+            print("WE GOT HERE WITH")
+            print(validated_data.add_discord_subscription)
+            pass
+        return super().update(instance, validated_data)
+
 
 class PlaceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Place
         fields = ('id', 'name', 'country', 'lat', 'long', 'picture')
+
+
+class DiscordChannelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DiscordChannel
+        fields = '__all__'
 
 
 class EventFileImportSerializer(serializers.ModelSerializer):

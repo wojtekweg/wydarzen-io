@@ -15,4 +15,11 @@ const emptyPlace = {
   long: "",
 };
 
-export { emptyEvent, emptyPlace };
+const emptyDiscordChannel = {
+  id: 1,
+  name: "",
+  channel_url: "",
+  display_embed: true,
+};
+
+export { emptyEvent, emptyPlace, emptyDiscordChannel };

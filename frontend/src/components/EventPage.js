@@ -2,7 +2,11 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import config from "../config.json";
-import { emptyEvent, emptyPlace } from "../helpers/api_methods";
+import {
+  emptyEvent,
+  emptyPlace,
+  emptyDiscordChannel,
+} from "../helpers/api_methods";
 import { EventModal } from "./modals/EventModal.js";
 
 const EventPage = () => {
@@ -10,6 +14,8 @@ const EventPage = () => {
   const [place, setPlace] = useState({ ...emptyPlace });
   const [imgClip, setImgClip] = useState(true);
   const [eventModal, setEventModal] = useState(false);
+  const [showSubscribeInput, setShowSubscribeInput] = useState(true);
+  const [discordChannels, setDiscordChannels] = useState([]);
   const { eventId } = useParams();
   let navigate = useNavigate();
   const [deleteConfirmModal, setDeleteConfirmModal] = useState(false);
@@ -17,6 +23,7 @@ const EventPage = () => {
   useEffect(() => {
     fetchEvent();
     fetchPlace(event.place);
+    fetchDiscordChannels();
   }, []);
 
   const fetchEvent = async () => {
@@ -32,6 +39,13 @@ const EventPage = () => {
     axios
       .get(`${config.url}places/${placeId}/`)
       .then((res) => setPlace(res.data))
+      .catch((err) => console.log(err));
+  };
+
+  const fetchDiscordChannels = () => {
+    axios
+      .get(`${config.url}discord_channels/`)
+      .then((res) => setDiscordChannels(res.data))
       .catch((err) => console.log(err));
   };
 
@@ -55,6 +69,41 @@ const EventPage = () => {
     } else {
       setDeleteConfirmModal(true);
     }
+  };
+
+  const patchEventDiscordSubscription = (discordObjectId) => {
+    const index = event.discord_subscription.indexOf(discordObjectId);
+    if (index > -1) {
+      event.discord_subscription.splice(index, 1);
+    } else {
+      event.discord_subscription.push(discordObjectId);
+    }
+
+    axios
+      .patch(`${config.url}events/${event.id}/`, {
+        discord_subscription: event.discord_subscription,
+      })
+      .then((res) => fetchEvent());
+  };
+
+  const renderDiscordChannels = () => {
+    return (
+      <div>
+        {discordChannels.map((channel) => (
+          <div className="btn w-full" key={channel.id}>
+            <input
+              style={{ listStyleType: "none" }}
+              type="checkbox"
+              className="mx-2 btn text-indigo-500"
+              checked={event.discord_subscription.includes(channel.id)}
+              onChange={() => patchEventDiscordSubscription(channel.id)}
+            ></input>
+            {channel.name}
+            <p className="truncate text-gray-500">{channel.channel_url}</p>
+          </div>
+        ))}
+      </div>
+    );
   };
 
   return (
@@ -203,7 +252,30 @@ const EventPage = () => {
             <button className="btn" onClick={() => setDeleteConfirmModal(true)}>
               Delete
             </button>
+            <button
+              className="btn"
+              onClick={() => setShowSubscribeInput(!showSubscribeInput)}
+            >
+              Manage subscribtions
+            </button>
           </div>
+          {showSubscribeInput ? null : (
+            <div className="flex-col my-2">
+              {renderDiscordChannels()}
+              <div className="btn w-full flex">
+                {/* TODO support adding discord channels from event page */}
+                <input
+                  type="text"
+                  id="subscribe"
+                  name="subscribe"
+                  // onChange={(e) => setSubscribeChannel(e.target.value)}
+                  placeholder="Enter Discord webhook URL"
+                  className="modal-input"
+                />
+                <button className="btn modal-save">Add</button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
       {eventModal ? (

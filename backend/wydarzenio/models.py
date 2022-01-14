@@ -22,6 +22,12 @@ class Place(models.Model):
         return self.name
 
 
+class DiscordChannel(models.Model):
+    name = models.CharField(max_length=128)
+    channel_url = models.CharField(max_length=256, unique=True)
+    display_embed = models.BooleanField(default=True)
+
+
 class Event(models.Model):
     title = models.CharField(max_length=128, default="TBA")
     date = models.DateField(default="2000-01-01")
@@ -29,6 +35,10 @@ class Event(models.Model):
     place = models.ForeignKey(Place, on_delete=models.CASCADE, default=1)
     is_active = models.BooleanField(default=True)
     picture_can_be_updated = models.BooleanField(default=True)
+    discord_subscription = models.ManyToManyField(
+        DiscordChannel, 
+        blank=True,
+        default=None)
     picture = models.ImageField(
         upload_to="event/posters",
         blank=True,

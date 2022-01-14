@@ -1,6 +1,6 @@
 from rest_framework import viewsets
-from .serializers import EventSerializer, PlaceSerializer, EventFileImportSerializer
-from .models import Event, Place, EventFileImport
+from .serializers import EventSerializer, PlaceSerializer, EventFileImportSerializer, DiscordChannelSerializer
+from .models import Event, Place, EventFileImport, DiscordChannel
 
 
 class EventView(viewsets.ModelViewSet):
@@ -16,3 +16,8 @@ class PlaceView(viewsets.ModelViewSet):
 class EventFileImportView(viewsets.ModelViewSet):
     serializer_class = EventFileImportSerializer
     queryset = EventFileImport.objects.all()
+
+
+class DiscordChannelView(viewsets.ModelViewSet):
+    serializer_class = DiscordChannelSerializer
+    queryset = DiscordChannel.objects.all()
