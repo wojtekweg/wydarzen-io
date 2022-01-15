@@ -1,4 +1,3 @@
-from cmath import sin
 from wydarzenio.models import ScrapperSingleton
 from datetime import datetime, timedelta, timezone
 
@@ -10,7 +9,7 @@ def limit_scraping(scrapping_func):
     """
     singleton = ScrapperSingleton.objects.all()
     if len(singleton) == 0:
-        log_object = ScrapperSingleton.objects.create(last_call=datetime.now)
+        log_object = ScrapperSingleton.objects.create(last_call=datetime.now())
     log_object = ScrapperSingleton.objects.all()[0]
     time_diff = datetime.now(timezone.utc) - log_object.last_call
 
