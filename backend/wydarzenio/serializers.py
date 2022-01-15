@@ -2,6 +2,7 @@ from pathlib import Path
 from rest_framework import serializers
 from .models import Event, Place, EventFileImport, DiscordChannel
 from .helpers.file_parsers import parse_csv_to_event, parse_ics_to_event, parse_json_to_event, parse_zip_to_event
+from .helpers.helper_scripts import send_discord_message_about_event
 
 
 class EventSerializer(serializers.ModelSerializer):
@@ -19,13 +20,9 @@ class EventSerializer(serializers.ModelSerializer):
         return obj.date.strftime('%Y-%d-%mT%H:%M')
 
     def update(self, instance, validated_data):
-        print(validated_data)
-        print("DUPPPPPAA")  
-        # TODO observer notify the discord channel about the update
-        if hasattr(validated_data, 'add_discord_subscription'):
-            print("WE GOT HERE WITH")
-            print(validated_data.add_discord_subscription)
-            pass
+        if len(instance.discord_subscription.all()) > 0:
+            for channel in instance.discord_subscription.all():
+                send_discord_message_about_event(channel.channel_url, instance, message=f"Your event was updated: {validated_data}")
         return super().update(instance, validated_data)
 
 
