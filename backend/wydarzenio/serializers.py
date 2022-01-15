@@ -1,12 +1,7 @@
 from pathlib import Path
 from rest_framework import serializers
-from icalendar import Calendar, Event
 from .models import Event, Place, EventFileImport, DiscordChannel
-from .helpers.helper_scripts import get_or_create_place, get_or_create_discord_channel
-import json
-from zipfile import ZipFile
-from dateutil import parser
-import csv
+from .helpers.file_parsers import parse_csv_to_event, parse_ics_to_event, parse_json_to_event, parse_zip_to_event
 
 
 class EventSerializer(serializers.ModelSerializer):
@@ -25,7 +20,8 @@ class EventSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         print(validated_data)
-        print("DUPPPPPAA")
+        print("DUPPPPPAA")  
+        # TODO observer notify the discord channel about the update
         if hasattr(validated_data, 'add_discord_subscription'):
             print("WE GOT HERE WITH")
             print(validated_data.add_discord_subscription)
@@ -54,92 +50,15 @@ class EventFileImportSerializer(serializers.ModelSerializer):
         event_file = EventFileImport.objects.create(**validated_data)
         events_list = []
 
-        # TODO move this logic somewhere else
-        ############################
-        #  DESIGN PATTERN: adapter #
-        ############################
         if Path(event_file.file.name).suffix == ".json":
-            # TODO support multievent json file upload
-            with open(f"./media/{event_file}") as file:
-                data = json.load(file)
-                Event.objects.create(
-                    title=data["title"],
-                    date=data["date"],
-                    description=data["description"],
-                    place=Place.objects.get(pk=int(data["place"])),
-                    is_active=True
-                )
-
+            events_list.append(parse_json_to_event(event_file))
         elif Path(event_file.file.name).suffix == ".ics":
-            with open(f"./media/{event_file}") as file:
-                gcal = Calendar.from_ical(file.read())
-                for component in gcal.walk():
-                    if component.name == "VEVENT":
-                        # TODO for facebook, retrieve:
-                        #  - URL
-                        #  - organizer
-                        #  - class:public
-                        try:
-                            events_list.append(Event.objects.create(
-                                title=f"{component.get('summary')}",
-                                date=component.get('dtstart').dt,
-                                description=f"{component.get('description')}",
-                                place=get_or_create_place(component.get('location')),
-                                is_active=True
-                            ))
-                        except TypeError as e:
-                            print(f"HOWDY, WE GOT TYPERRROR: {e}")
+            events_list = parse_ics_to_event(event_file)
         elif Path(event_file.file.name).suffix == ".zip":
-            # here it is asserted that .zip file comes from Notion app and is having .md calendar
-            # TODO rewrite it to be more flexible
-            with ZipFile(f"./media/{event_file}", 'r') as zipObj:
-                listOfFileNames = zipObj.namelist()
-                for fileName in listOfFileNames:
-                    if fileName.endswith('.md'):
-                        zipObj.extract(fileName, 'media/event/file_imports/temp_md')
-                        with open(f"media/event/file_imports/temp_md/{fileName}", 'r') as md_file:
-                            lines = [line for line in md_file]
-                            Event.objects.create(
-                                title=lines[0][2:],
-                                date=parser.parse(lines[2][6:]),
-                                description="Imported from .md",
-                                is_active=True
-                            )
-                    if fileName.endswith('.csv'):
-                        zipObj.extract(fileName, 'media/event/file_imports/temp_csv')
-                        with open(f"media/event/file_imports/temp_csv/{fileName}", 'r') as csv_file:
-                            csv_reader = csv.DictReader(csv_file)
-                            line_count = 0
-                            for row in csv_reader:
-                                try:
-                                    e = Event.objects.create(
-                                        title=row['\ufeffName'],  # why is that? idk
-                                        date=parser.parse(row['Date']),
-                                        is_active=True
-                                    )
-                                    print(e)
-                                except parser._parser.ParserError:
-                                    continue
-                                line_count += 1
+            events_list = parse_zip_to_event(event_file)
         elif Path(event_file.file.name).suffix == ".csv":
-            with open(f"./media/{event_file}") as file:
-                csv_reader = csv.DictReader(file)
-                line_count = 0
-                for row in csv_reader:
-                    name, date, description, place = row['Name'], row['Date'], row['Description'], row['Place']
-                    try:
-                        e = Event.objects.create(
-                                title=name,
-                                date=parser.parse(date),
-                                description=description,
-                                place=get_or_create_place(place),
-                                is_active=True
-                                )
-                        print(e)
-                    except parser._parser.ParserError:
-                        continue
-                    line_count += 1
+            events_list = parse_csv_to_event(event_file)
         else:
             raise AttributeError("WRONG FILE IMPORT!")
-        print(events_list)
+        print(f"created {len(events_list)} events")
         return event_file

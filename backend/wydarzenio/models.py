@@ -75,7 +75,7 @@ class ScrapperSingleton(models.Model):
 
     def update_object(self, url, success=False):
         self.url = url
-        self.last_call = datetime.utcnow()
+        self.last_call = datetime.now()
         self.was_successful = success
         new_limit = int(self.minutes_limit / 2)
         if not success and new_limit > 5:

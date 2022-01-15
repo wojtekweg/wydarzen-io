@@ -1,10 +1,8 @@
 from __future__ import absolute_import, unicode_literals
-import datetime
 from celery import shared_task
 from datetime import date, timedelta
 from .models import Event
-from .helpers.bs_script import save_img_by_query
-import requests
+from .helpers.bs_script import save_img_from_bing
 
 
 @shared_task(name="mark_as_inactive_DEBUG")
@@ -24,21 +22,7 @@ def fill_first_empty_image():
         .first()
     was_picture_updated = "(picture was not updated)"
     if event_to_update:
-        save_img_by_query(event_to_update.title, output_dir='media/event/posters/')
-        file_path = f'event/posters/{event_to_update.title}/Image_1.jpg'
-        try:
-            # if file opens, then it can be saved to model
-            with open('media/' + file_path, "r"):
-                pass
-            event_to_update.picture = file_path
-            print(f"Updated event {event_to_update.id} picture")
-        except IOError:
-            event_to_update.picture_can_be_updated = False
-            print(f"Set event picture upload to False for {event_to_update.id}")
-        finally:
-            if event_to_update.picture_can_be_updated:
-                was_picture_updated = "(picture was correctly updated)" 
-            event_to_update.save()
+        was_picture_updated = save_img_from_bing(event_to_update)
     else:
         print("No events to update")
     print(f"Updated {event_to_update} object {was_picture_updated})")
