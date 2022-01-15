@@ -19,6 +19,8 @@ const EventPage = () => {
   const { eventId } = useParams();
   let navigate = useNavigate();
   const [deleteConfirmModal, setDeleteConfirmModal] = useState(false);
+  const [newDiscordChannel, setNewDiscordChannel] =
+    useState(emptyDiscordChannel);
 
   useEffect(() => {
     fetchEvent();
@@ -83,6 +85,13 @@ const EventPage = () => {
       .patch(`${config.url}events/${event.id}/`, {
         discord_subscription: event.discord_subscription,
       })
+      .then((res) => fetchEvent());
+  };
+
+  const postNewDiscordChannel = () => {
+    console.log(newDiscordChannel);
+    axios
+      .post(`${config.url}discord_channels/`, newDiscordChannel)
       .then((res) => fetchEvent());
   };
 
@@ -266,13 +275,36 @@ const EventPage = () => {
                 {/* TODO support adding discord channels from event page */}
                 <input
                   type="text"
-                  id="subscribe"
-                  name="subscribe"
-                  // onChange={(e) => setSubscribeChannel(e.target.value)}
-                  placeholder="Enter Discord webhook URL"
+                  id="subscribe-name"
+                  name="subscribe-name"
+                  onChange={(e) =>
+                    setNewDiscordChannel({
+                      ...newDiscordChannel,
+                      name: e.target.value,
+                    })
+                  }
+                  placeholder="Name"
                   className="modal-input"
                 />
-                <button className="btn modal-save">Add</button>
+                <input
+                  type="text"
+                  id="subscribe-url"
+                  name="subscribe-url"
+                  onChange={(e) =>
+                    setNewDiscordChannel({
+                      ...newDiscordChannel,
+                      channel_url: e.target.value,
+                    })
+                  }
+                  placeholder="Enter Discord webhook URL"
+                  className="modal-input mx-5"
+                />
+                <button
+                  className="btn modal-save"
+                  onClick={() => postNewDiscordChannel()}
+                >
+                  Add
+                </button>
               </div>
             </div>
           )}

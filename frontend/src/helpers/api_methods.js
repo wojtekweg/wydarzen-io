@@ -16,7 +16,6 @@ const emptyPlace = {
 };
 
 const emptyDiscordChannel = {
-  id: 1,
   name: "",
   channel_url: "",
   display_embed: true,
