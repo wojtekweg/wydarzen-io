@@ -6,13 +6,13 @@ describe("Add event", () => {
   const events = new Events();
   const navbar = new Navbar();
   let now = new Date();
-  let futureDate = new Date().toISOString().substring(0, 10);
+  let futureDate = "2030-01-14";
   const day = 864e5;
   const filepath = "cypress-pic.jpeg";
 
   before(() => {
-    now = new Date();
-    futureDate = new Date(+now + day * 7).toISOString().substring(0, 10);
+    const nextWeek = new Date(+now + day * 7);
+    futureDate = nextWeek.toISOString().substring(0, 10);
   });
 
   it("adds event from modal", () => {
@@ -22,7 +22,7 @@ describe("Add event", () => {
 
     cy.get("#title").type("From cypress");
     cy.get("#description").type("From cypress is description written :)");
-    cy.get("#date").type(futureDate || "2030-01-14"); // fallback date for unsuccesful asynchronious execution
+    cy.get("#date").type(futureDate || "2030-01-14");
     cy.get("#picture").attachFile(filepath);
     cy.get("#save").click();
   });
