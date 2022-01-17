@@ -1,5 +1,8 @@
 [![Cypress end-to-end](https://github.com/wojtekweg/wydarzen-io/actions/workflows/cypress.yml/badge.svg)](https://github.com/wojtekweg/wydarzen-io/actions/workflows/cypress.yml)
 
+<img width="1830" alt="Screenshot 2022-01-16 at 19 21 36" src="https://user-images.githubusercontent.com/49337058/149787491-709187e7-30cd-4bbe-a822-38d26119eca3.png">
+
+
 # Running app
 
 Open five terminals and run following commmands in each:
