@@ -2,7 +2,7 @@ amqp==5.0.9
 anyjson==0.3.3
 asgiref==3.4.1
 async-generator==1.10
-attrs==21.2.0
+attrs==21.4.0
 beautifulsoup4==4.10.0
 billiard==3.6.4.0
 bing-image-downloader==1.1.1
@@ -10,7 +10,7 @@ cached-property==1.5.2
 celery==5.2.2
 certifi==2021.10.8
 cffi==1.15.0
-charset-normalizer==2.0.9
+charset-normalizer==2.0.10
 click==8.0.3
 click-didyoumean==0.3.0
 click-plugins==1.1.1
