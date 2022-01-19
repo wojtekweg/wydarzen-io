@@ -30,5 +30,10 @@ def fill_first_empty_image():
 
 @shared_task(name="discord_notify")
 def send_discord_message_about_event():
-    # TODO create observer to watch for all upcoming events and sent a message
-    pass
+    start_date = date.today()
+    end_date = start_date + timedelta(days=1)
+    qs = Event.objects.filter(date__range=[start_date, end_date])
+
+    for event_ in qs:
+        for channel in event_.discord_subscription.all():
+            send_discord_message_about_event(channel.channel_url, event_, message=f"Reminder about your event coming soon!")

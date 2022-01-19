@@ -34,6 +34,6 @@ app.conf.beat_schedule = {
     },
     'discord-notify': {
         'task': 'discord_notify',
-        'schedule': 10 * 1.0  # TODO 10 seconds for testing
+        'schedule': 24 * 60 * 60 * 60 * 1.0,  # 24 hours
     }
 }

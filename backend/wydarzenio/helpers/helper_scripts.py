@@ -33,11 +33,6 @@ def get_or_create_discord_channel(discord_url, name="Created without name specif
     return DiscordChannel.objects.get(pk=1)
 
 
-def save_img_from_file_to_model(event_model, file_path):
-    # TODO
-    pass
-
-
 def send_discord_message_about_event(discord_endpoint, event, message="Somebody just wanted to ping you about it?"):
     # TODO make the message more rich like there https://gist.github.com/Birdie0/78ee79402a4301b1faf412ab5f1cdcf9
     data = {

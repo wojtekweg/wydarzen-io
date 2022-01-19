@@ -5,7 +5,7 @@ from .models import Event, Place, EventFileImport, DiscordChannel
 
 class EventView(viewsets.ModelViewSet):
     serializer_class = EventSerializer
-    queryset = Event.objects.all()  # TODO: add start_date 
+    queryset = Event.objects.all()
 
 
 class PlaceView(viewsets.ModelViewSet):

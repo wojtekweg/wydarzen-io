@@ -26,10 +26,9 @@ def save_img_from_url(url, save_to_file=True, download_folder="media/img_downloa
     pic_to_get = 1
     if not 'facebook' in url:
         pic_to_get = random.randint(0, len(images)-1)
-    i = images[pic_to_get].get('src')  #.split(sep='?', maxsplit=1)[0]
+    i = images[pic_to_get].get('src')
 
     if save_to_file:
-        # move it to helper_scripts.save_img_from_file_to_model
         if not os.path.exists(download_folder):
             os.makedirs(download_folder)
 

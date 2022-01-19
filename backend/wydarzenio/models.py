@@ -3,14 +3,12 @@ from django.db import models
 from django.core.validators import FileExtensionValidator
 from datetime import datetime
 
-cracow_coords = {"lat": 50.049683, "long": 19.944544}
-
 
 class Place(models.Model):
     name = models.CharField(max_length=128, unique=True)
     country = CountryField()
-    lat = models.DecimalField(max_digits=9, decimal_places=6, default=cracow_coords["lat"])
-    long = models.DecimalField(max_digits=9, decimal_places=6, default=cracow_coords["long"])
+    lat = models.DecimalField(max_digits=9, decimal_places=6, default=50.049683)  # default are the coords of Cracow
+    long = models.DecimalField(max_digits=9, decimal_places=6, default=19.944544)
     picture = models.ImageField(
         upload_to="event/posters",
         blank=True,
@@ -45,9 +43,10 @@ class Event(models.Model):
         null=True,
         default=None)
 
-    # TODO change default
-    # TODO add server-side naming of files (so the file will have the ID instead of name)
-    # TODO handle PUT of empty file
+    # TODO refactor picture upload logic:
+    #   - change default
+    #   - add server-side naming of files (so the file will have the ID instead of name)
+    #   - handle PUT of empty file
 
     def __str__(self) -> str:
         return f"{self.title} ({self.date})"
@@ -69,7 +68,7 @@ class EventFileImport(models.Model):
 class ScrapperSingleton(models.Model):
     last_call = models.DateTimeField()
     url = models.URLField(unique=False, blank=True, null=True)
-    img_url = models.URLField(blank=True, null=True)  # TODO fill that in update
+    img_url = models.URLField(blank=True, null=True)
     was_successful = models.BooleanField(default=False)
     minutes_limit = models.IntegerField(default=30)
 
