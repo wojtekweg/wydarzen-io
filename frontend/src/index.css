@@ -32,6 +32,16 @@ input {
   @apply bg-gray-100 dark:bg-gray-800;
 }
 
+a.link {
+  @apply underline text-blue-700 dark:text-blue-300;
+}
+a.link:hover {
+  @apply text-blue-800 dark:text-blue-600;
+}
+a.link:visited {
+  @apply text-purple-600 dark:text-purple-600;
+}
+
 .event-title {
   cursor: pointer;
   font-weight: 750;

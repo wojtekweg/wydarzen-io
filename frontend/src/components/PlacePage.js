@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import config from "../config.json";
-import { emptyPlace } from "../helpers/api_methods";
+import { emptyPlace } from "../helpers/api_schemas";
 
 const PlacePage = (ś) => {
   const [place, setPlace] = useState({ ...emptyPlace });

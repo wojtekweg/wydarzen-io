@@ -2,8 +2,8 @@ import { EventModal } from "./modals/EventModal";
 import PlaceModal from "./modals/PlaceModal";
 import ImportModal from "./modals/ImportModal";
 import React, { useState } from "react";
-import { emptyPlace } from "./../helpers/api_methods";
-import { emptyEvent } from "../helpers/api_methods";
+import { emptyPlace } from "../helpers/api_schemas";
+import { emptyEvent } from "../helpers/api_schemas";
 
 const MenuButtons = (props) => {
   // TODO fix logic of opening modals, because here it is changed by state

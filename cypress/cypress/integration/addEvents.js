@@ -1,6 +1,6 @@
 import Navbar from "../support/pageObjects/components/navbar";
 import { Events } from "../support/pageObjects/events";
-import "cypress-file-upload";
+import "cypress-file-upload"; // TODO use new upload of files from cypress 9
 
 describe("Add event", () => {
   const events = new Events();
@@ -15,18 +15,18 @@ describe("Add event", () => {
     futureDate = nextWeek.toISOString().substring(0, 10);
   });
 
-//   TYPING THE DATE IS FLAKY, DONT KNOW WHY :( 
-//   it("adds event from modal", () => {
-//     cy.visit(events.url);
+  //   TYPING THE DATE IS FLAKY, DONT KNOW WHY :(
+  //   it("adds event from modal", () => {
+  //     cy.visit(events.url);
 
-//     navbar.getAddEvent().click();
+  //     navbar.getAddEvent().click();
 
-//     cy.get("#title").type("From cypress");
-//     cy.get("#description").type("From cypress is description written :)");
-//     cy.get("#date").type(futureDate || "2030-01-14");
-//     cy.get("#picture").attachFile(filepath);
-//     cy.get("#save").click();
-//   });
+  //     cy.get("#title").type("From cypress");
+  //     cy.get("#description").type("From cypress is description written :)");
+  //     cy.get("#date").type(futureDate || "2030-01-14");
+  //     cy.get("#picture").attachFile(filepath);
+  //     cy.get("#save").click();
+  //   });
 
   it("adds event from json", () => {
     cy.writeFile("cypress/fixtures/exampleEvent.json", {
