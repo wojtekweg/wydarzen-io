@@ -125,7 +125,7 @@ const EventPage = () => {
             style={{
               textAlign: "center",
             }}
-            className="inline-block my-5 py-5 lg:w-5/6 mx-auto rounded bg-red-50 text-red-500 text-l tracking-widest"
+            className="inline-block my-5 py-5 lg:w-5/6 mx-auto rounded bg-red-50 dark:bg-red-900 text-red-500 text-l tracking-widest"
           >
             EVENT IS INACTIVE
           </span>
@@ -213,7 +213,7 @@ const EventPage = () => {
           </div>
 
           <div className="flex flex-col sm:flex-row mt-10">
-            <div className="sm:w-2/3 sm:pr-8 sm:py-8  border-gray-200 sm:border-t-0 border-t mt-4 pt-4 sm:mt-0 text-center sm:text-left">
+            <div className="sm:w-2/3 sm:pr-8 sm:py-8  border-gray-200 sm:border-t-0 border-t mt-4 pt-4 sm:mt-0 text-center sm:text-left dark:text-zinc-200">
               <p className="leading-relaxed text-lg mb-4">
                 {event.description}
               </p>

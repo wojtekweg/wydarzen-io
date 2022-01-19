@@ -1,19 +1,36 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MenuButtons } from "./MenuButtons";
 
 const Navbar = (props) => {
   const [collapse, setCollapse] = useState(false);
-  const [currTheme, setCurrTheme] = useState("light");
+  const [currTheme, setCurrTheme] = useState();
 
-  const setTheme = () => {
-    if (currTheme === "light") {
-      document.documentElement.classList.add("dark");
+  const setTheme = (initialSet = false) => {
+    const html = document.querySelector("html");
+
+    if (
+      ((!("theme" in localStorage) &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches) ||
+        localStorage.theme === "dark") &&
+      initialSet
+    ) {
+      localStorage.theme = "dark";
+      html.classList.add("dark");
+      setCurrTheme("dark");
+    } else if (currTheme === "light") {
+      localStorage.theme = "dark";
+      html.classList.add("dark");
       setCurrTheme("dark");
     } else {
-      document.documentElement.classList.remove("dark");
+      localStorage.theme = "light";
+      html.classList.remove("dark");
       setCurrTheme("light");
     }
   };
+
+  useEffect(() => {
+    setTheme(true);
+  }, []);
 
   return (
     <div className="px-auto">

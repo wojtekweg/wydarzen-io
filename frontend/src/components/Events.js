@@ -190,7 +190,9 @@ const Events = () => {
               </h1>
             </Link>
 
-            <p className="leading-relaxed mb-3 truncate">{event.description}</p>
+            <p className="leading-relaxed mb-3 truncate dark:text-zinc-400">
+              {event.description}
+            </p>
           </div>
         </div>
       </div>
