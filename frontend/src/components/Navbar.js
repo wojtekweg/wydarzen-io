@@ -2,10 +2,10 @@ import { useState, useEffect } from "react";
 import { MenuButtons } from "./MenuButtons";
 
 const Navbar = (props) => {
-  const [collapse, setCollapse] = useState(false);
-  const [currTheme, setCurrTheme] = useState();
+  const [collapseMenu, setCollapseMenu] = useState(false);
+  const [currTheme, setCurrTheme] = useState(false);
 
-  const setTheme = (initialSet = false) => {
+  const changeTheme = (initialSet = false) => {
     const html = document.querySelector("html");
 
     if (
@@ -29,7 +29,7 @@ const Navbar = (props) => {
   };
 
   useEffect(() => {
-    setTheme(true);
+    changeTheme(true);
   }, []);
 
   return (
@@ -41,9 +41,9 @@ const Navbar = (props) => {
       </div>
       <MenuButtons />
       <div>
-        {collapse ? (
+        {collapseMenu ? (
           <div
-            onClick={() => setCollapse(!collapse)}
+            onClick={() => setCollapseMenu(!collapseMenu)}
             style={{
               position: "fixed",
               bottom: 10,
@@ -80,7 +80,7 @@ const Navbar = (props) => {
                 className="rotate-90 mx-5 h-5 w-5 bg-gray-400 dark:bg-indigo-700 rounded-full navbar-link"
                 viewBox="0 0 20 20"
                 fill="currentColor"
-                onClick={() => setCollapse(!collapse)}
+                onClick={() => setCollapseMenu(!collapseMenu)}
               >
                 <path
                   fillRule="evenodd"
@@ -104,7 +104,7 @@ const Navbar = (props) => {
                 About
               </a>
             </div>
-            <div className="navbar-link" onClick={() => setTheme()}>
+            <div className="navbar-link" onClick={() => changeTheme()}>
               Change theme
             </div>
           </div>
