@@ -4,15 +4,20 @@ import { useParams } from "react-router-dom";
 import config from "../config.json";
 import { emptyPlace } from "../helpers/api_schemas";
 import { Page404 } from "./Page404.js";
+import { parse, compareAsc } from "date-fns";
+import placeholder from "../assets/placeholder.png";
+import { Link } from "react-router-dom";
 
 const PlacePage = () => {
   const [httpStatusCode, setHttpStatusCode] = useState();
   const [place, setPlace] = useState({ ...emptyPlace });
   const [imgClip, setImgClip] = useState(true);
+  const [eventsGrid, setEventsGrid] = useState([]);
   const { placeId } = useParams();
 
   useEffect(() => {
     fetchPlace();
+    refreshGrid();
   }, []);
 
   const fetchPlace = async () => {
@@ -34,6 +39,78 @@ const PlacePage = () => {
   if (httpStatusCode === 404 || httpStatusCode === false) {
     return <Page404 />;
   }
+
+  const setEventsGrid_ = (arr) => {
+    arr.forEach((e) => (e.date_iso = parse(e.date, "yyyy-MM-dd", new Date())));
+    setEventsGrid(arr);
+  };
+
+  const refreshGrid = async () => {
+    // TODO terrible idea to fetch all events here
+    axios
+      .get(`${config.url}events/`)
+      .then((res) => setEventsGrid_(res.data))
+      .catch((err) => console.log(err));
+  };
+
+  const getActiveEvents = () => {
+    let arr = eventsGrid.filter((e) => e.place == placeId);
+    arr.sort((a, b) => compareAsc(a.date_iso, b.date_iso));
+    return arr;
+  };
+
+  const renderGridItems = () => {
+    const activeEvents = getActiveEvents();
+
+    if (activeEvents.length === 0) {
+      return (
+        <div>
+          <p>No events found :(</p>
+        </div>
+      );
+    }
+    return activeEvents.map((event) => (
+      <div
+        className="p-4 md:w-1/3 max-w-xl max-h-md"
+        id="eventCard"
+        key={event.id}
+      >
+        <div
+          className={`h-full ${
+            event.is_active ? "bg-indigo-500" : "bg-red-700"
+          } border-opacity-60 rounded overflow-hidden bg-opacity-5`}
+        >
+          <img
+            className="lg:h-48 md:h-36 w-full object-cover object-center"
+            src={`${event.picture || placeholder}`}
+            alt="blog"
+          />
+          <div className="p-6">
+            <h2
+              className="tracking-widest text-xs title-font font-medium text-gray-400 mb-1"
+              id="dateAndPlace"
+            >
+              {event.date} at{" "}
+              <a href={`/places/${event.place}`}>{event.place_name}</a>
+            </h2>
+            <Link to={`/events/${event.id}`}>
+              <h1
+                className={`title-font text-lg font-medium hover:cursor-pointer ${
+                  event.is_active
+                    ? "hover:underline text-gray-900 dark:text-zinc-100"
+                    : "line-through text-red-900 dark:text-red-300"
+                } mb-3`}
+                id="eventTitle"
+              >
+                {event.title}
+              </h1>
+            </Link>
+            <p className="subtext">{event.description}</p>
+          </div>
+        </div>
+      </div>
+    ));
+  };
 
   return (
     <section className="text-gray-600 body-font">
@@ -101,7 +178,14 @@ const PlacePage = () => {
               </h1>
             </a>
           </div>
-          {/* // TODO place events enpoint */}
+          <h1 className="subtext" style={{ fontFamily: "arial" }}>
+            All events history at {place.name}:
+          </h1>
+          <section className="text-gray-600 dark:text-grey-200 body-font">
+            <div className="container px-5 py-5 mx-auto flex flex-wrap -m-4">
+              {renderGridItems()}
+            </div>
+          </section>
         </div>
       </div>
     </section>
