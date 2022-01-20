@@ -3,8 +3,10 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import config from "../config.json";
 import { emptyPlace } from "../helpers/api_schemas";
+import { Page404 } from "./Page404.js";
 
-const PlacePage = (ś) => {
+const PlacePage = () => {
+  const [httpStatusCode, setHttpStatusCode] = useState();
   const [place, setPlace] = useState({ ...emptyPlace });
   const [imgClip, setImgClip] = useState(true);
   const { placeId } = useParams();
@@ -19,12 +21,19 @@ const PlacePage = (ś) => {
       .then((res) => {
         setPlace(res.data);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        setHttpStatusCode(false);
+      });
   };
 
   const changeImgView = () => {
     setImgClip(!imgClip);
   };
+
+  if (httpStatusCode === 404 || httpStatusCode === false) {
+    return <Page404 />;
+  }
 
   return (
     <section className="text-gray-600 body-font">

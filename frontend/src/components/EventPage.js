@@ -8,8 +8,10 @@ import {
   emptyDiscordChannel,
 } from "../helpers/api_schemas";
 import { EventModal } from "./modals/EventModal.js";
+import { Page404 } from "./Page404.js";
 
 const EventPage = () => {
+  const [httpStatusCode, setHttpStatusCode] = useState();
   const [event, setEvent] = useState({ ...emptyEvent });
   const [place, setPlace] = useState({ ...emptyPlace });
   const [imgClip, setImgClip] = useState(true);
@@ -34,7 +36,10 @@ const EventPage = () => {
       .then((res) => {
         setEvent(res.data);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        setHttpStatusCode(false);
+      });
   };
 
   const fetchPlace = async (placeId) => {
@@ -343,6 +348,9 @@ const EventPage = () => {
     );
   };
 
+  if (httpStatusCode === 404 || httpStatusCode === false) {
+    return <Page404 />;
+  }
   return (
     <section className="text-gray-600 body-font">
       <div className="container px-5 pt-12 pb-24 mx-auto flex flex-col">
