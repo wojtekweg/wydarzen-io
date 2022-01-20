@@ -1,8 +1,21 @@
+import { useNavigate } from "react-router-dom";
+
 const Page404 = () => {
+  const navigate = useNavigate();
+
   return (
-    <section class="text-gray-600 body-font">
-      <div class="container px-5 py-24 mx-auto">
-        <h1 class="justify-items-center text-xl">Page not found :(</h1>
+    <section className="text-gray-600 body-font">
+      <div className="container px-5 py-24 mx-auto">
+        <h1 className="text-3xl">Page not found :(</h1>
+        <h1>
+          <button
+            type="button"
+            className="text-xl"
+            onClick={() => navigate(-1)}
+          >
+            Go back ↩
+          </button>
+        </h1>
       </div>
     </section>
   );
