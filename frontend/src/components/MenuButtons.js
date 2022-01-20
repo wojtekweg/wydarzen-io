@@ -26,13 +26,13 @@ const MenuButtons = (props) => {
   return (
     <div width="100%" className="menu-buttons">
       <div className={"menu-buttons flex"}>
-        <button className={`btn modal`} onClick={() => createEvent(false)}>
+        <button className={` modal`} onClick={() => createEvent(false)}>
           Add event
         </button>
-        <button className={`btn modal`} onClick={() => createEvent(true)}>
+        <button className={` modal`} onClick={() => createEvent(true)}>
           Import event
         </button>
-        <button className={`btn modal`} onClick={createPlace}>
+        <button className={` modal`} onClick={createPlace}>
           Add place
         </button>
       </div>

@@ -134,7 +134,28 @@ function EventModal(props) {
           </div>
         </div>
         <div className="event-modal-picture-and-place py-2 modal-full-row">
-          <div className="event-modal-picture modal-label-input">
+          <div className="event-modal-place modal-label-input">
+            <label htmlFor="place" className="modal-label">
+              Place
+            </label>
+            <p htmlFor="place">
+              <input
+                // TODO edit place
+                type="text"
+                name="place"
+                className="input-map"
+                disabled={true}
+                placeholder={
+                  typeof props.activeEvent.title != "undefined" &&
+                  typeof props.activeEvent.id != "undefined" &&
+                  props.activeEvent.place_name !== ""
+                    ? props.activeEvent.place_name
+                    : "Editing place is not yet possible"
+                }
+              />
+            </p>
+          </div>
+          <div className="event-modal-picture modal-label-input pl-5">
             <label htmlFor="picture" className="modal-label">
               Picture
             </label>
@@ -162,30 +183,9 @@ function EventModal(props) {
               />
             )}
           </div>
-          <div className="event-modal-place modal-label-input">
-            <label htmlFor="place" className="modal-label">
-              Place
-            </label>
-            <p htmlFor="place">
-              <input
-                // TODO edit place
-                type="text"
-                name="place"
-                className="input-map"
-                disabled={true}
-                placeholder={
-                  typeof props.activeEvent.title != "undefined" &&
-                  typeof props.activeEvent.id != "undefined" &&
-                  props.activeEvent.place_name !== ""
-                    ? props.activeEvent.place_name
-                    : "Editing place is not yet possible"
-                }
-              />
-            </p>
-          </div>
         </div>
         <div className="event-modal-footer modal-full-row">
-          <div className="event-modal-date w-full">
+          <div className="w-full">
             <label className="modal-label" htmlFor="date">
               Date
             </label>
@@ -198,31 +198,14 @@ function EventModal(props) {
               className="modal-input"
             />
           </div>
-          {/* 
-          <div className="event-modal-is_active">
-            <label className="leading-7 text-sm text-gray-600" htmlFor="active">
-              Active
-            </label>
-            <input
-              className="form-check-input appearance-none h-10 w-10 border border-gray-900 rounded-sm 
-                  bg-green-200 checked:bg-red-900 checked:border-red-600 focus:outline-none 
-                  transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left 
-                  mr-2 cursor-pointer"
-              type="checkbox"
-              value={is_active}
-              name="active"
-              onChange={(e) => setActive(e.target.value)}
-            />
-          </div> */}
-
-          <div className="event-modal-save modal-full-row">
-            <button className="modal-cancel" onClick={(e) => setToggle(false)}>
-              Cancel
-            </button>
-            <button className="modal-save" id="save" onClick={postData}>
-              Save
-            </button>
-          </div>
+        </div>
+        <div className="pt-5 flex modal-full-row">
+          <button className="modal-cancel" onClick={() => setToggle(false)}>
+            Cancel
+          </button>
+          <button className="modal-save" id="save" onClick={postData}>
+            Save
+          </button>
         </div>
       </div>
     </section>

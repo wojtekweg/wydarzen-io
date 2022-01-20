@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { MenuButtons } from "./MenuButtons";
 
-const Navbar = (props) => {
+const Navbar = () => {
   const [collapseMenu, setCollapseMenu] = useState(false);
   const [currTheme, setCurrTheme] = useState(false);
 

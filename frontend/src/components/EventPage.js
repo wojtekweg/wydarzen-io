@@ -9,6 +9,7 @@ import {
 } from "../helpers/api_schemas";
 import { EventModal } from "./modals/EventModal.js";
 import { Page404 } from "./Page404.js";
+import placeholder from "../assets/placeholder.png";
 
 const EventPage = () => {
   const [httpStatusCode, setHttpStatusCode] = useState();
@@ -120,7 +121,7 @@ const EventPage = () => {
     }
   };
 
-  const renderImgCollapseBtn = () => {
+  const renderImgCollapse = () => {
     return (
       <div className="object-cover object-center absolute p-2 opacity-40 hover:opacity-90">
         <svg
@@ -165,11 +166,7 @@ const EventPage = () => {
         <img
           alt="content"
           className="object-cover object-center h-full w-full"
-          src={
-            event.picture
-              ? event.picture
-              : "https://picsum.photos/720/400?grayscale&blur"
-          }
+          src={event.picture || placeholder}
         />
       </div>
     );
@@ -230,21 +227,17 @@ const EventPage = () => {
   const renderActionButtons = () => {
     return (
       <div className="flex flex-col sm:flex-row mt-1 text-right">
-        <button className="btn" onClick={() => setEventModal(!eventModal)}>
-          Edit
-        </button>
+        <button onClick={() => setEventModal(!eventModal)}>Edit</button>
         <button
-          className="btn"
+          className={event.is_active ? "" : "toggle"}
           onClick={() => changeCancel()}
           id="activeButton"
         >
           {event.is_active ? "Cancel" : "Reactivate"}
         </button>
-        <button className="btn" onClick={() => setDeleteConfirmModal(true)}>
-          Delete
-        </button>
+        <button onClick={() => setDeleteConfirmModal(true)}>Delete</button>
         <button
-          className="btn"
+          className={showSubscribeInput ? "" : "toggle"}
           onClick={() => setShowSubscribeInput(!showSubscribeInput)}
         >
           Manage subscribtions
@@ -255,23 +248,20 @@ const EventPage = () => {
 
   const renderDiscordChannels = () => {
     return (
-      <div className="flex-col my-2">
-        <div>
-          {discordChannels.map((channel) => (
-            <div className="btn w-full" key={channel.id}>
-              <input
-                style={{ listStyleType: "none" }}
-                type="checkbox"
-                className="mx-2 btn text-indigo-500"
-                checked={event.discord_subscription.includes(channel.id)}
-                onChange={() => patchEventDiscordSubscription(channel.id)}
-              ></input>
-              {channel.name}
-              <p className="truncate text-gray-500">{channel.channel_url}</p>
-            </div>
-          ))}
-        </div>
-        <div className="btn w-full flex">
+      <div className="w-full flex-col">
+        {discordChannels.map((channel) => (
+          <button
+            className={`w-full cursor-pointer ${
+              event.discord_subscription.includes(channel.id) ? "toggle" : ""
+            }`}
+            key={channel.id}
+            onClick={() => patchEventDiscordSubscription(channel.id)}
+          >
+            {channel.name}
+            <p className="subtext">{channel.channel_url}</p>
+          </button>
+        ))}
+        <button className="w-full flex items-center">
           <input
             type="text"
             id="subscribe-name"
@@ -299,12 +289,12 @@ const EventPage = () => {
             className="modal-input mx-5"
           />
           <button
-            className="btn modal-save"
+            className=" modal-save"
             onClick={() => postNewDiscordChannel()}
           >
             Add
           </button>
-        </div>
+        </button>
       </div>
     );
   };
@@ -337,10 +327,10 @@ const EventPage = () => {
         <h1>Delete event</h1>
         <p>Are you sure to delete this event from database?</p>
         <div>
-          <button className="btn" onClick={() => setDeleteConfirmModal(false)}>
+          <button className="" onClick={() => setDeleteConfirmModal(false)}>
             No, cancel
           </button>
-          <button className="btn" onClick={() => handleDeleteEvent()}>
+          <button className="" onClick={() => handleDeleteEvent()}>
             Yes, delete
           </button>
         </div>
@@ -356,7 +346,7 @@ const EventPage = () => {
       <div className="container px-5 pt-12 pb-24 mx-auto flex flex-col">
         {renderBannerForInactive()}
         <div className="lg:w-5/6 mx-auto">
-          {renderImgCollapseBtn()}
+          {renderImgCollapse()}
           {renderImg()}
 
           <div

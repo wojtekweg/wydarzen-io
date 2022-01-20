@@ -42,6 +42,10 @@ a.link:visited {
   @apply text-purple-600 dark:text-purple-600;
 }
 
+button {
+  @apply dark:text-zinc-400 cursor-default py-2 px-4 mx-2 my-1 font-semibold rounded-lg shadow-lg hover:bg-slate-100 dark:hover:bg-indigo-900;
+}
+
 .event-title {
   cursor: pointer;
   font-weight: 750;
@@ -88,10 +92,6 @@ a.link:visited {
   align-items: center;
 }
 
-.btn {
-  @apply dark:text-zinc-400 cursor-default py-2 px-4 mx-2 my-1 font-semibold rounded-lg shadow-lg hover:bg-slate-100 dark:hover:bg-slate-800 hover:animate-pulse;
-}
-
 .active {
   @apply border-0;
 }
@@ -116,7 +116,7 @@ a.link:visited {
   @apply cursor-not-allowed italic;
 }
 .toggle {
-  @apply border-2 border-double border-indigo-600 dark:border-indigo-900;
+  @apply border-2 border border-indigo-500 dark:border-indigo-900;
 }
 
 .input-map {
@@ -170,11 +170,11 @@ a.link:visited {
 }
 
 .modal-full-row {
-  @apply flex lg:w-2/3 w-full sm:flex-row flex-col mx-auto px-8 sm:space-x-4 sm:space-y-0 space-y-4 sm:px-0 items-end;
+  @apply flex lg:w-2/3 w-full sm:flex-row flex-col mx-auto px-8 sm:space-x-4 sm:space-y-0 space-y-4 sm:px-0 items-center;
 }
 
 .modal-label-input {
-  @apply relative flex-grow w-full;
+  @apply relative flex-grow w-full my-5;
 }
 
 .modal-label {
@@ -182,9 +182,9 @@ a.link:visited {
 }
 
 .modal-input {
-  @apply block w-full px-3
-  py-1.5 text-base font-normal text-gray-700 dark:text-zinc-300 rounded-lg transition
-  ease-in-out focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none;
+  @apply block w-full px-3 py-4 my-1
+  text-base font-normal text-gray-700 dark:text-zinc-100 rounded-lg transition
+  ease-in-out focus:border-indigo-500 focus:border-2 focus:outline-none dark:bg-gray-700;
 }
 
 .modal-save {
@@ -216,4 +216,12 @@ a.link:visited {
 
 .navbar-link {
   @apply hover:opacity-100 hover:text-indigo-500 hover:underline hover:decoration-wavy  cursor-pointer;
+}
+
+.subtext {
+  @apply truncate text-gray-500;
+}
+
+.date-input {
+  @apply text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5   dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500;
 }

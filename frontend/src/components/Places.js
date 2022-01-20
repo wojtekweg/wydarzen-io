@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react/cjs/react.development";
 import axios from "axios";
 import config from "../config.json";
+import placeholder from "../assets/placeholder.png";
 
 const Places = () => {
   const [places, setPlaces] = useState([]);
@@ -26,11 +27,7 @@ const Places = () => {
           <img
             alt="ecommerce"
             class="object-cover object-center w-full h-full block"
-            src={
-              place.picture
-                ? place.picture
-                : "https://picsum.photos/720/400?grayscale&blur"
-            }
+            src={place.picture || placeholder}
           />
         </a>
         <div className="mt-4">

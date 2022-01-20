@@ -12,6 +12,7 @@ import {
   compareAsc,
   isValid,
 } from "date-fns";
+import placeholder from "../assets/placeholder.png";
 
 const Events = () => {
   const [viewActive, setViewActive] = useState("All"); // allowed states should be "Active", "All", "Inactive"
@@ -38,30 +39,26 @@ const Events = () => {
       .catch((err) => console.log(err));
   };
 
-  const getActiveEvents = () => {
+  const getActiveEvents = (isForCalendar = false) => {
     let arr = eventsGrid;
 
-    // arr.forEach((e) => (e.date_iso = parse(e.date, "yyyy-MM-dd", new Date())));
+    if (!isForCalendar) {
+      if (searchPhrase.length > 0) {
+        arr = arr.filter((event) =>
+          event.title.toLowerCase().match(searchPhrase.toLowerCase())
+        );
+      }
 
-    if (searchPhrase.length > 0) {
-      arr = arr.filter((event) =>
-        event.title.toLowerCase().match(searchPhrase.toLowerCase())
-      );
-    }
-
-    // TODO logic of date filters has to be refactored
-    //  setting invalid date should clear the filter
-    //  the best would be to always have valid or empty date
-    //  add and sub are to show inclusive date for filtering
-    if (isValid(dateFrom)) {
-      arr = arr.filter((event) =>
-        isAfter(event.date_iso, sub(dateFrom, { days: 1 }))
-      );
-    }
-    if (isValid(dateTo)) {
-      arr = arr.filter((event) =>
-        isBefore(event.date_iso, add(dateTo, { days: 1 }))
-      );
+      if (isValid(dateFrom)) {
+        arr = arr.filter((event) =>
+          isAfter(event.date_iso, sub(dateFrom, { days: 1 }))
+        );
+      }
+      if (isValid(dateTo)) {
+        arr = arr.filter((event) =>
+          isBefore(event.date_iso, add(dateTo, { days: 1 }))
+        );
+      }
     }
     arr.sort((a, b) => compareAsc(a.date_iso, b.date_iso));
 
@@ -85,7 +82,7 @@ const Events = () => {
 
   const getActiveEventsForCalendarView = () => {
     let arr = [];
-    getActiveEvents().forEach((i) =>
+    getActiveEvents(true).forEach((i) =>
       arr.push({
         title: i.title,
         start: new Date(i.date),
@@ -151,22 +148,16 @@ const Events = () => {
         key={event.id}
       >
         <div
-          className={`h-full border-2 ${
-            event.is_active
-              ? "border-gray-200 dark:border-gray-800"
-              : "border-red-400"
-          } border-opacity-60 rounded-lg overflow-hidden`}
+          className={`h-full ${
+            event.is_active ? "bg-indigo-500" : "bg-red-700"
+          } border-opacity-60 rounded overflow-hidden bg-opacity-5`}
         >
           <div className="mx-1 my-1 object-cover object-center absolute">
             {renderEventButtons(event)}
           </div>
           <img
             className="lg:h-48 md:h-36 w-full object-cover object-center"
-            src={`${
-              event.picture
-                ? event.picture
-                : "https://picsum.photos/720/400?grayscale&blur"
-            }`}
+            src={`${event.picture || placeholder}`}
             alt="blog"
           />
           <div className="p-6">
@@ -189,10 +180,7 @@ const Events = () => {
                 {event.title}
               </h1>
             </Link>
-
-            <p className="leading-relaxed mb-3 truncate dark:text-zinc-400">
-              {event.description}
-            </p>
+            <p className="subtext">{event.description}</p>
           </div>
         </div>
       </div>
@@ -217,124 +205,84 @@ const Events = () => {
   const renderEventsFiltering = () => {
     return (
       <div>
-        <div height="5%" className="my-2 ">
-          <div className={"menu-buttons"}>
-            <input
-              className={`${
-                searchPhrase !== "" ? "toggle" : ""
-              } justify-items-center dark:bg-slate-800 search-input`}
-              placeholder="Search event title"
-              onChange={(input) => setSearchPhrase(input.target.value)}
-              id="searchInput"
-            />
-            <button
-              className={`btn ${
-                viewActive !== "All" ? "toggle active" : ""
-              } w-2/12`}
-              onClick={switchActive}
-              id="toggleActive"
-            >
-              {viewActive} events
-            </button>
-            <button
-              className={`btn toggle ${gridDisplay ? "" : "active"} w-2/12`}
-              onClick={() => setGridDisplay(!gridDisplay)}
-              id="toggleView"
-            >
-              {gridDisplay ? "Grid" : "Calendar"} view
-            </button>
-          </div>
+        <div className="menu-buttons my-2">
+          <input
+            className={`${searchPhrase !== "" ? "toggle" : ""} search-input`}
+            placeholder="Search by event title"
+            onChange={(input) => setSearchPhrase(input.target.value)}
+            id="searchInput"
+          />
+          <button
+            className={`${viewActive !== "All" ? "toggle active" : ""} w-2/12`}
+            onClick={switchActive}
+            id="toggleActive"
+          >
+            {viewActive} events
+          </button>
+          <button
+            className={`toggle ${gridDisplay ? "" : "active"} w-2/12`}
+            onClick={() => setGridDisplay(!gridDisplay)}
+            id="toggleView"
+          >
+            {gridDisplay ? "Grid" : "Calendar"} view
+          </button>
         </div>
 
-        <div height="5%" className={`my-2 ${gridDisplay ? "" : "invisible"}`}>
-          <div className={"menu-buttons"}>
-            <div
-              className={`btn flex items-center ${
-                isValid(dateFrom) || isValid(dateTo) ? "toggle" : ""
-              }`}
-            >
-              <div className="relative">
-                <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
-                  <svg
-                    className="w-5 h-5 text-gray-500 dark:text-gray-400"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-                      clipRule="evenodd"
-                    ></path>
-                  </svg>
-                </div>
-                <input
-                  id="startDate"
-                  name="start"
-                  type="date"
-                  className="text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5   dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  defaultValue={toISOStringDate(dateFrom)}
-                  onChange={(e) =>
-                    setDateFrom(parse(e.target.value, "yyyy-MM-dd", new Date()))
-                  }
-                />
-              </div>
-              <span className="mx-4 text-gray-500">to</span>
-              <div className="relative">
-                <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
-                  <svg
-                    className="w-5 h-5 text-gray-500 dark:text-gray-400"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-                      clipRule="evenodd"
-                    ></path>
-                  </svg>
-                </div>
-                <input
-                  id="endDate"
-                  name="end"
-                  type="date"
-                  className="text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5   dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  defaultValue={toISOStringDate(dateTo)}
-                  onChange={(e) =>
-                    setDateTo(parse(e.target.value, "yyyy-MM-dd", new Date()))
-                  }
-                />
-              </div>
+        <div className={`menu-buttons my-2 ${gridDisplay ? "" : "invisible"}`}>
+          <button
+            className={`flex items-center ${
+              isValid(dateFrom) || isValid(dateTo) ? "toggle" : ""
+            }`}
+          >
+            <p className="subtext mr-2">Events from</p>
+            <div className="relative">
+              <input
+                id="startDate"
+                name="start"
+                type="date"
+                className={`date-input ${isValid(dateFrom) ? "toggle" : ""}`}
+                defaultValue={toISOStringDate(dateFrom)}
+                onChange={(e) =>
+                  setDateFrom(parse(e.target.value, "yyyy-MM-dd", new Date()))
+                }
+              />
             </div>
-            <button
-              className="btn"
-              onClick={() => setSortReversed(!sortReversed)}
-              id="sortButton"
+            <p className="subtext mx-2">to</p>
+            <div className="relative">
+              <input
+                id="endDate"
+                name="end"
+                type="date"
+                className={`date-input ${isValid(dateTo) ? "toggle" : ""}`}
+                defaultValue={toISOStringDate(dateTo)}
+                onChange={(e) =>
+                  setDateTo(parse(e.target.value, "yyyy-MM-dd", new Date()))
+                }
+              />
+            </div>
+          </button>
+          <button
+            onClick={() => setSortReversed(!sortReversed)}
+            id="sortButton"
+          >
+            {sortReversed ? "⬆" : "⬇"}
+          </button>
+          <button onClick={() => refreshGrid()} id="refreshButton">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
             >
-              {sortReversed ? "⬆" : "⬇"}
-            </button>
-            <button
-              className="btn"
-              onClick={() => refreshGrid()}
-              id="refreshButton"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                />
-              </svg>
-            </button>
-          </div>
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+              />
+            </svg>
+          </button>
         </div>
       </div>
     );
@@ -347,8 +295,8 @@ const Events = () => {
         <div className="card p-3 mx-5">
           {gridDisplay ? (
             <section className="text-gray-600 dark:text-grey-200 body-font">
-              <div className="container px-5 py-5 mx-auto">
-                <div className="flex flex-wrap -m-4">{renderGridItems()}</div>
+              <div className="container px-5 py-5 mx-auto flex flex-wrap -m-4">
+                {renderGridItems()}
               </div>
             </section>
           ) : (

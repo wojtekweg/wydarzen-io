@@ -74,19 +74,11 @@ const CustomModal = (props) => {
             />
           </div>
 
-          <div className="modal-full-row">
-            <button
-              className="modal-cancel w-1/12"
-              onClick={(e) => setToggle(false)}
-            >
+          <div className="pt-5 flex modal-full-row">
+            <button className="modal-cancel" onClick={() => setToggle(false)}>
               Cancel
             </button>
-            <button
-              className="modal-save"
-              id="save"
-              onClick={postData}
-              type="submit"
-            >
+            <button className="modal-save" id="save" onClick={postData}>
               Save
             </button>
           </div>
