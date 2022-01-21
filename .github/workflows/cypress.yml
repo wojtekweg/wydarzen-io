@@ -44,7 +44,6 @@ jobs:
           working-directory: ./cypress
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
-        if: failure()
         with:
           name: cypress-videos
           path: ./cypress/cypress/videos
