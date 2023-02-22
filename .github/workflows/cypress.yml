@@ -43,7 +43,7 @@ jobs:
         with:
           working-directory: ./cypress
       - name: Upload artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: cypress-videos
           path: ./cypress/cypress/videos
