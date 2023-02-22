@@ -192,4 +192,4 @@ const PlacePage = () => {
   );
 };
 
-export { PlacePage };
+export default PlacePage;

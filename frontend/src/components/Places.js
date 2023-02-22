@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react/cjs/react.development";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import config from "../config.json";
 import placeholder from "../assets/placeholder.png";
@@ -54,4 +54,4 @@ const Places = () => {
   );
 };
 
-export { Places };
+export default Places;

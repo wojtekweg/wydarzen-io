@@ -3,8 +3,8 @@ import { Navbar } from "./components/Navbar";
 import { Route, Routes } from "react-router-dom";
 import { About } from "./components/static-subpages/About";
 import { EventPage } from "./components/EventPage";
-import { PlacePage } from "./components/PlacePage";
-import { Places } from "./components/Places";
+import PlacePage from "./components/PlacePage";
+import Places from "./components/Places";
 import { Page404 } from "./components/Page404";
 import { Events } from "./components/Events";
 
