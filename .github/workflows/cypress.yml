@@ -11,7 +11,7 @@ jobs:
         node-version: [16.x]
     steps:
       - name: Checkout Git
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Set up Python 3.7
         uses: actions/setup-python@v2
         with:
@@ -28,7 +28,7 @@ jobs:
         run: |
           ./manage.py runserver &
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
       - name: Install NPM dependencies
