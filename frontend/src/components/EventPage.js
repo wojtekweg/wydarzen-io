@@ -248,20 +248,22 @@ const EventPage = () => {
 
   const renderDiscordChannels = () => {
     return (
-      <div className="w-full flex-col">
+      <div className="flex-col">
         {discordChannels.map((channel) => (
           <button
-            className={`w-full cursor-pointer ${
+            className={`cursor-pointer ${
               event.discord_subscription.includes(channel.id) ? "toggle" : ""
             }`}
             key={channel.id}
             onClick={() => patchEventDiscordSubscription(channel.id)}
           >
             {channel.name}
-            <p className="subtext">{channel.channel_url}</p>
+            <p className="subtext truncate w-40" title={channel.channel_url}>
+              {channel.channel_url}
+            </p>
           </button>
         ))}
-        <button className="w-full flex items-center">
+        <button className="flex items-center">
           <input
             type="text"
             id="subscribe-name"

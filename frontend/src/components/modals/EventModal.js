@@ -58,7 +58,7 @@ function EventModal(props) {
     // Convert event to form, for more flexible editing options
     let formData = new FormData();
     for (let key in event) {
-      if (key === "picture") continue;
+      if (key === "picture" || key === "discord_subscription") continue;
       formData.append(key, event[key]);
     }
 
