@@ -21,7 +21,6 @@ function EventModal(props) {
   const [picture, setPicture] = useState(props.activeEvent.picture);
   const isPictureUploadDisabled = !!picture;
   const [pictureUploadError, setPictureUploadError] = useState(null);
-  const [toggle, setToggle] = useState(props.isOpen);
 
   const printInvalidPicture = (errorMessage) => {
     console.error(errorMessage);
@@ -77,12 +76,12 @@ function EventModal(props) {
       axios.post(config.url + "events/", formData).catch(logError);
     }
 
-    setToggle(false);
+    props.callbackModal("event");
   };
 
   return (
     <section
-      className={`modal-section ${toggle ? "" : "invisible"}`}
+      className={`modal-section ${props.eventModal ? "invisible" : ""}`}
       id="popup-modal"
     >
       <div className="modal-container">
@@ -200,7 +199,10 @@ function EventModal(props) {
           </div>
         </div>
         <div className="pt-5 flex modal-full-row">
-          <button className="modal-cancel" onClick={() => setToggle(false)}>
+          <button
+            className="modal-cancel"
+            onClick={() => props.callbackModal("event")}
+          >
             Cancel
           </button>
           <button className="modal-save" id="save" onClick={postData}>

@@ -126,22 +126,25 @@ button {
 .modal-section {
   position: fixed;
   z-index: 1; /* Sit on top */
-  overflow: auto; /* Enable scroll if needed */
-  /* left: 0; */
-  /* top: 0; */
+  /* overflow: auto; Enable scroll if needed */
   display: flex;
+  height: 100%;
+  width: 100%;
   justify-content: center;
   align-items: center;
-  @apply text-gray-600 dark:text-zinc-100 m-10 rounded-xl bg-white dark:bg-gray-800 border-2 border-x-indigo-200 dark:border-indigo-800 border-opacity-60 rounded-lg overflow-hidden top-10;
-  @keyframes animatetop {
-    from {
-      top: -300px;
-      opacity: 0;
-    }
-    to {
-      top: 0;
-      opacity: 1;
-    }
+  animation-duration: 0.3s;
+  animation-name: animatetop;
+  @apply top-0 text-zinc-100  rounded-xl  border-indigo-800 border-opacity-60 rounded-lg backdrop-blur-lg backdrop-brightness-50;
+}
+
+@keyframes animatetop {
+  from {
+    top: -300px;
+    opacity: 0;
+  }
+  to {
+    top: 0;
+    opacity: 1;
   }
 }
 
@@ -166,7 +169,7 @@ button {
 }
 
 .modal-p {
-  @apply lg:w-2/3 mx-auto leading-relaxed text-base dark:text-zinc-100;
+  @apply lg:w-2/3 mx-auto leading-relaxed text-base text-zinc-100;
 }
 
 .modal-full-row {
@@ -178,12 +181,12 @@ button {
 }
 
 .modal-label {
-  @apply leading-7 text-sm text-gray-600 dark:text-zinc-200;
+  @apply leading-7 text-sm text-zinc-200;
 }
 
 .modal-input {
   @apply block w-full px-3 py-4 my-1
-  text-base font-normal text-gray-700 dark:text-zinc-100 rounded-lg transition
+  text-base font-normal text-zinc-100 rounded-lg transition
   ease-in-out focus:border-indigo-500 focus:border-2 focus:outline-none dark:bg-gray-700;
 }
 

@@ -375,7 +375,10 @@ const EventPage = () => {
         </div>
       </div>
       {eventModal ? (
-        <EventModal activeEvent={event} isOpen={eventModal} />
+        <EventModal
+          activeEvent={event}
+          callbackModal={() => setEventModal(false)}
+        />
       ) : null}
       {deleteConfirmModal ? renderDeleteConfirmModal() : ""}
     </section>

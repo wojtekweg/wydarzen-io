@@ -15,7 +15,6 @@ const logError = (error) => {
 
 const CustomModal = (props) => {
   const [uploadedFile, setUploadedFile] = useState(null);
-  const [toggle, setToggle] = useState(props.isOpen);
 
   const postData = async () => {
     const formData = new FormData();
@@ -24,13 +23,13 @@ const CustomModal = (props) => {
       .post(config.url + "event_file_upload/", formData)
       .catch(logError);
 
-    setToggle(false);
+    props.callbackModal("import");
     return;
   };
 
   return (
     <section
-      className={`modal-section ${toggle ? "" : "invisible"}`}
+      className={`modal-section ${props.importModal ? "invisible" : ""}`}
       id="popup-modal"
     >
       <div className="modal-container">
@@ -75,7 +74,10 @@ const CustomModal = (props) => {
           </div>
 
           <div className="pt-5 flex modal-full-row">
-            <button className="modal-cancel" onClick={() => setToggle(false)}>
+            <button
+              className="modal-cancel"
+              onClick={() => props.callbackModal("import")}
+            >
               Cancel
             </button>
             <button className="modal-save" id="save" onClick={postData}>

@@ -6,8 +6,6 @@ import { emptyPlace } from "../helpers/api_schemas";
 import { emptyEvent } from "../helpers/api_schemas";
 
 const MenuButtons = (props) => {
-  // TODO fix logic of opening modals, because here it is changed by state
-  //  and in modal it is changed by visibility xd
   const [eventModal, setEventModal] = useState(props.eventModal);
   const [placeModal, setPlaceModal] = useState(false);
   const [importModal, setImportModal] = useState(false);
@@ -15,12 +13,24 @@ const MenuButtons = (props) => {
 
   const createEvent = (is_import = false) => {
     if (is_import) setImportModal(!importModal);
-    else setEventModal(!eventModal);
+    else setEventModal(true);
   };
 
   const createPlace = () => {
     setActivePlace({ ...emptyPlace });
     setPlaceModal(!placeModal);
+  };
+
+  const callbackModal = (what) => {
+    if (what === "event") {
+      setEventModal(false);
+    }
+    if (what === "place") {
+      setPlaceModal(false);
+    }
+    if (what === "import") {
+      setImportModal(false);
+    }
   };
 
   return (
@@ -37,25 +47,13 @@ const MenuButtons = (props) => {
         </button>
       </div>
       {eventModal ? (
-        <EventModal
-          activeEvent={emptyEvent}
-          // toggle={() => setEventModal(false)}
-          isOpen={eventModal}
-        />
+        <EventModal activeEvent={emptyEvent} callbackModal={callbackModal} />
       ) : null}
       {importModal ? (
-        <ImportModal
-          activeEvent={emptyEvent}
-          // toggle={() => setImportModal(false)}
-          isOpen={importModal}
-        />
+        <ImportModal activeEvent={emptyEvent} callbackModal={callbackModal} />
       ) : null}
       {placeModal ? (
-        <PlaceModal
-          activePlace={activePlace}
-          // toggle={() => setPlaceModal(false)}
-          isOpen={placeModal}
-        />
+        <PlaceModal activePlace={activePlace} callbackModal={callbackModal} />
       ) : null}
     </div>
   );

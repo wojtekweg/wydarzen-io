@@ -7,7 +7,6 @@ function CustomModal(props) {
   const [country, setCountry] = useState(props.activePlace.country);
   const [lat, setLat] = useState(props.activePlace.lat);
   const [long, setLong] = useState(props.activePlace.long);
-  const [toggle, setToggle] = useState(props.isOpen);
 
   const postData = (props) => {
     const place = {
@@ -23,12 +22,12 @@ function CustomModal(props) {
       return;
     }
     axios.put(`${config.url}palces/${place.id}/`, place);
-    setToggle(false);
+    props.callbackModal("place");
   };
 
   return (
     <section
-      className={`modal-section ${toggle ? "" : "invisible"}`}
+      className={`modal-section ${props.placeModal ? "invisible" : ""}`}
       id="popup-modal"
     >
       <div className="modal-container">
@@ -107,7 +106,10 @@ function CustomModal(props) {
           </div>
         </div>
         <div className="modal-full-row my-6">
-          <button className="modal-cancel" onClick={(e) => setToggle(false)}>
+          <button
+            className="modal-cancel"
+            onClick={(e) => props.callbackModal("place")}
+          >
             Cancel
           </button>
           <button className="modal-save" onClick={postData}>
