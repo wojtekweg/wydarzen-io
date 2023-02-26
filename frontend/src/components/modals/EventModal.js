@@ -172,7 +172,7 @@ function EventModal(props) {
               </p>
             ) : (
               <input
-                className="modal-input"
+                className="modal-input modal-file-input"
                 type="file"
                 id="picture"
                 label="picture file"

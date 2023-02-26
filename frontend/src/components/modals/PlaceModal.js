@@ -37,6 +37,7 @@ function CustomModal(props) {
             Create new place in database - you have to enter it manually, but
             fetching data from maps API is on TODO list :)
           </p>
+          {/* https://nominatim.org/release-docs/develop/api/Search/#output-format to bedzie dobre */}
         </div>
 
         <div className="modal-full-row">
@@ -62,6 +63,7 @@ function CustomModal(props) {
               name="name"
               onChange={(e) => setCountry(e.target.value)}
               className="modal-input"
+              placeholder="Two letters country code, like 'PL'"
             />
           </div>
         </div>

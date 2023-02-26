@@ -1,9 +1,16 @@
 import { useState, useEffect } from "react";
 import { MenuButtons } from "./MenuButtons";
+import LoginModal from "./modals/LoginModal";
 
 const Navbar = () => {
+  const [loginModal, setLoginModal] = useState(false);
   const [collapseMenu, setCollapseMenu] = useState(false);
   const [currTheme, setCurrTheme] = useState(false);
+  const [currentUser, setCurrentUser] = useState({
+    username: "",
+    token: "",
+    avatar: "",
+  });
 
   const changeTheme = (initialSet = false) => {
     const html = document.querySelector("html");
@@ -28,8 +35,26 @@ const Navbar = () => {
     }
   };
 
+  const changeLoginToken = (token) => {
+    setCurrentUser({ ...currentUser, token: token, username: "Jakis" });
+    localStorage.loginToken = currentUser;
+  };
+
+  const callbackModal = (what) => {
+    if (what === "login") {
+      setLoginModal(false);
+    }
+  };
+
   useEffect(() => {
     changeTheme(true);
+    const close = (e) => {
+      if (e.keyCode === 27) {
+        callbackModal("login");
+      }
+    };
+    window.addEventListener("keydown", close);
+    return () => window.removeEventListener("keydown", close);
   }, []);
 
   return (
@@ -49,7 +74,7 @@ const Navbar = () => {
               bottom: 10,
               left: 10,
             }}
-            className="p-10 px-4 py-2 flex opacity-70 hover:opacity-100 backdrop-blur bg-indigo-500 text-indigo-50 rounded-full cursor-pointer"
+            className="p-10 px-4 py-2 flex opacity-70 hover:opacity-100 backdrop-blur bg-indigo-500 text-indigo-50 rounded-full cursor-pointer my-4"
           >
             <p className="mr-2">Menu</p>
             <svg
@@ -66,14 +91,7 @@ const Navbar = () => {
             </svg>
           </div>
         ) : (
-          <div
-            style={{
-              position: "fixed",
-              bottom: 0,
-              width: "100%",
-            }}
-            className="backdrop-blur-lg x-4 py-2 grid gap-4 grid-rows-1 grid-cols-5"
-          >
+          <div className="navbar-menu">
             <div>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -89,17 +107,18 @@ const Navbar = () => {
                 />
               </svg>
             </div>
-            <div className="navbar-link">
+
+            <div>
               <a className="navbar-link" href="/">
                 Events
               </a>
             </div>
-            <div className="navbar-link">
+            <div>
               <a className="navbar-link" href="/places">
                 Places
               </a>
             </div>
-            <div className="navbar-link">
+            <div>
               <a className="navbar-link" href="/about">
                 About
               </a>
@@ -107,9 +126,34 @@ const Navbar = () => {
             <div className="navbar-link" onClick={() => changeTheme()}>
               Change theme
             </div>
+            <div
+              onClick={() => setLoginModal(true)}
+              className="modal login navbar-link flex flex-nowrap px-2 py-1 place-content-center"
+            >
+              {currentUser.token
+                ? currentUser.avatar || (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      className="w-6 h-6 mr-2"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M18.685 19.097A9.723 9.723 0 0021.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 003.065 7.097A9.716 9.716 0 0012 21.75a9.716 9.716 0 006.685-2.653zm-12.54-1.285A7.486 7.486 0 0112 15a7.486 7.486 0 015.855 2.812A8.224 8.224 0 0112 20.25a8.224 8.224 0 01-5.855-2.438zM15.75 9a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                  )
+                : ""}
+              <p className="">{currentUser.username || "Login"}</p>
+            </div>
           </div>
         )}
       </div>
+      {loginModal ? (
+        <LoginModal callbackModal={callbackModal} currentUser={currentUser} />
+      ) : null}
     </div>
   );
 };

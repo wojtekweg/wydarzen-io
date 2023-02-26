@@ -11,6 +11,7 @@ const Page404 = () => {
           <button
             type="button"
             className="text-xl"
+            style={{ width: "50%", cursor: "pointer" }}
             onClick={() => navigate(-1)}
           >
             Go back ↩

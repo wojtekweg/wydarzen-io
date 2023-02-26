@@ -5,6 +5,8 @@
 body {
   font-family: Arial, Helvetica, sans-serif;
   @apply bg-zinc-50 text-zinc-900 dark:bg-gray-900 dark:text-neutral-100;
+  animation-duration: 0.2s;
+  animation-name: animatetop;
 }
 
 ::-moz-selection {
@@ -44,6 +46,10 @@ a.link:visited {
 
 button {
   @apply dark:text-zinc-400 cursor-default py-2 px-4 mx-2 my-1 font-semibold rounded-lg shadow-lg hover:bg-slate-100 dark:hover:bg-indigo-900;
+}
+
+.login {
+  @apply rounded-lg bg-indigo-400;
 }
 
 .event-title {
@@ -134,7 +140,7 @@ button {
   align-items: center;
   animation-duration: 0.3s;
   animation-name: animatetop;
-  @apply top-0 text-zinc-100  rounded-xl  border-indigo-800 border-opacity-60 rounded-lg backdrop-blur-lg backdrop-brightness-50;
+  @apply top-0 text-zinc-100 rounded-xl border-indigo-800 border-opacity-60 rounded-lg backdrop-blur-lg backdrop-brightness-50;
 }
 
 @keyframes animatetop {
@@ -148,12 +154,26 @@ button {
   }
 }
 
+@keyframes animatebottom {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 .modal-close {
   position: fixed;
   z-index: 1; /* Sit on top */
   overflow: auto; /* Enable scroll if needed */
   right: 0;
   top: 0;
+}
+
+.container {
+  animation-duration: 1s;
+  animation-name: animatetop;
 }
 
 .modal-container {
@@ -186,16 +206,25 @@ button {
 
 .modal-input {
   @apply block w-full px-3 py-4 my-1
-  text-base font-normal text-zinc-100 rounded-lg transition
+  text-base font-normal text-black dark:text-zinc-100 rounded-lg transition
   ease-in-out focus:border-indigo-500 focus:border-2 focus:outline-none dark:bg-gray-700;
 }
 
 .modal-save {
-  @apply py-2 flex-auto h-11 text-white dark:text-black bg-indigo-500 border-0 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg;
+  cursor: pointer;
+  @apply py-2 flex-auto h-11 text-white dark:text-black bg-indigo-500 border-0 px-8 focus:outline-none hover:bg-green-600 dark:hover:bg-green-600 rounded text-lg;
 }
 
 .modal-cancel {
-  @apply py-2 flex-auto h-11 text-white dark:text-black bg-gray-500 border-0 px-8 focus:outline-none hover:bg-red-400 rounded text-lg;
+  cursor: pointer;
+  @apply py-2 flex-auto h-11 text-white dark:text-black bg-gray-500 border-0 px-8 focus:outline-none hover:bg-red-400 dark:hover:bg-red-400 rounded text-lg;
+}
+
+.modal-file-input {
+  @apply file:rounded-full file:border-0
+  file:text-sm file:font-semibold
+  file:bg-violet-50 file:text-violet-700
+  hover:file:bg-violet-100;
 }
 
 .icon-button:before {
@@ -219,6 +248,28 @@ button {
 
 .navbar-link {
   @apply hover:opacity-100 hover:text-indigo-500 hover:underline hover:decoration-wavy  cursor-pointer;
+}
+
+.lgshadow {
+  box-shadow: 20px 20px 50px 30px white;
+}
+
+.drkshadow {
+  box-shadow: 20px 20px 50px 30px black;
+}
+
+.navbar-menu {
+  align-items: center;
+  position: fixed;
+  bottom: 0;
+  animation-duration: 1s;
+  animation-name: animatebottom;
+
+  @apply backdrop-blur-2xl  
+  px-8 py-2 w-full h-20
+  grid gap-4 grid-rows-1 grid-cols-6
+  backdrop-contrast-100 backdrop-brightness-125 dark:backdrop-brightness-50
+  text-zinc-900 dark:text-zinc-100;
 }
 
 .subtext {
