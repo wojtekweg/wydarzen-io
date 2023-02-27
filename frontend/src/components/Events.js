@@ -85,6 +85,7 @@ const Events = () => {
     getActiveEvents(true).forEach((i) =>
       arr.push({
         title: i.title,
+        id: i.id,
         start: new Date(i.date),
         end: new Date(i.date),
         allDay: true,
@@ -142,21 +143,22 @@ const Events = () => {
       );
     }
     return activeEvents.map((event) => (
-      <div
-        className="p-4 md:w-1/3 max-w-xl max-h-md"
-        id="eventCard"
-        key={event.id}
-      >
+      <div className="p-4 w-1/2" id="eventCard" key={event.id}>
         <div
           className={`h-full ${
             event.is_active ? "bg-indigo-500" : "bg-red-700"
           } border-opacity-60 rounded overflow-hidden bg-opacity-5`}
         >
-          <div className="mx-1 my-1 object-cover object-center absolute">
+          <div
+            className="mx-1 my-1 object-cover object-center absolute"
+            style={{ zIndex: 2 }}
+          >
             {renderEventButtons(event)}
           </div>
           <img
-            className="lg:h-48 md:h-36 w-full object-cover object-center"
+            className="object-cover object-center
+            lg:h-64 md:h-64 sm:h-16
+            lg:w-full md:w-full sm:w-full"
             src={`${event.picture || placeholder}`}
             alt="blog"
           />
