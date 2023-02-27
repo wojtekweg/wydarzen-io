@@ -378,7 +378,7 @@ const EventPage = () => {
       </div>
       {eventModal ? (
         <EventModal
-          activeEvent={event}
+          activeEvent={{ ...event, place: place }}
           callbackModal={() => setEventModal(false)}
         />
       ) : null}

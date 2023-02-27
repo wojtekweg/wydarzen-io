@@ -21,7 +21,7 @@ function EventModal(props) {
   const [picture, setPicture] = useState(props.activeEvent.picture);
   const isPictureUploadDisabled = !!picture;
   const [pictureUploadError, setPictureUploadError] = useState(null);
-  const [place, setPlace] = useState(null);
+  const [place, setPlace] = useState(props.activeEvent.place);
   const [places, setPlaces] = useState([]);
 
   useEffect(() => {
@@ -31,7 +31,9 @@ function EventModal(props) {
   const refreshPlaces = async () => {
     axios
       .get(`${config.url}places/`)
-      .then((res) => setPlaces(res.data))
+      .then((res) => {
+        setPlaces(res.data);
+      })
       .catch((err) => console.log(err));
   };
 
@@ -63,7 +65,7 @@ function EventModal(props) {
     const event = {
       ...props.activeEvent,
       title: title,
-      place: place,
+      place: place.id,
       description: description,
       date: date,
       is_active: is_active,
@@ -93,21 +95,22 @@ function EventModal(props) {
     props.callbackModal("event");
   };
 
-  const handlePlaceChange = (input) => {
-    let place_ = places.filter((place) => place.name.match(input))[0];
-    setPlace(place_.id);
+  const handlePlaceChangeByPlaceName = (input) => {
+    let place_ = places.filter((place) => place.name.match(input.name))[0];
+    setPlace(place_);
   };
 
   const renderPlacesDropdown = () => {
     return (
       <div className="h-full w-full transition-all ">
         <select
+          // value={place || ""}  // TODO why pre-selecting place from event page isnt working?
           className="h-full w-full transition-all modal-input"
-          onChange={(e) => handlePlaceChange(e.target.value)}
+          onChange={(e) => handlePlaceChangeByPlaceName(e)}
         >
-          {places.map((place, key) => (
+          {places.map((place_, key) => (
             <option className="modal-input" key={key}>
-              {place.name}
+              {place_.name}
             </option>
           ))}
         </select>
