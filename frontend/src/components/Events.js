@@ -145,16 +145,10 @@ const Events = () => {
     return activeEvents.map((event) => (
       <div className="p-4 w-1/2" id="eventCard" key={event.id}>
         <div
-          className={`h-full ${
+          className={`h-full rounded-xl shadow-lg hover:shadow-2xl ${
             event.is_active ? "bg-indigo-500" : "bg-red-700"
-          } border-opacity-60 rounded overflow-hidden bg-opacity-5`}
+          } border-opacity-60 overflow-hidden bg-opacity-5`}
         >
-          <div
-            className="mx-1 my-1 object-cover object-center absolute"
-            style={{ zIndex: 2 }}
-          >
-            {renderEventButtons(event)}
-          </div>
           <img
             className="object-cover object-center
             lg:h-64 md:h-64 sm:h-16
@@ -162,14 +156,20 @@ const Events = () => {
             src={`${event.picture || placeholder}`}
             alt="blog"
           />
+
           <div className="p-6">
-            <h2
-              className="tracking-widest text-xs title-font font-medium text-gray-400 mb-1"
-              id="dateAndPlace"
-            >
-              {event.date} at{" "}
-              <a href={`/places/${event.place}`}>{event.place_name}</a>
-            </h2>
+            <div className="flex flex-row">
+              <div className="object-center mr-4">
+                {renderEventButtons(event)}
+              </div>
+              <h2
+                className="tracking-widest text-xs title-font font-medium text-gray-400 mb-1"
+                id="dateAndPlace"
+              >
+                {event.date} at{" "}
+                <a href={`/places/${event.place}`}>{event.place_name}</a>
+              </h2>
+            </div>
             <Link to={`/events/${event.id}`}>
               <h1
                 className={`title-font text-lg font-medium hover:cursor-pointer ${

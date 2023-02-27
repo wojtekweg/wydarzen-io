@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import config from "../../config.json";
 
@@ -21,6 +21,19 @@ function EventModal(props) {
   const [picture, setPicture] = useState(props.activeEvent.picture);
   const isPictureUploadDisabled = !!picture;
   const [pictureUploadError, setPictureUploadError] = useState(null);
+  const [place, setPlace] = useState(null);
+  const [places, setPlaces] = useState([]);
+
+  useEffect(() => {
+    refreshPlaces();
+  }, []);
+
+  const refreshPlaces = async () => {
+    axios
+      .get(`${config.url}places/`)
+      .then((res) => setPlaces(res.data))
+      .catch((err) => console.log(err));
+  };
 
   const printInvalidPicture = (errorMessage) => {
     console.error(errorMessage);
@@ -50,6 +63,7 @@ function EventModal(props) {
     const event = {
       ...props.activeEvent,
       title: title,
+      place: place,
       description: description,
       date: date,
       is_active: is_active,
@@ -77,6 +91,28 @@ function EventModal(props) {
     }
 
     props.callbackModal("event");
+  };
+
+  const handlePlaceChange = (input) => {
+    let place_ = places.filter((place) => place.name.match(input))[0];
+    setPlace(place_.id);
+  };
+
+  const renderPlacesDropdown = () => {
+    return (
+      <div className="h-full w-full transition-all ">
+        <select
+          className="h-full w-full transition-all modal-input"
+          onChange={(e) => handlePlaceChange(e.target.value)}
+        >
+          {places.map((place, key) => (
+            <option className="modal-input" key={key}>
+              {place.name}
+            </option>
+          ))}
+        </select>
+      </div>
+    );
   };
 
   return (
@@ -137,22 +173,7 @@ function EventModal(props) {
             <label htmlFor="place" className="modal-label">
               Place
             </label>
-            <p htmlFor="place">
-              <input
-                // TODO edit place
-                type="text"
-                name="place"
-                className="input-map"
-                disabled={true}
-                placeholder={
-                  typeof props.activeEvent.title != "undefined" &&
-                  typeof props.activeEvent.id != "undefined" &&
-                  props.activeEvent.place_name !== ""
-                    ? props.activeEvent.place_name
-                    : "Editing place is not yet possible"
-                }
-              />
-            </p>
+            <div htmlFor="place">{renderPlacesDropdown()}</div>
           </div>
           <div className="event-modal-picture modal-label-input pl-5">
             <label htmlFor="picture" className="modal-label">
