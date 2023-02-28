@@ -100,7 +100,7 @@ const Events = () => {
         <svg
           onClick={() => changeActive(event)}
           xmlns="http://www.w3.org/2000/svg"
-          className="icon-button h-5 w-5 cursor-pointer opacity-50 hover:opacity-100"
+          className="icon-button h-5 w-5 cursor-pointer"
           viewBox="0 0 20 20"
           fill="#888888"
           data-info="Cancel"
@@ -117,7 +117,7 @@ const Events = () => {
         <svg
           onClick={() => changeActive(event)}
           xmlns="http://www.w3.org/2000/svg"
-          className="icon-button h-5 w-5 cursor-pointer opacity-50 hover:opacity-100"
+          className="icon-button h-5 w-5 cursor-pointer"
           viewBox="0 0 20 20"
           fill="#888888"
           data-info="Reactivate"

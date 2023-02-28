@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import axios from "axios";
 import config from "../../config.json";
+import { UserContext } from "../../App";
 
 // TODO create helpers and cleanup
 const logError = (error) => {
@@ -14,17 +15,20 @@ const logError = (error) => {
 };
 
 const LoginModal = (props) => {
-  const [login, setLogin] = useState(props.currentUser.username);
-  const [password, setPassword] = useState(props.currentUser.password);
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const { username, setUsername, setToken } = useContext(UserContext);
 
   const postData = async () => {
     const formData = new FormData();
-    formData.append("login", login);
+    formData.append("username", username);
     formData.append("password", password);
     await axios
-      .post(config.url + "event_file_upload/", formData)
-      .catch(logError);
+      .post(config.url.replace("api/", "api-token-auth/"), formData)
+      .catch(logError)
+      .then((res) => {
+        setToken(res.data.token);
+      });
 
     props.callbackModal("login");
     return;
@@ -48,8 +52,8 @@ const LoginModal = (props) => {
               type="text"
               id="Login"
               name="Login"
-              value={login}
-              onChange={(e) => setLogin(e.target.value)}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               placeholder="User login"
               className="modal-input"
             />

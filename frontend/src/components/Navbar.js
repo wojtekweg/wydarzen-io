@@ -1,16 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { MenuButtons } from "./MenuButtons";
 import LoginModal from "./modals/LoginModal";
+import { UserContext } from "../App";
 
 const Navbar = () => {
   const [loginModal, setLoginModal] = useState(false);
   const [collapseMenu, setCollapseMenu] = useState(false);
   const [currTheme, setCurrTheme] = useState(false);
-  const [currentUser, setCurrentUser] = useState({
-    username: "",
-    token: "",
-    avatar: "",
-  });
+  const { username, token } = useContext(UserContext);
 
   const changeTheme = (initialSet = false) => {
     const html = document.querySelector("html");
@@ -33,11 +30,6 @@ const Navbar = () => {
       html.classList.remove("dark");
       setCurrTheme("light");
     }
-  };
-
-  const changeLoginToken = (token) => {
-    setCurrentUser({ ...currentUser, token: token, username: "Jakis" });
-    localStorage.loginToken = currentUser;
   };
 
   const callbackModal = (what) => {
@@ -127,11 +119,11 @@ const Navbar = () => {
               Change theme
             </div>
             <div
-              onClick={() => setLoginModal(true)}
+              onClick={() => (token ? "" : setLoginModal(true))}
               className="modal login navbar-link flex flex-nowrap px-2 py-1 place-content-center"
             >
-              {currentUser.token
-                ? currentUser.avatar || (
+              {token
+                ? username.avatar || (
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
@@ -146,14 +138,12 @@ const Navbar = () => {
                     </svg>
                   )
                 : ""}
-              <p className="">{currentUser.username || "Login"}</p>
+              <p className="">{username || "Login"}</p>
             </div>
           </div>
         )}
       </div>
-      {loginModal ? (
-        <LoginModal callbackModal={callbackModal} currentUser={currentUser} />
-      ) : null}
+      {loginModal ? <LoginModal callbackModal={callbackModal} /> : null}
     </div>
   );
 };
