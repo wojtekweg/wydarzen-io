@@ -11,6 +11,8 @@ router.register(r'events', views.EventView, 'event')
 router.register(r'places', views.PlaceView, 'place')
 router.register(r'event_file_upload', views.EventFileImportView, 'event_file_upload')
 router.register(r'discord_channels', views.DiscordChannelView, 'discord_channels')
+router.register(r'users', views.UserView, 'user')
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),

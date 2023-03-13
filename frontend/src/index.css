@@ -56,7 +56,7 @@ button {
 }
 
 .login {
-  @apply text-zinc-50 rounded-lg bg-indigo-400 hover:bg-indigo-50 font-semibold;
+  @apply text-zinc-50 rounded-lg bg-indigo-500 hover:bg-indigo-50 font-semibold rounded-full;
 }
 
 .event-title {
@@ -165,10 +165,19 @@ button {
 
 @keyframes animatebottom {
   from {
-    opacity: 0;
+    left: -1000px;
   }
   to {
-    opacity: 1;
+    left: 0px;
+  }
+}
+
+@keyframes animatecards {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
   }
 }
 
@@ -181,8 +190,8 @@ button {
 }
 
 .container {
-  animation-duration: 1s;
-  animation-name: animatetop;
+  animation-duration: 0.5s;
+  animation-name: animatecards;
 }
 
 .modal-container {
@@ -272,7 +281,7 @@ button {
   position: fixed;
   bottom: 0;
   animation-duration: 1s;
-  animation-name: animatebottom;
+  /*animation-name: animatebottom;*/
 
   @apply backdrop-blur-2xl  
   px-8 py-2 w-full h-20
