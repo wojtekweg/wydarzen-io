@@ -1,25 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import config from '../../config.json'
+import handleError from '../../helpers/helpers'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-
-// TODO create helpers and cleanup
-const logError = (error) => {
-  if (error.response) {
-    console.error(error.response.data)
-  } else if (error.request) {
-    console.error(error.request)
-  } else {
-    console.error('Error', error.message)
-  }
-  toast.error(`Error: ${error}`, {
-    position: 'top-right',
-    autoClose: 1000,
-    icon: '❗️',
-    theme: localStorage.theme
-  })
-}
 
 const LoginModal = (props) => {
   const [password, setPassword] = useState('')
@@ -70,7 +54,7 @@ const LoginModal = (props) => {
       url: config.url.replace('api/', 'api-token-auth/'),
       data: formData
     })
-      .catch(logError)
+      .catch((res) => handleError(res))
       .then((res) => {
         localStorage.setItem('token', res.data.token)
         localStorage.setItem('username', usernameIn)

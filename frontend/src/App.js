@@ -9,6 +9,8 @@ import { Page404 } from './components/Page404'
 import { Events } from './components/Events'
 
 function App() {
+  document.body.style.zoom = '85%'
+
   return (
     <React.StrictMode>
       <main className='app'>
