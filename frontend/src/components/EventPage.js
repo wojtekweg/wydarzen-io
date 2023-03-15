@@ -6,6 +6,7 @@ import { emptyEvent, emptyPlace, emptyDiscordChannel } from '../helpers/api_sche
 import { EventModal } from './modals/EventModal.js'
 import { Page404 } from './Page404.js'
 import placeholder from '../assets/placeholder.png'
+import handleError from '../helpers/helpers'
 
 const EventPage = () => {
   const [httpStatusCode, setHttpStatusCode] = useState()
@@ -34,7 +35,7 @@ const EventPage = () => {
         setEvent(res.data)
       })
       .catch((err) => {
-        console.log(err)
+        handleError(err)
         setHttpStatusCode(false)
       })
   }
@@ -43,14 +44,14 @@ const EventPage = () => {
     axios
       .get(`${config.url}places/${placeId}/`)
       .then((res) => setPlace(res.data))
-      .catch((err) => console.log(err))
+      .catch((err) => handleError(err))
   }
 
   const fetchDiscordChannels = () => {
     axios
       .get(`${config.url}discord_channels/`)
       .then((res) => setDiscordChannels(res.data))
-      .catch((err) => console.log(err))
+      .catch((err) => handleError(err))
   }
 
   const changeImgView = () => {

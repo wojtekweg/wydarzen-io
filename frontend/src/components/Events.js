@@ -7,6 +7,7 @@ import { isAfter, isBefore, parse, add, sub, compareAsc, isValid } from 'date-fn
 import placeholder from '../assets/placeholder.png'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import handleError from '../helpers/helpers'
 
 const Events = () => {
   const [viewActive, setViewActive] = useState('All') // allowed states should be "Active", "All", "Inactive"
@@ -31,7 +32,7 @@ const Events = () => {
     axios
       .get(`${config.url}events/`)
       .then((res) => setEventsGrid_(res.data))
-      .catch((err) => console.log(err))
+      .catch((err) => handleError(err))
   }
 
   const getActiveEvents = (isForCalendar = false) => {
@@ -174,14 +175,7 @@ const Events = () => {
       .patch(`${config.url}events/${event.id}/`, {
         is_active: !event.is_active
       })
-      .catch((err) =>
-        toast.error(`Error: ${err}`, {
-          position: 'top-right',
-          autoClose: 1000,
-          icon: '❗️',
-          theme: localStorage.getItem('theme')
-        })
-      )
+      .catch((err) => handleError(err))
       .then((res) => {
         toast(`${event.is_active ? 'Cancelled' : 'Reactivated'} event "${event.title}"`, {
           position: 'top-right',
