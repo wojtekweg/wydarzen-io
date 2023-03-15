@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import config from "../../config.json";
 
@@ -21,6 +21,21 @@ function EventModal(props) {
   const [picture, setPicture] = useState(props.activeEvent.picture);
   const isPictureUploadDisabled = !!picture;
   const [pictureUploadError, setPictureUploadError] = useState(null);
+  const [place, setPlace] = useState(props.activeEvent.place);
+  const [places, setPlaces] = useState([]);
+
+  useEffect(() => {
+    refreshPlaces();
+  }, []);
+
+  const refreshPlaces = async () => {
+    axios
+      .get(`${config.url}places/`)
+      .then((res) => {
+        setPlaces(res.data);
+      })
+      .catch((err) => console.log(err));
+  };
 
   const printInvalidPicture = (errorMessage) => {
     console.error(errorMessage);
@@ -50,6 +65,7 @@ function EventModal(props) {
     const event = {
       ...props.activeEvent,
       title: title,
+      place: place.id,
       description: description,
       date: date,
       is_active: is_active,
@@ -58,7 +74,7 @@ function EventModal(props) {
     // Convert event to form, for more flexible editing options
     let formData = new FormData();
     for (let key in event) {
-      if (key === "picture") continue;
+      if (key === "picture" || key === "discord_subscription") continue;
       formData.append(key, event[key]);
     }
 
@@ -77,6 +93,29 @@ function EventModal(props) {
     }
 
     props.callbackModal("event");
+  };
+
+  const handlePlaceChangeByPlaceName = (input) => {
+    let place_ = places.filter((place) => place.name.match(input.name))[0];
+    setPlace(place_);
+  };
+
+  const renderPlacesDropdown = () => {
+    return (
+      <div className="h-full w-full transition-all ">
+        <select
+          // value={place || ""}  // TODO why pre-selecting place from event page isnt working?
+          className="h-full w-full transition-all modal-input"
+          onChange={(e) => handlePlaceChangeByPlaceName(e)}
+        >
+          {places.map((place_, key) => (
+            <option className="modal-input" key={key}>
+              {place_.name}
+            </option>
+          ))}
+        </select>
+      </div>
+    );
   };
 
   return (
@@ -137,22 +176,7 @@ function EventModal(props) {
             <label htmlFor="place" className="modal-label">
               Place
             </label>
-            <p htmlFor="place">
-              <input
-                // TODO edit place
-                type="text"
-                name="place"
-                className="input-map"
-                disabled={true}
-                placeholder={
-                  typeof props.activeEvent.title != "undefined" &&
-                  typeof props.activeEvent.id != "undefined" &&
-                  props.activeEvent.place_name !== ""
-                    ? props.activeEvent.place_name
-                    : "Editing place is not yet possible"
-                }
-              />
-            </p>
+            <div htmlFor="place">{renderPlacesDropdown()}</div>
           </div>
           <div className="event-modal-picture modal-label-input pl-5">
             <label htmlFor="picture" className="modal-label">
@@ -172,7 +196,7 @@ function EventModal(props) {
               </p>
             ) : (
               <input
-                className="modal-input"
+                className="modal-input modal-file-input"
                 type="file"
                 id="picture"
                 label="picture file"

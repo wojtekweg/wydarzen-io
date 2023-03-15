@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'wydarzenio',
     'corsheaders',
     'rest_framework',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [

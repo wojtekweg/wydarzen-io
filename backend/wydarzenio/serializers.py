@@ -1,8 +1,13 @@
 from pathlib import Path
-from rest_framework import serializers
+
+from django.shortcuts import get_object_or_404
+from rest_framework.authtoken.admin import User
+from rest_framework.response import Response
+
 from .models import Event, Place, EventFileImport, DiscordChannel
 from .helpers.file_parsers import parse_csv_to_event, parse_ics_to_event, parse_json_to_event, parse_zip_to_event
 from .helpers.helper_scripts import send_discord_message_about_event
+from rest_framework import serializers
 
 
 class EventSerializer(serializers.ModelSerializer):
@@ -59,3 +64,9 @@ class EventFileImportSerializer(serializers.ModelSerializer):
             raise AttributeError("WRONG FILE IMPORT!")
         print(f"created {len(events_list)} events")
         return event_file
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'email', 'groups')

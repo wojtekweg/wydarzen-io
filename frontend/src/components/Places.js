@@ -19,7 +19,12 @@ const Places = () => {
 
   const renderPlaces = () => {
     return places.map((place) => (
-      <div className="lg:w-1/4 md:w-1/2 p-4 w-full" key={place.id}>
+      <div
+        className="lg:w-1/4 md:w-1/2 p-4 w-full 
+        shadow-lg hover:shadow-2xl
+        m-4 "
+        key={place.id}
+      >
         <a
           className="block relative h-48 rounded overflow-hidden"
           href={`places/${place.id}`}
@@ -27,6 +32,7 @@ const Places = () => {
           <img
             alt="ecommerce"
             class="object-cover object-center w-full h-full block"
+            style={{ position: "inherit", zIndex: -1 }}
             src={place.picture || placeholder}
           />
         </a>
@@ -48,7 +54,7 @@ const Places = () => {
   return (
     <section class="text-gray-600 body-font">
       <div class="container px-5 py-24 mx-auto">
-        <div class="flex flex-wrap -m-4">{renderPlaces()}</div>
+        <div class="flex flex-wrap m-4 justify-center">{renderPlaces()}</div>
       </div>
     </section>
   );

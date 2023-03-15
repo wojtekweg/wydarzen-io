@@ -1,5 +1,10 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
-from .serializers import EventSerializer, PlaceSerializer, EventFileImportSerializer, DiscordChannelSerializer
+from rest_framework.authtoken.admin import User
+from rest_framework.response import Response
+
+from .serializers import EventSerializer, PlaceSerializer, EventFileImportSerializer, DiscordChannelSerializer, \
+    UserSerializer
 from .models import Event, Place, EventFileImport, DiscordChannel
 
 
@@ -21,3 +26,16 @@ class EventFileImportView(viewsets.ModelViewSet):
 class DiscordChannelView(viewsets.ModelViewSet):
     serializer_class = DiscordChannelSerializer
     queryset = DiscordChannel.objects.all()
+
+
+class UserView(viewsets.ModelViewSet):
+    serializer_class = UserSerializer
+    queryset = User.objects.all()
+
+    def retrieve(self, request, pk=None):
+        user_ = User.objects.filter(username=pk).first()
+        if user_:
+            serializer = UserSerializer(user_)
+            return Response(serializer.data)
+        else:
+            return Response({"error": "User not found"}, status=404)

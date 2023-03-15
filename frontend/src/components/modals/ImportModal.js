@@ -68,7 +68,7 @@ const CustomModal = (props) => {
               id="file"
               label="calendar file"
               onChange={(e) => setUploadedFile(e.target.files[0])}
-              className="modal-input"
+              className="modal-input modal-file-input"
               accept="application/json, text/calendar, application/zip"
             />
           </div>
