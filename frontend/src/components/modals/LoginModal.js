@@ -23,7 +23,7 @@ const logError = (error) => {
 
 const LoginModal = (props) => {
   const [password, setPassword] = useState('')
-  const [isLogged, setIsLogged] = useState(localStorage.getItem('token') !== '')
+  const [isLogged, setIsLogged] = useState(localStorage.getItem('token') && localStorage.getItem('username'))
   const [showPassword, setShowPassword] = useState(false)
   const [user, setUser] = useState({
     id: null,

@@ -16,6 +16,7 @@ const Events = () => {
   const [dateFrom, setDateFrom] = useState(new Date())
   const [dateTo, setDateTo] = useState(add(new Date(), { months: 2 }))
   const [eventsGrid, setEventsGrid] = useState([])
+  const token = localStorage.getItem('token')
 
   useEffect(() => {
     refreshGrid()
@@ -81,6 +82,9 @@ const Events = () => {
   }
 
   const renderEventButtons = (event) => {
+    if (!token) {
+      return null
+    }
     if (event.is_active) {
       return (
         <svg

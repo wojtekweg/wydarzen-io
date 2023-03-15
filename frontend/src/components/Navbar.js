@@ -87,7 +87,7 @@ const Navbar = () => {
           <a href='/'>wydarzen.io</a>
         </h1>
       </div>
-      <MenuButtons />
+      {token ? <MenuButtons /> : null}
       <div>
         {collapseMenu ? (
           <div

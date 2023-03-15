@@ -1,99 +1,93 @@
-import React, { useEffect, useState, Fragment } from "react";
-import axios from "axios";
-import { useParams, useNavigate } from "react-router-dom";
-import config from "../config.json";
-import {
-  emptyEvent,
-  emptyPlace,
-  emptyDiscordChannel,
-} from "../helpers/api_schemas";
-import { EventModal } from "./modals/EventModal.js";
-import { Page404 } from "./Page404.js";
-import placeholder from "../assets/placeholder.png";
+import React, { useEffect, useState, Fragment } from 'react'
+import axios from 'axios'
+import { useParams, useNavigate } from 'react-router-dom'
+import config from '../config.json'
+import { emptyEvent, emptyPlace, emptyDiscordChannel } from '../helpers/api_schemas'
+import { EventModal } from './modals/EventModal.js'
+import { Page404 } from './Page404.js'
+import placeholder from '../assets/placeholder.png'
 
 const EventPage = () => {
-  const [httpStatusCode, setHttpStatusCode] = useState();
-  const [event, setEvent] = useState({ ...emptyEvent });
-  const [place, setPlace] = useState({ ...emptyPlace });
-  const [imgClip, setImgClip] = useState(true);
-  const [eventModal, setEventModal] = useState(false);
-  const [showSubscribeInput, setShowSubscribeInput] = useState(true);
-  const [discordChannels, setDiscordChannels] = useState([]);
-  const { eventId } = useParams();
-  let navigate = useNavigate();
-  const [deleteConfirmModal, setDeleteConfirmModal] = useState(false);
-  const [newDiscordChannel, setNewDiscordChannel] =
-    useState(emptyDiscordChannel);
+  const [httpStatusCode, setHttpStatusCode] = useState()
+  const [event, setEvent] = useState({ ...emptyEvent })
+  const [place, setPlace] = useState({ ...emptyPlace })
+  const [imgClip, setImgClip] = useState(true)
+  const [eventModal, setEventModal] = useState(false)
+  const [showSubscribeInput, setShowSubscribeInput] = useState(true)
+  const [discordChannels, setDiscordChannels] = useState([])
+  const { eventId } = useParams()
+  let navigate = useNavigate()
+  const [deleteConfirmModal, setDeleteConfirmModal] = useState(false)
+  const [newDiscordChannel, setNewDiscordChannel] = useState(emptyDiscordChannel)
+  const token = localStorage.getItem('token')
 
   useEffect(() => {
-    fetchEvent();
-    fetchPlace(event.place);
-    fetchDiscordChannels();
-  }, []);
+    fetchEvent()
+    fetchPlace(event.place)
+    fetchDiscordChannels()
+  }, [])
 
   const fetchEvent = async () => {
     axios
       .get(`${config.url}events/${eventId}/`)
       .then((res) => {
-        setEvent(res.data);
+        setEvent(res.data)
       })
       .catch((err) => {
-        console.log(err);
-        setHttpStatusCode(false);
-      });
-  };
+        console.log(err)
+        setHttpStatusCode(false)
+      })
+  }
 
   const fetchPlace = async (placeId) => {
     axios
       .get(`${config.url}places/${placeId}/`)
       .then((res) => setPlace(res.data))
-      .catch((err) => console.log(err));
-  };
+      .catch((err) => console.log(err))
+  }
 
   const fetchDiscordChannels = () => {
     axios
       .get(`${config.url}discord_channels/`)
       .then((res) => setDiscordChannels(res.data))
-      .catch((err) => console.log(err));
-  };
+      .catch((err) => console.log(err))
+  }
 
   const changeImgView = () => {
-    setImgClip(!imgClip);
-  };
+    setImgClip(!imgClip)
+  }
 
   const changeCancel = () => {
     axios
       .patch(`${config.url}events/${event.id}/`, {
-        is_active: !event.is_active,
+        is_active: !event.is_active
       })
-      .then((res) => fetchEvent());
-  };
+      .then((res) => fetchEvent())
+  }
 
   const handleDeleteEvent = () => {
     if (deleteConfirmModal) {
-      axios
-        .delete(`${config.url}events/${event.id}/`)
-        .then(() => navigate("/"));
+      axios.delete(`${config.url}events/${event.id}/`).then(() => navigate('/'))
     } else {
-      setDeleteConfirmModal(true);
+      setDeleteConfirmModal(true)
     }
-  };
+  }
 
   const renderDescription = () => {
     const URL_REGEX =
-      /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
+      /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/
     return (
-      <div className="sm:w-2/3 sm:pr-8 sm:py-8  border-gray-200 sm:border-t-0 border-t mt-4 pt-4 sm:mt-0 text-center sm:text-left dark:text-zinc-200">
-        <p className="leading-relaxed text-lg mb-4 whitespace-pre-line">
-          {event.description.split("\n").map((value, index) => (
+      <div className='sm:w-2/3 sm:pr-8 sm:py-8  border-gray-200 sm:border-t-0 border-t mt-4 pt-4 sm:mt-0 text-center sm:text-left dark:text-zinc-200'>
+        <p className='leading-relaxed text-lg mb-4 whitespace-pre-line'>
+          {event.description.split('\n').map((value, index) => (
             <Fragment key={index}>
-              {value.split(" ").map((part) =>
+              {value.split(' ').map((part) =>
                 URL_REGEX.test(part) ? (
-                  <a className="link" href={part}>
-                    {part}{" "}
+                  <a className='link' href={part}>
+                    {part}{' '}
                   </a>
                 ) : (
-                  part + " "
+                  part + ' '
                 )
               )}
               <br />
@@ -101,274 +95,247 @@ const EventPage = () => {
           ))}
         </p>
       </div>
-    );
-  };
+    )
+  }
 
   const renderBannerForInactive = () => {
     if (event.is_active) {
-      return "";
+      return ''
     } else {
       return (
         <span
           style={{
-            textAlign: "center",
+            textAlign: 'center'
           }}
-          className="inline-block my-5 py-5 lg:w-5/6 mx-auto rounded bg-red-50 dark:bg-red-900 text-red-500 text-l tracking-widest"
-        >
+          className='inline-block my-5 py-5 lg:w-5/6 mx-auto rounded bg-red-50 dark:bg-red-900 text-red-500 text-l tracking-widest'>
           EVENT IS INACTIVE
         </span>
-      );
+      )
     }
-  };
+  }
 
   const renderImgCollapse = () => {
     return (
-      <div className="object-cover object-center absolute p-2 opacity-40 hover:opacity-90">
+      <div className='object-cover object-center absolute p-2 opacity-40 hover:opacity-90'>
         <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-6 w-6 bg-gray-200 rounded-full p-1 cursor-pointer"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          onClick={() => changeImgView()}
-        >
+          xmlns='http://www.w3.org/2000/svg'
+          className='h-6 w-6 bg-gray-200 rounded-full p-1 cursor-pointer'
+          fill='none'
+          viewBox='0 0 24 24'
+          stroke='currentColor'
+          onClick={() => changeImgView()}>
           {imgClip ? (
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M19 13l-7 7-7-7m14-8l-7 7-7-7"
-            />
+            <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M19 13l-7 7-7-7m14-8l-7 7-7-7' />
           ) : (
             <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6 bg-gray-200 rounded-full p-1 cursor-pointer"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M5 11l7-7 7 7M5 19l7-7 7 7"
-              />
+              xmlns='http://www.w3.org/2000/svg'
+              className='h-6 w-6 bg-gray-200 rounded-full p-1 cursor-pointer'
+              fill='none'
+              viewBox='0 0 24 24'
+              stroke='currentColor'>
+              <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M5 11l7-7 7 7M5 19l7-7 7 7' />
             </svg>
           )}
         </svg>
       </div>
-    );
-  };
+    )
+  }
 
   const renderImg = () => {
     return (
-      <div className={`rounded-lg overflow-hidden ${imgClip ? "h-64" : ""}`}>
-        <img
-          alt="content"
-          className="object-cover object-center h-full w-full"
-          src={event.picture || placeholder}
-        />
+      <div className={`rounded-lg overflow-hidden ${imgClip ? 'h-64' : ''}`}>
+        <img alt='content' className='object-cover object-center h-full w-full' src={event.picture || placeholder} />
       </div>
-    );
-  };
+    )
+  }
 
   const renderCalendarBox = () => {
     return (
       <div>
-        <div className="m-5 px-2 border-2 dark:border-gray-800 inline-flex items-center aspect-square">
-          <div className="flex flex-col items-center text-center leading-none">
-            <span className="text-red-500 px-2 pt-2 pb-2 mb-2 border-b-2 border-gray-200 dark:border-gray-800">
-              {new Date(event.date).toLocaleString("default", {
-                month: "long",
+        <div className='m-5 px-2 border-2 dark:border-gray-800 inline-flex items-center aspect-square'>
+          <div className='flex flex-col items-center text-center leading-none'>
+            <span className='text-red-500 px-2 pt-2 pb-2 mb-2 border-b-2 border-gray-200 dark:border-gray-800'>
+              {new Date(event.date).toLocaleString('default', {
+                month: 'long'
               })}
             </span>
-            <span className="pb-2 text-gray-800 dark:text-gray-200 title-font leading-none">
+            <span className='pb-2 text-gray-800 dark:text-gray-200 title-font leading-none'>
               {new Date(event.date).getDate()}
             </span>
           </div>
         </div>
       </div>
-    );
-  };
+    )
+  }
 
   const renderPlaceBox = () => {
     return (
-      <div className="sm:w-1/3 text-center sm:pl-8 sm:py-8">
-        <div className="w-20 h-20 rounded-full inline-flex items-center justify-center bg-gray-200 dark:bg-gray-800 text-gray-400">
+      <div className='sm:w-1/3 text-center sm:pl-8 sm:py-8'>
+        <div className='w-20 h-20 rounded-full inline-flex items-center justify-center bg-gray-200 dark:bg-gray-800 text-gray-400'>
           <svg
-            fill="none"
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            className="w-10 h-10"
-            viewBox="0 0 24 24"
-          >
-            <path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+            fill='none'
+            stroke='currentColor'
+            strokeLinecap='round'
+            strokeLinejoin='round'
+            strokeWidth='2'
+            className='w-10 h-10'
+            viewBox='0 0 24 24'>
+            <path d='M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4'></path>
           </svg>
         </div>
 
-        <div
-          className="flex flex-col items-center text-center justify-center"
-          id="place"
-        >
-          <h2 className="font-medium title-font mt-4 text-gray-900 dark:text-gray-200 text-lg">
+        <div className='flex flex-col items-center text-center justify-center' id='place'>
+          <h2 className='font-medium title-font mt-4 text-gray-900 dark:text-gray-200 text-lg'>
             <a href={`/places/${event.place}`}>{event.place_name}</a>
           </h2>
-          <div className="w-12 h-1 bg-indigo-500 rounded mt-2 mb-4"></div>
-          <p className="text-base">
+          <div className='w-12 h-1 bg-indigo-500 rounded mt-2 mb-4'></div>
+          <p className='text-base'>
             {place.country}: {place.lat}, {place.long}
           </p>
         </div>
       </div>
-    );
-  };
+    )
+  }
 
   const renderActionButtons = () => {
     return (
-      <div className="flex flex-col sm:flex-row mt-1 text-right">
-        <button onClick={() => setEventModal(!eventModal)}>Edit</button>
+      <div className='flex flex-col sm:flex-row mt-1 text-right'>
+        {token ? (
+          <div>
+            <button onClick={() => setEventModal(!eventModal)}>Edit</button>
+            <button className={event.is_active ? '' : 'toggle'} onClick={() => changeCancel()} id='activeButton'>
+              {event.is_active ? 'Cancel' : 'Reactivate'}
+            </button>
+            <button onClick={() => setDeleteConfirmModal(true)}>Delete</button>
+          </div>
+        ) : (
+          <span></span>
+        )}
         <button
-          className={event.is_active ? "" : "toggle"}
-          onClick={() => changeCancel()}
-          id="activeButton"
-        >
-          {event.is_active ? "Cancel" : "Reactivate"}
-        </button>
-        <button onClick={() => setDeleteConfirmModal(true)}>Delete</button>
-        <button
-          className={showSubscribeInput ? "" : "toggle"}
-          onClick={() => setShowSubscribeInput(!showSubscribeInput)}
-        >
+          className={showSubscribeInput ? '' : 'toggle'}
+          onClick={() => setShowSubscribeInput(!showSubscribeInput)}>
           Manage subscribtions
         </button>
       </div>
-    );
-  };
+    )
+  }
 
   const renderDiscordChannels = () => {
     return (
-      <div className="flex-col">
+      <div className='flex-col'>
         {discordChannels.map((channel) => (
           <button
-            className={`cursor-pointer ${
-              event.discord_subscription.includes(channel.id) ? "toggle" : ""
-            }`}
+            className={`cursor-pointer ${event.discord_subscription.includes(channel.id) ? 'toggle' : ''}`}
             key={channel.id}
-            onClick={() => patchEventDiscordSubscription(channel.id)}
-          >
+            onClick={() => (token ? patchEventDiscordSubscription(channel.id) : null)}>
             {channel.name}
-            <p className="subtext truncate w-40" title={channel.channel_url}>
+            <p className='subtext truncate w-40' title={channel.channel_url}>
               {channel.channel_url}
             </p>
           </button>
         ))}
-        <button className="flex items-center">
-          <input
-            type="text"
-            id="subscribe-name"
-            name="subscribe-name"
-            onChange={(e) =>
-              setNewDiscordChannel({
-                ...newDiscordChannel,
-                name: e.target.value,
-              })
-            }
-            placeholder="Name"
-            className="modal-input"
-          />
-          <input
-            type="text"
-            id="subscribe-url"
-            name="subscribe-url"
-            onChange={(e) =>
-              setNewDiscordChannel({
-                ...newDiscordChannel,
-                channel_url: e.target.value,
-              })
-            }
-            placeholder="Enter Discord webhook URL"
-            className="modal-input mx-5"
-          />
-          <button
-            className=" modal-save"
-            onClick={() => postNewDiscordChannel()}
-          >
-            Add
+        {token ? (
+          <button className='flex items-center'>
+            <input
+              type='text'
+              id='subscribe-name'
+              name='subscribe-name'
+              onChange={(e) =>
+                setNewDiscordChannel({
+                  ...newDiscordChannel,
+                  name: e.target.value
+                })
+              }
+              placeholder='Name'
+              className='modal-input'
+            />
+            <input
+              type='text'
+              id='subscribe-url'
+              name='subscribe-url'
+              onChange={(e) =>
+                setNewDiscordChannel({
+                  ...newDiscordChannel,
+                  channel_url: e.target.value
+                })
+              }
+              placeholder='Enter Discord webhook URL'
+              className='modal-input mx-5'
+            />
+            <button className=' modal-save' onClick={() => postNewDiscordChannel()}>
+              Add
+            </button>
           </button>
-        </button>
+        ) : (
+          <span></span>
+        )}
       </div>
-    );
-  };
+    )
+  }
 
   const patchEventDiscordSubscription = (discordObjectId) => {
-    const index = event.discord_subscription.indexOf(discordObjectId);
+    const index = event.discord_subscription.indexOf(discordObjectId)
     if (index > -1) {
-      event.discord_subscription.splice(index, 1);
+      event.discord_subscription.splice(index, 1)
     } else {
-      event.discord_subscription.push(discordObjectId);
+      event.discord_subscription.push(discordObjectId)
     }
 
     axios
       .patch(`${config.url}events/${event.id}/`, {
-        discord_subscription: event.discord_subscription,
+        discord_subscription: event.discord_subscription
       })
-      .then((res) => fetchEvent());
-  };
+      .then((res) => fetchEvent())
+  }
 
   const postNewDiscordChannel = () => {
-    console.log(newDiscordChannel);
-    axios
-      .post(`${config.url}discord_channels/`, newDiscordChannel)
-      .then((res) => fetchEvent());
-  };
+    console.log(newDiscordChannel)
+    axios.post(`${config.url}discord_channels/`, newDiscordChannel).then((res) => fetchEvent())
+  }
 
   const renderDeleteConfirmModal = () => {
     return (
-      <div className="modal-section flex-col left-0 right-0 bottom-0 top-0 bg-opacit-50">
+      <div className='modal-section flex-col left-0 right-0 bottom-0 top-0 bg-opacit-50'>
         <h1>Delete event</h1>
         <p>Are you sure to delete this event from database?</p>
         <div>
-          <button className="" onClick={() => setDeleteConfirmModal(false)}>
+          <button className='' onClick={() => setDeleteConfirmModal(false)}>
             No, cancel
           </button>
-          <button className="" onClick={() => handleDeleteEvent()}>
+          <button className='' onClick={() => handleDeleteEvent()}>
             Yes, delete
           </button>
         </div>
       </div>
-    );
-  };
+    )
+  }
 
   if (httpStatusCode === 404 || httpStatusCode === false) {
-    return <Page404 />;
+    return <Page404 />
   }
   return (
-    <section className="text-gray-600 body-font">
-      <div className="container px-5 pt-12 pb-24 mx-auto flex flex-col">
+    <section className='text-gray-600 body-font'>
+      <div className='container px-5 pt-12 pb-24 mx-auto flex flex-col'>
         {renderBannerForInactive()}
-        <div className="lg:w-5/6 mx-auto">
+        <div className='lg:w-5/6 mx-auto'>
           {renderImgCollapse()}
           {renderImg()}
 
           <div
-            className="flex overflow-hidden"
+            className='flex overflow-hidden'
             style={{
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: 20,
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: 20
             }}
-            id="calendarBox"
-          >
+            id='calendarBox'>
             {renderCalendarBox()}
             <a href={`/events/${eventId}`}>
-              <h1 className="text-4xl	underline decoration-wavy hover:decoration-indigo-500">
-                {event.title}
-              </h1>
+              <h1 className='text-4xl	underline decoration-wavy hover:decoration-indigo-500'>{event.title}</h1>
             </a>
           </div>
 
-          <div className="flex flex-col sm:flex-row mt-10">
+          <div className='flex flex-col sm:flex-row mt-10'>
             {renderDescription()}
             {renderPlaceBox()}
           </div>
@@ -377,14 +344,11 @@ const EventPage = () => {
         </div>
       </div>
       {eventModal ? (
-        <EventModal
-          activeEvent={{ ...event, place: place }}
-          callbackModal={() => setEventModal(false)}
-        />
+        <EventModal activeEvent={{ ...event, place: place }} callbackModal={() => setEventModal(false)} />
       ) : null}
-      {deleteConfirmModal ? renderDeleteConfirmModal() : ""}
+      {deleteConfirmModal ? renderDeleteConfirmModal() : ''}
     </section>
-  );
-};
+  )
+}
 
-export { EventPage };
+export { EventPage }
