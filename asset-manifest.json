@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/wydarzenio/static/css/main.0d992cad.css",
+    "main.js": "/wydarzenio/static/js/main.643f8e6f.js",
+    "static/media/placeholder.png": "/wydarzenio/static/media/placeholder.35cad1d4e896c1dd6062.png",
+    "index.html": "/wydarzenio/index.html",
+    "main.0d992cad.css.map": "/wydarzenio/static/css/main.0d992cad.css.map",
+    "main.643f8e6f.js.map": "/wydarzenio/static/js/main.643f8e6f.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.0d992cad.css",
+    "static/js/main.643f8e6f.js"
+  ]
+}
