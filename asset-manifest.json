@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/wydarzen-io/static/css/main.0d992cad.css",
-    "main.js": "/wydarzen-io/static/js/main.dfa22e92.js",
+    "main.js": "/wydarzen-io/static/js/main.b36585fe.js",
     "static/media/placeholder.png": "/wydarzen-io/static/media/placeholder.35cad1d4e896c1dd6062.png",
     "index.html": "/wydarzen-io/index.html",
     "main.0d992cad.css.map": "/wydarzen-io/static/css/main.0d992cad.css.map",
-    "main.dfa22e92.js.map": "/wydarzen-io/static/js/main.dfa22e92.js.map"
+    "main.b36585fe.js.map": "/wydarzen-io/static/js/main.b36585fe.js.map"
   },
   "entrypoints": [
     "static/css/main.0d992cad.css",
-    "static/js/main.dfa22e92.js"
+    "static/js/main.b36585fe.js"
   ]
 }
