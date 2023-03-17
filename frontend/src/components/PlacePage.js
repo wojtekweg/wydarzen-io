@@ -8,6 +8,8 @@ import { parse, compareAsc } from 'date-fns'
 import placeholder from '../assets/placeholder.png'
 import { Link } from 'react-router-dom'
 import handleError from '../helpers/helpers'
+import fakePlace from '../assets/fakeApi/fakePlace.json'
+import fakeEvents from '../assets/fakeApi/fakeEvents.json'
 
 const PlacePage = () => {
   const [httpStatusCode, setHttpStatusCode] = useState()
@@ -22,15 +24,19 @@ const PlacePage = () => {
   }, [])
 
   const fetchPlace = async () => {
-    axios
-      .get(`${config.url}places/${placeId}/`)
-      .then((res) => {
-        setPlace(res.data)
-      })
-      .catch((err) => {
-        handleError(err)
-        setHttpStatusCode(false)
-      })
+    if (config.url === config.ghDeployUrl) {
+      setPlace(fakePlace)
+    } else {
+      axios
+        .get(`${config.url}places/${placeId}/`)
+        .then((res) => {
+          setPlace(res.data)
+        })
+        .catch((err) => {
+          handleError(err)
+          setHttpStatusCode(false)
+        })
+    }
   }
 
   const changeImgView = () => {
@@ -48,10 +54,14 @@ const PlacePage = () => {
 
   const refreshGrid = async () => {
     // TODO terrible idea to fetch all events here
-    axios
-      .get(`${config.url}events/`)
-      .then((res) => setEventsGrid_(res.data))
-      .catch((err) => handleError(err))
+    if (config.url === config.ghDeployUrl) {
+      setEventsGrid_(fakeEvents)
+    } else {
+      axios
+        .get(`${config.url}events/`)
+        .then((res) => setEventsGrid_(res.data))
+        .catch((err) => handleError(err))
+    }
   }
 
   const getActiveEvents = () => {

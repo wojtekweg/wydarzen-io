@@ -1,0 +1,13 @@
+{
+  "id": 330,
+  "place_name": "-",
+  "date_iso": "2023-05-03T00:00",
+  "title": "Koncert",
+  "date": "2023-03-05",
+  "description": "Jakiś tam koncert",
+  "is_active": true,
+  "picture_can_be_updated": false,
+  "picture": "https://wojtekweg.github.io/wydarzen-io/static/media/placeholder.35cad1d4e896c1dd6062.png",
+  "place": 1,
+  "discord_subscription": []
+}

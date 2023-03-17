@@ -7,6 +7,7 @@ import PlacePage from './components/PlacePage'
 import Places from './components/Places'
 import { Page404 } from './components/Page404'
 import { Events } from './components/Events'
+import config from './config.json'
 
 function App() {
   document.body.style.zoom = '85%'

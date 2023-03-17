@@ -7,6 +7,8 @@ import { EventModal } from './modals/EventModal.js'
 import { Page404 } from './Page404.js'
 import placeholder from '../assets/placeholder.png'
 import handleError from '../helpers/helpers'
+import fakeEvent from '../assets/fakeApi/fakeEvent.json'
+import fakePlace from '../assets/fakeApi/fakePlace.json'
 
 const EventPage = () => {
   const [httpStatusCode, setHttpStatusCode] = useState()
@@ -29,22 +31,30 @@ const EventPage = () => {
   }, [])
 
   const fetchEvent = async () => {
-    axios
-      .get(`${config.url}events/${eventId}/`)
-      .then((res) => {
-        setEvent(res.data)
-      })
-      .catch((err) => {
-        handleError(err)
-        setHttpStatusCode(false)
-      })
+    if (config.url === config.ghDeployUrl) {
+      setEvent(fakeEvent)
+    } else {
+      axios
+        .get(`${config.url}events/${eventId}/`)
+        .then((res) => {
+          setEvent(res.data)
+        })
+        .catch((err) => {
+          handleError(err)
+          setHttpStatusCode(false)
+        })
+    }
   }
 
   const fetchPlace = async (placeId) => {
-    axios
-      .get(`${config.url}places/${placeId}/`)
-      .then((res) => setPlace(res.data))
-      .catch((err) => handleError(err))
+    if (config.url === config.ghDeployUrl) {
+      setPlace(fakePlace)
+    } else {
+      axios
+        .get(`${config.url}places/${placeId}/`)
+        .then((res) => setPlace(res.data))
+        .catch((err) => handleError(err))
+    }
   }
 
   const fetchDiscordChannels = () => {

@@ -1,0 +1,58 @@
+[
+  {
+    "id": 1,
+    "name": "-",
+    "country": "PL",
+    "lat": "0.000000",
+    "long": "0.000000",
+    "picture": "http://localhost:8000/media/event/posters/4.jpeg"
+  },
+  {
+    "id": 2,
+    "name": "PAON",
+    "country": "PL",
+    "lat": "50.049683",
+    "long": "19.944544",
+    "picture": "http://localhost:8000/media/event/posters/Screenshot_2021-12-09_at_20.54.56.png"
+  },
+  {
+    "id": 3,
+    "name": "test",
+    "country": "PL",
+    "lat": "0.000000",
+    "long": "0.000000",
+    "picture": "http://localhost:8000/media/event/posters/Screenshot_2021-11-29_at_17.28.01.png"
+  },
+  {
+    "id": 4,
+    "name": "HYPE PARK",
+    "country": "PL",
+    "lat": "50.049683",
+    "long": "19.944544",
+    "picture": "http://localhost:8000/media/event/posters/Screenshot_2022-01-05_at_17.15.58.png"
+  },
+  {
+    "id": 5,
+    "name": "prof. Stanisława Łojasiewicza 6, Kraków",
+    "country": "PL",
+    "lat": "50.049683",
+    "long": "19.944544",
+    "picture": "http://localhost:8000/media/event/posters/Screenshot_2022-01-05_at_17.16.15.png"
+  },
+  {
+    "id": 6,
+    "name": "Kina Kraków",
+    "country": "PL",
+    "lat": "50.049683",
+    "long": "19.944544",
+    "picture": "http://localhost:8000/media/event/posters/14a.jpeg"
+  },
+  {
+    "id": 7,
+    "name": "Miejsce",
+    "country": "PL",
+    "lat": "12.000000",
+    "long": "32.000000",
+    "picture": null
+  }
+]

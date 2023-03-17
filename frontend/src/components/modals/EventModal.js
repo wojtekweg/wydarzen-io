@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import handleError from '../../helpers/helpers'
 import config from '../../config.json'
+import fakePlaces from '../../assets/fakeApi/fakePlaces.json'
 
 function EventModal(props) {
   const [title, setTitle] = useState(props.activeEvent.title)
@@ -19,12 +20,16 @@ function EventModal(props) {
   }, [])
 
   const refreshPlaces = async () => {
-    axios
-      .get(`${config.url}places/`)
-      .then((res) => {
-        setPlaces(res.data)
-      })
-      .catch((err) => handleError(err))
+    if (config.url === config.ghDeployUrl) {
+      setPlaces(fakePlaces)
+    } else {
+      axios
+        .get(`${config.url}places/`)
+        .then((res) => {
+          setPlaces(res.data)
+        })
+        .catch((err) => handleError(err))
+    }
   }
 
   const printInvalidPicture = (errorMessage) => {

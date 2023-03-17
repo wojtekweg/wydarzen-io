@@ -2,14 +2,21 @@ import { useState, useEffect } from 'react'
 import { MenuButtons } from './MenuButtons'
 import LoginModal from './modals/LoginModal'
 import { ToastContainer, toast } from 'react-toastify'
+import config from '../config'
 import 'react-toastify/dist/ReactToastify.css'
 
 const Navbar = () => {
+  if (config.url === config.ghDeployUrl) {
+    console.log('You are in limited GitHub paged deploy mode')
+    localStorage.setItem('token', 'debug_token')
+  }
+
   const [loginModal, setLoginModal] = useState(false)
   const [collapseMenu, setCollapseMenu] = useState(false)
   const [currTheme, setCurrTheme] = useState(false)
   const username = localStorage.getItem('username')
   const token = localStorage.getItem('token')
+  const isHash = config.url === config.ghDeployUrl ? '#' : ''
 
   const changeTheme = (initialSet = false) => {
     const html = document.querySelector('html')
@@ -84,7 +91,7 @@ const Navbar = () => {
       <ToastContainer />
       <div width='100%' height='5%' id='logo'>
         <h1 className='text-3xl font-bold underline'>
-          <a href='/'>wydarzen.io</a>
+          <a href={isHash + '/'}>wydarzen.io</a>
         </h1>
       </div>
       {token ? <MenuButtons /> : null}
@@ -129,17 +136,17 @@ const Navbar = () => {
             </div>
 
             <div>
-              <a className='navbar-link' href='/'>
+              <a className='navbar-link' href={isHash + '/'}>
                 Events
               </a>
             </div>
             <div>
-              <a className='navbar-link' href='/places'>
+              <a className='navbar-link' href={isHash + '/places'}>
                 Places
               </a>
             </div>
             <div>
-              <a className='navbar-link' href='/about'>
+              <a className='navbar-link' href={isHash + '/about'}>
                 About
               </a>
             </div>

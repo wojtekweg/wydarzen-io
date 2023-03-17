@@ -3,6 +3,7 @@ import axios from 'axios'
 import config from '../config.json'
 import placeholder from '../assets/placeholder.png'
 import handleError from '../helpers/helpers'
+import fakePlaces from '../assets/fakeApi/fakePlaces.json'
 
 const Places = () => {
   const [places, setPlaces] = useState([])
@@ -12,10 +13,14 @@ const Places = () => {
   }, [])
 
   const refreshPlaces = async () => {
-    axios
-      .get(`${config.url}places/`)
-      .then((res) => setPlaces(res.data))
-      .catch((err) => handleError(err))
+    if (config.url === config.ghDeployUrl) {
+      setPlaces(fakePlaces)
+    } else {
+      axios
+        .get(`${config.url}places/`)
+        .then((res) => setPlaces(res.data))
+        .catch((err) => handleError(err))
+    }
   }
 
   const renderPlaces = () => {

@@ -8,6 +8,7 @@ import placeholder from '../assets/placeholder.png'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import handleError from '../helpers/helpers'
+import fakeEvents from '../assets/fakeApi/fakeEvents.json'
 
 const Events = () => {
   const [viewActive, setViewActive] = useState('All') // allowed states should be "Active", "All", "Inactive"
@@ -29,10 +30,14 @@ const Events = () => {
   }
 
   const refreshGrid = async () => {
-    axios
-      .get(`${config.url}events/`)
-      .then((res) => setEventsGrid_(res.data))
-      .catch((err) => handleError(err))
+    if (config.url === config.ghDeployUrl) {
+      setEventsGrid_(fakeEvents)
+    } else {
+      axios
+        .get(`${config.url}events/`)
+        .then((res) => setEventsGrid_(res.data))
+        .catch((err) => handleError(err))
+    }
   }
 
   const getActiveEvents = (isForCalendar = false) => {

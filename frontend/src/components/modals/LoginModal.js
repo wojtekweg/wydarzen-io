@@ -4,6 +4,7 @@ import config from '../../config.json'
 import handleError from '../../helpers/helpers'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import fakeUser from '../../assets/fakeApi/fakeUser.json'
 
 const LoginModal = (props) => {
   const [password, setPassword] = useState('')
@@ -35,11 +36,17 @@ const LoginModal = (props) => {
 
   const fetchUserDetails = (username = user.username) => {
     if (user.username) {
-      axios.get(`${config.url}users/${username}/`).then((res) => {
-        setUser(res.data)
+      if (config.url === config.ghDeployUrl) {
+        setUser(fakeUser)
         setIsLogged(true)
         return true
-      })
+      } else {
+        axios.get(`${config.url}users/${username}/`).then((res) => {
+          setUser(res.data)
+          setIsLogged(true)
+          return true
+        })
+      }
     }
     return false
   }
