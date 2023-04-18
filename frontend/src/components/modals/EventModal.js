@@ -84,7 +84,7 @@ function EventModal(props) {
   }
 
   const handlePlaceChangeByPlaceName = (input) => {
-    let place_ = places.filter((place) => place.name.match(input.name))[0]
+    let place_ = places.filter((place) => place.name.match(input))[0]
     setPlace(place_)
   }
 
@@ -92,9 +92,9 @@ function EventModal(props) {
     return (
       <div className='h-full w-full transition-all '>
         <select
-          // value={place || ""}  // TODO why pre-selecting place from event page isnt working?
+          value={place.name} // TODO why pre-selecting place from event page isnt working?
           className='h-full w-full transition-all modal-input'
-          onChange={(e) => handlePlaceChangeByPlaceName(e)}>
+          onChange={(e) => handlePlaceChangeByPlaceName(e.target.value)}>
           {places.map((place_, key) => (
             <option className='modal-input' key={key}>
               {place_.name}
