@@ -45,6 +45,7 @@ describe('Single Event Page', () => {
   })
 
   beforeEach(() => {
+    cy.visit('/')
     navbar.loginAsAdmin()
     cy.visit(event.url)
 

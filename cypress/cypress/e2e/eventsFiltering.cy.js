@@ -4,7 +4,7 @@ import Navbar from '../support/pageObjects/components/navbar'
 describe('Filtering of events', () => {
   const events = new Events()
 
-  before(() => {
+  beforeEach(() => {
     cy.visit(events.url)
   })
 
@@ -16,6 +16,15 @@ describe('Filtering of events', () => {
     let cancelledEvents = 0
 
     events.getToggleActiveEvents().click()
+
+    cy.get('.container').then(($container) => {
+      const noData = $container.text().includes('No Record found')
+      if (!noData) {
+        events.getCalendarFrom().clear()
+        events.getCalendarTo().clear()
+      }
+    })
+
     events.getEvents().then((elm) => {
       activeEvents = elm.length
     })
