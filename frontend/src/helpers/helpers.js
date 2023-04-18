@@ -17,12 +17,14 @@ const handleError = (error) => {
     message = error
   } else if (Array.isArray(error) && error.length === 1) {
     message = error[0]
-  } else if ('response' in error) {
-    message = 'data' in error.response ? error.response.data : error.response
-  } else if ('request' in error) {
-    message = error.request
-  } else if ('message' in error) {
-    message = error.message
+  } else if (typeof error === 'object' && error !== null) {
+    if ('response' in error) {
+      message = 'data' in error.response ? error.response.data : error.response
+    } else if ('request' in error) {
+      message = error.request
+    } else if ('message' in error) {
+      message = error.message
+    }
   }
   // print and show error and leave
   if (typeof message === 'string' && message !== '') {

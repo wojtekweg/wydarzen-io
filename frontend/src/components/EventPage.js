@@ -86,7 +86,7 @@ const EventPage = () => {
 
   const renderDescription = () => {
     const URL_REGEX =
-      /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/
+      /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/
     return (
       <div className='sm:w-2/3 sm:pr-8 sm:py-8  border-gray-200 sm:border-t-0 border-t mt-4 pt-4 sm:mt-0 text-center sm:text-left dark:text-zinc-200'>
         <p className='leading-relaxed text-lg mb-4 whitespace-pre-line'>
