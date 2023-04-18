@@ -125,6 +125,11 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
+PROJECT_PATH = os.path.realpath(os.path.dirname(__file__))
+TEMPLATE_DIRS = [
+    os.path.join(PROJECT_PATH, 'templates/'),
+]
+
 # Celery Broker - Redis  
 CELERY_BROKER_URL = 'redis://localhost:6379'  
 CELERY_RESULT_BACKEND = 'redis://localhost:6379'  
