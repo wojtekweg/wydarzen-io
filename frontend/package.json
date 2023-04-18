@@ -1,6 +1,5 @@
 {
   "name": "frontend",
-  "homepage": "https://wojtekweg.github.io/wydarzen-io/#",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
